@@ -1,9 +1,12 @@
 %% Barrier geometric model with coupled Alongshore. %%%%%%%%%%%%%%%
 % Jorge Lorenzo Trueba adopted by Andrew Ashton starting 2-2015
 
+
 clear; close all;
 
 %% Run parameters
+
+rrr = 1;
 
 % Time
 Tmax = 500;    % Runing time (years)
