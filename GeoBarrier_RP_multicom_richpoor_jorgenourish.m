@@ -8,10 +8,15 @@
 %8*(1e6*(x1+x2)^0.085-1e6*x1^0.085)=1e6+5/2 * x2 * 400 * 10 + 5* x2 * 2* 400
 
 %% Run parameters
-%runs = [330:-10:300];
-runs = [320];
-runn = length(runs);               % change var (or number to have something the length of the total number of runs)
-                    % which n is running
+
+%%runs = [the different runs you have for that variable];
+%%runn = length(runs);               % change var (or number to have something the length of the total number of runs)
+%runs = [330:-10:300]; %one example of initial width changing runs
+runs=[0.001 0.003 0.005 0.02];
+runn = length(runs);
+
+
+% which n is running
 % run1 Height Drowning
 %Qow_max =5; Ksf = 10000;
 % run 2 Width Drowning
@@ -32,7 +37,7 @@ dy = 100; % Spacing alongshore (m)
 Yn = 80; % number of Y cells
 
 % SL rise rate = a + bt
-sl_a = 0.003; %m/yr
+% sl_a = 0.003; %m/yr
 sl_b = 0; % If b=0 constant sea-level rise
 
 % Barrier Variables - here assume these are constant across barrier, these
@@ -68,11 +73,14 @@ f = 1e6;    % fixed cost of nourishment
 %this is where I will add something having to do with multiple existing
 %properties and their value relative to distance from oceanfront and width
 %of the beach 
-alpha1 = 1e6;       % property value of community 1
-alpha2 = 1e6;     % property value of community 2
+P1 = 30000; %NRM 2013
+P2 = 40000; %just bigger than P1
+ir = 0.07; % 7% discount rate
+n = 25; % 25 years (NRM 2013)
+alpha1 = P1*ir*((1+ir)^n)./(((1+ir)^n)-1);     % annual value of community 1
+alpha2 = P2*ir*((1+ir)^n)./(((1+ir)^n)-1);     % annual value of community 2
 c = 5;              % unit cost of sand /volume
-b = 0.085;          % exponent from Landry 2007--whole community
-%b = 0.2;          %ocean f6ont properties only
+b = 0.2632;          % exponent from Pompe & Rinehard 1995-- first row of houses = 0.2632; OR Landry 2007 (whole community)= 0.085, and NRM 2013 =0.157 (reasonable for coastal homes in NE)
 
 % Plot Control
 plottimes = 8;
@@ -134,8 +142,9 @@ NB2 = zeros(ts,length(runs));
 %% TIME LOOP %%%%%%%%%%%%%%%%%%%%
 for runn=1:runn
     %input variables
-    Wstart=runs(runn);
-    %Wstart=400;
+%     Wstart=runs(runn);
+%     Wstart=400;
+    sl_a=runs(runn);
     %%%% Set community locations
     jjcom = zeros(size(Yi));
     jjcom1 = 31:35;             % 1 represents community 1
@@ -289,7 +298,8 @@ for i=1:ts
     if min(W1(i,:))<=1
         Beta1mr(i,runn) = nproperties*L1/dy * (alpha1 * ((propertysize+mean(W1(i,:)))^b-mean(W1(i,:))^b)); 
         %Cost1mr(i,runn) = dem*dy/nproperties*propertysize + alpha1*nproperties*L1/dy;
-        Cost1mr(i,runn) = alpha1*nproperties*L1/dy;
+%         Cost1mr(i,runn) = alpha1*nproperties*L1/dy;
+        Cost1mr(i,runn) = 0;
         NB1mr(i,runn) = Beta1mr(i,runn)-Cost1mr(i,runn);
     end
     
@@ -302,65 +312,66 @@ for i=1:ts
     if min(W2(i,:))<=1
         Beta2mr(i,runn) = nproperties*L2/dy * (alpha2 * ((propertysize+mean(W2(i,:)))^b-mean(W2(i,:))^b));
         %Cost2mr(i,runn) = dem*dy/nproperties*propertysize + alpha2*nproperties*L2/dy;
-        Cost2mr(i,runn) = alpha2*nproperties*L2/dy;
+        %Cost2mr(i,runn) = alpha2*nproperties*L2/dy;
+        Cost2mr(i,runn) = 0;
         NB2mr(i,runn) = Beta2mr(i,runn)-Cost2mr(i,runn);
     end
    
     
 
     
-%     %% nourishing
-% % 
-% %        if mean(xsl(jjcom1)) >= location1
-% %            disp('need to make decision')
-% %        end
-% %        if mean(xsl(jjcom2)) >= location2
-% %            disp('need to make decision 2')
-% %        end
-% %        
-% %        
-% %if (rem(t,1)==0) % option to nourish once a year
-%        %community 1
-%         %if (mean(xsl(jjcom1)) >= location1) && (Beta1 > Cost1)
-%         if mean(W1(i,:))>0 && NB1(i,runn)>0
-%             xsl(jjcom1) = xsl(jjcom1) - 2*Vnn1/(2*mean(H(jjcom1))+Dsf);
-%             tnourished1(i,runn) = 1;
-%             %disp('nourished 1')
-%             %nourished_time1=i
-%         elseif min(W1(i,:))<=0 && NB1mr(i,runn)<NB1(i,runn)
-%             xsl(jjcom1) = xsl(jjcom1) - 2*Vnn1/(2*mean(H(jjcom1))+Dsf);
-%             tnourished1(i,runn) = 1;
-% %             disp('test')
-%         elseif min(W1(i,:))<=0 && NB1mr(i,runn)>NB1(i,runn)
-%             location1 = mean(xsl(jjcom1))+propertysize;
-%             tmanret1(i,runn) = 1;
-%             %recalculate width
-%             W1(i,:) = (location1 - xsl(jjcom1)); %beach width
-%         elseif mean(W1(i,:))>0 && NB1(i,runn)<0
-%             xsl(jjcom1) = xsl(jjcom1);
-%         end
-%         
-%         
-%        %community 2
-%         if mean(W2(i,:))>0 && NB2(i,runn)>0
-%             xsl(jjcom2) = xsl(jjcom2) - 2*Vnn2/(2*mean(H(jjcom2))+Dsf);
-%             tnourished2(i,runn) = 1;
-%             %disp('nourished 1')
-%             %nourished_time1=i
-%         elseif min(W2(i,:))<=0 && NB2mr(i,runn)<NB2(i,runn)
-%             xsl(jjcom2) = xsl(jjcom2) - 2*Vnn2/(2*mean(H(jjcom2))+Dsf);
-%             tnourished2(i,runn) = 1;           
-%         elseif min(W2(i,:))<=0 && NB2mr(i,runn)>NB2(i,runn)
-%             location2 = mean(xsl(jjcom2))+propertysize;
-%             tmanret2(i,runn) = 1;
-%             %recalculate width
-%             W2(i,:) = (location2 - xsl(jjcom2)); %beach width
-%         elseif mean(W2(i,:))>0 && NB2(i,runn)<0
-%             xsl(jjcom2) = xsl(jjcom2);
-%         end
-% %end
-%   
-%         
+    %% nourishing
+% 
+%        if mean(xsl(jjcom1)) >= location1
+%            disp('need to make decision')
+%        end
+%        if mean(xsl(jjcom2)) >= location2
+%            disp('need to make decision 2')
+%        end
+%        
+%        
+%if (rem(t,1)==0) % option to nourish once a year
+       %community 1
+        %if (mean(xsl(jjcom1)) >= location1) && (Beta1 > Cost1)
+        if mean(W1(i,:))>0 && NB1(i,runn)>0
+            xsl(jjcom1) = xsl(jjcom1) - 2*Vnn1/(2*mean(H(jjcom1))+Dsf);
+            tnourished1(i,runn) = 1;
+            %disp('nourished 1')
+            %nourished_time1=i
+        elseif min(W1(i,:))<=0 && NB1mr(i,runn)<NB1(i,runn)
+            xsl(jjcom1) = xsl(jjcom1) - 2*Vnn1/(2*mean(H(jjcom1))+Dsf);
+            tnourished1(i,runn) = 1;
+%             disp('test')
+        elseif min(W1(i,:))<=0 && NB1mr(i,runn)>NB1(i,runn)
+            location1 = mean(xsl(jjcom1))+propertysize;
+            tmanret1(i,runn) = 1;
+            %recalculate width
+            W1(i,:) = (location1 - xsl(jjcom1)); %beach width
+        elseif mean(W1(i,:))>0 && NB1(i,runn)<0
+            xsl(jjcom1) = xsl(jjcom1);
+        end
+        
+        
+       %community 2
+        if mean(W2(i,:))>0 && NB2(i,runn)>0
+            xsl(jjcom2) = xsl(jjcom2) - 2*Vnn2/(2*mean(H(jjcom2))+Dsf);
+            tnourished2(i,runn) = 1;
+            %disp('nourished 1')
+            %nourished_time1=i
+        elseif min(W2(i,:))<=0 && NB2mr(i,runn)<NB2(i,runn)
+            xsl(jjcom2) = xsl(jjcom2) - 2*Vnn2/(2*mean(H(jjcom2))+Dsf);
+            tnourished2(i,runn) = 1;           
+        elseif min(W2(i,:))<=0 && NB2mr(i,runn)>NB2(i,runn)
+            location2 = mean(xsl(jjcom2))+propertysize;
+            tmanret2(i,runn) = 1;
+            %recalculate width
+            W2(i,:) = (location2 - xsl(jjcom2)); %beach width
+        elseif mean(W2(i,:))>0 && NB2(i,runn)<0
+            xsl(jjcom2) = xsl(jjcom2);
+        end
+%end
+  
+        
 
     %% Variable storage ?
     if (mod(i,savenum)- 1 == 0)
