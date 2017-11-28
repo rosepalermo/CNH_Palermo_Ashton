@@ -74,7 +74,7 @@ f = 1e6;    % fixed cost of nourishment
 %properties and their value relative to distance from oceanfront and width
 %of the beach 
 P1 = 1.5e6; %NRM 2013
-P2 = 2.0e6; %just bigger than P1
+P2 = 2.0e6; %just bigger than P1 (needs to be something concrete for a commercial community in this region)
 ir = 0.07; % 7% discount rate
 n = 25; % 25 years (NRM 2013)
 alpha1 = P1*ir*((1+ir)^n)./(((1+ir)^n)-1);     % annual value of community 1
@@ -292,7 +292,7 @@ for i=1:ts
     %% here is where an economic model should go
     
     %Beta1 = alpha1 * mean(W1+Wn1)^b;
-    Beta1(i,runn) = nproperties*L1/dy * alpha1 * ((((Wn1+mean(W1(i,:)))./W1(1,1))^b) - alpha1 * mean(W1(i,:))^b);
+    Beta1(i,runn) = nproperties*L1/dy * alpha1 * ((((Wn1+mean(W1(i,:)))./W1(1,1))^b) - mean(W1(i,:)./W1(1,1))^b);
     Cost1(i,runn) = f + c/2 * Wn1 * L1 * Dsf + c * Wn1 * mean(H(jjcom1)) * L1;
     NB1(i,runn) = Beta1(i,runn)-Cost1(i,runn);
     if min(W1(i,:))<=1
@@ -306,7 +306,7 @@ for i=1:ts
   
     
     %Beta2 = alpha2 * mean(W2+Wn2)^b;
-    Beta2(i,runn) = nproperties*L2/dy * (alpha2 * (((Wn2+mean(W2(i,:)))./W2(1,1))^b) - alpha2 * mean(W2(i,:))^b);
+    Beta2(i,runn) = nproperties*L2/dy * (alpha2 * (((Wn2+mean(W2(i,:)))./W2(1,1))^b) - alpha2 * mean(W2(i,:)./W2(1,1))^b);
     Cost2(i,runn) = f + c/2 * Wn2 * L2 * Dsf + c * Wn2 * mean(H(jjcom2)) * L2;
     NB2(i,runn) = Beta2(i,runn)-Cost2(i,runn);
     if min(W2(i,:))<=1

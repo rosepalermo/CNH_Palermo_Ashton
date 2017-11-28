@@ -74,7 +74,7 @@ f = 1e6;    % fixed cost of nourishment
 %properties and their value relative to distance from oceanfront and width
 %of the beach 
 P1 = 1.5e6; %NRM 2013
-P2 = 2.0e6; %just bigger than P1
+P2 = 2.0e6; %just bigger than P1 (needs to be something concrete for a commercial community in this region)
 ir = 0.07; % 7% discount rate
 n = 25; % 25 years (NRM 2013)
 alpha1 = P1*ir*((1+ir)^n)./(((1+ir)^n)-1);     % annual value of community 1
