@@ -340,22 +340,22 @@ for runn=1:runn
         
         
         % community 2 nourishment
-        Beta2_1(i,runn) = nproperties*L1/dy * alpha1 * ((((Wn1+W1av)./W1(1,1))^b) - mean(W1(i,:)./W1(1,1))^b);
-        Beta2_2(i,runn) = nproperties*L1/dy * alpha1 * (((((Wn1+W1av)-2*slr2)./W1(1,1))^b) - (mean(W1(i,:)-2*slr2)./W1(1,1))^b);
-        Beta2_3(i,runn) = nproperties*L1/dy * alpha1 * (((((Wn1+W1av)-3*slr2)./W1(1,1))^b) - (mean(W1(i,:)-3*slr2)./W1(1,1))^b);
-        Beta2_4(i,runn) = nproperties*L1/dy * alpha1 * (((((Wn1+W1av)-4*slr2)./W1(1,1))^b) - (mean(W1(i,:)-4*slr2)./W1(1,1))^b);
-        Beta2_5(i,runn) = nproperties*L1/dy * alpha1 * (((((Wn1+W1av)-5*slr2)./W1(1,1))^b) - (mean(W1(i,:)-5*slr2)./W1(1,1))^b);
+        Beta2_1(i,runn) = nproperties*L2/dy * alpha1 * ((((Wn2+W2av)./W2(1,1))^b) - mean(W2(i,:)./W2(1,1))^b);
+        Beta2_2(i,runn) = nproperties*L2/dy * alpha1 * (((((Wn2+W2av)-2*slr2)./W2(1,1))^b) - (mean(W2(i,:)-1*slr2)./W2(1,1))^b);
+        Beta2_3(i,runn) = nproperties*L2/dy * alpha1 * (((((Wn2+W2av)-3*slr2)./W2(1,1))^b) - (mean(W2(i,:)-2*slr2)./W2(1,1))^b);
+        Beta2_4(i,runn) = nproperties*L2/dy * alpha1 * (((((Wn2+W2av)-4*slr2)./W2(1,1))^b) - (mean(W2(i,:)-3*slr2)./W2(1,1))^b);
+        Beta2_5(i,runn) = nproperties*L2/dy * alpha1 * (((((Wn2+W2av)-5*slr2)./W2(1,1))^b) - (mean(W2(i,:)-4*slr2)./W2(1,1))^b);
         Benefit2(i,runn) = Beta2_1(i,runn)/(1+ir)+Beta2_2(i,runn)/(1+ir).^2+Beta2_3(i,runn)/(1+ir).^3+Beta2_4(i,runn)/(1+ir).^4+Beta2_5(i,runn)/(1+ir).^5; % benefit assuming that retreat rate of last year
         Cost2(i,runn) = f + c/2 * Wn2 * L2 * Dsf + c * Wn2 * mean(H(jjcom2)) * L2;
         NB2(i,runn) = Benefit2(i,runn)-Cost2(i,runn);
         
         % community 2 managed retreat
         if min(W2(i,:))<=1
-            Beta2mr_1(i,runn) = nproperties*L1/dy * alpha1 * ((((Wn1+W1av)./W1(1,1))^b) - mean(W1(i,:)./W1(1,1))^b);
-            Beta2mr_2(i,runn) = nproperties*L1/dy * alpha1 * (((((Wn1+W1av)-2*slr2)./W1(1,1))^b) - (mean(W1(i,:)-2*slr2)./W1(1,1))^b);
-            Beta2mr_3(i,runn) = nproperties*L1/dy * alpha1 * (((((Wn1+W1av)-3*slr2)./W1(1,1))^b) - (mean(W1(i,:)-3*slr2)./W1(1,1))^b);
-            Beta2mr_4(i,runn) = nproperties*L1/dy * alpha1 * (((((Wn1+W1av)-4*slr2)./W1(1,1))^b) - (mean(W1(i,:)-4*slr2)./W1(1,1))^b);
-            Beta2mr_5(i,runn) = nproperties*L1/dy * alpha1 * (((((Wn1+W1av)-5*slr2)./W1(1,1))^b) - (mean(W1(i,:)-5*slr2)./W1(1,1))^b);
+            Beta2mr_1(i,runn) = nproperties*L2/dy * alpha1 * ((((Wn2+W2av)./W2(1,1))^b) - mean(W2(i,:)./W2(1,1))^b);
+            Beta2mr_2(i,runn) = nproperties*L2/dy * alpha1 * (((((Wn2+W2av)-2*slr2)./W2(1,1))^b) - (mean(W2(i,:)-1*slr2)./W2(1,1))^b);
+            Beta2mr_3(i,runn) = nproperties*L2/dy * alpha1 * (((((Wn2+W2av)-3*slr2)./W2(1,1))^b) - (mean(W2(i,:)-2*slr2)./W2(1,1))^b);
+            Beta2mr_4(i,runn) = nproperties*L2/dy * alpha1 * (((((Wn2+W2av)-4*slr2)./W2(1,1))^b) - (mean(W2(i,:)-3*slr2)./W2(1,1))^b);
+            Beta2mr_5(i,runn) = nproperties*L2/dy * alpha1 * (((((Wn2+W2av)-5*slr2)./W2(1,1))^b) - (mean(W2(i,:)-4*slr2)./W2(1,1))^b);
             Benefit2mr(i,runn) = Beta2mr_1(i,runn)/(1+ir)+Beta2mr_2(i,runn)/(1+ir).^2+Beta2mr_3(i,runn)/(1+ir).^3+Beta2mr_4(i,runn)/(1+ir).^4+Beta2mr_5(i,runn)/(1+ir).^5; % benefit assuming that retreat rate of last year
             %         Benefit2mr(i,runn) = Beta2mr(i,runn)/(1+ir)+Beta2mr(i,runn)/(1+ir).^2+Beta2mr(i,runn)/(1+ir).^3+Beta2mr(i,runn)/(1+ir).^4+Beta2mr(i,runn)/(1+ir).^5; % benefit assuming that width will not change over next 5 years
             %Cost2mr(i,runn) = dem*dy/nproperties*propertysize + alpha2*nproperties*L2/dy;
@@ -380,48 +380,48 @@ for runn=1:runn
         %if (rem(t,1)==0) % option to nourish once a year
         %community 1
         %if (mean(xsl(jjcom1)) >= location1) && (Beta1 > Cost1)
-        %         if i > 0
-        %             if i-1 == fix((i-1) / 100)
-        if W1av>0 && NB1(i,runn)>0
-            xsl(jjcom1) = xsl(jjcom1) - 2*Vnn1/(2*mean(H(jjcom1))+Dsf);
-            tnourished1(i,runn) = 1;
-            %disp('nourished 1')
-            %nourished_time1=i
-        elseif min(W1(i,:))<=0 && NB1mr(i,runn)<NB1(i,runn)
-            xsl(jjcom1) = xsl(jjcom1) - 2*Vnn1/(2*mean(H(jjcom1))+Dsf);
-            tnourished1(i,runn) = 1;
-            %             disp('test')
-        elseif min(W1(i,:))<=0 && NB1mr(i,runn)>NB1(i,runn)
-            location1 = mean(xsl(jjcom1))+propertysize;
-            tmanret1(i,runn) = 1;
-            %recalculate width
-            W1(i,:) = (location1 - xsl(jjcom1)); %beach width
-        elseif W1av>0 && NB1(i,runn)<0
-            xsl(jjcom1) = xsl(jjcom1);
+        if i > 500
+            if sum(find(inourished1(i-500:i,runn)))<1
+                if W1av>0 && NB1(i,runn)>0
+                    xsl(jjcom1) = xsl(jjcom1) - 2*Vnn1/(2*mean(H(jjcom1))+Dsf);
+                    tnourished1(i,runn) = 1;
+                    %disp('nourished 1')
+                    %nourished_time1=i
+                elseif min(W1(i,:))<=0 && NB1mr(i,runn)<NB1(i,runn)
+                    xsl(jjcom1) = xsl(jjcom1) - 2*Vnn1/(2*mean(H(jjcom1))+Dsf);
+                    tnourished1(i,runn) = 1;
+                    %             disp('test')
+                elseif min(W1(i,:))<=0 && NB1mr(i,runn)>NB1(i,runn)
+                    location1 = mean(xsl(jjcom1))+propertysize;
+                    tmanret1(i,runn) = 1;
+                    %recalculate width
+                    W1(i,:) = (location1 - xsl(jjcom1)); %beach width
+                elseif W1av>0 && NB1(i,runn)<0
+                    xsl(jjcom1) = xsl(jjcom1);
+                end
+            end
+            
+            if sum(find(inourished1(i-500:i,runn)))<1
+                %community 2
+                if W2av>0 && NB2(i,runn)>0
+                    xsl(jjcom2) = xsl(jjcom2) - 2*Vnn2/(2*mean(H(jjcom2))+Dsf);
+                    tnourished2(i,runn) = 1;
+                    %disp('nourished 1')
+                    %nourished_time1=i
+                elseif min(W2(i,:))<=0 && NB2mr(i,runn)<NB2(i,runn)
+                    xsl(jjcom2) = xsl(jjcom2) - 2*Vnn2/(2*mean(H(jjcom2))+Dsf);
+                    tnourished2(i,runn) = 1;
+                elseif min(W2(i,:))<=0 && NB2mr(i,runn)>NB2(i,runn)
+                    location2 = mean(xsl(jjcom2))+propertysize;
+                    tmanret2(i,runn) = 1;
+                    %recalculate width
+                    W2(i,:) = (location2 - xsl(jjcom2)); %beach width
+                elseif W2av>0 && NB2(i,runn)<0
+                    xsl(jjcom2) = xsl(jjcom2);
+                end
+            end
         end
         
-        
-        %community 2
-        if W2av>0 && NB2(i,runn)>0
-            xsl(jjcom2) = xsl(jjcom2) - 2*Vnn2/(2*mean(H(jjcom2))+Dsf);
-            tnourished2(i,runn) = 1;
-            %disp('nourished 1')
-            %nourished_time1=i
-        elseif min(W2(i,:))<=0 && NB2mr(i,runn)<NB2(i,runn)
-            xsl(jjcom2) = xsl(jjcom2) - 2*Vnn2/(2*mean(H(jjcom2))+Dsf);
-            tnourished2(i,runn) = 1;
-        elseif min(W2(i,:))<=0 && NB2mr(i,runn)>NB2(i,runn)
-            location2 = mean(xsl(jjcom2))+propertysize;
-            tmanret2(i,runn) = 1;
-            %recalculate width
-            W2(i,:) = (location2 - xsl(jjcom2)); %beach width
-        elseif W2av>0 && NB2(i,runn)<0
-            xsl(jjcom2) = xsl(jjcom2);
-        end
-        %             end
-        %         end
-        
-        %end
         
         
         

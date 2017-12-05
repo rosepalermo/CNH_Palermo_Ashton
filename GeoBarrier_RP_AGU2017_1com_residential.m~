@@ -225,7 +225,7 @@ for runn=1:runn
                 Qow_B = 0.6*Qow_B;
                 Qow_H = 0.6*Qow_H;
                 %Qow_B = Qow_B;  % (no overwash control)
-                %                 Qow_H = Qow_H;
+                %Qow_H = Qow_H;
             end
             
             if ismember(j,jjcom2(:)) %for this test, community 2 is commerical, so -90%OW (Rogers et al 2015)
@@ -380,8 +380,9 @@ for runn=1:runn
         %if (rem(t,1)==0) % option to nourish once a year
         %community 1
         %if (mean(xsl(jjcom1)) >= location1) && (Beta1 > Cost1)
-        %         if i > 0
-        %             if i-1 == fix((i-1) / 100)
+                if i > 100
+                    if sum(find(inourished1(i-5:i,runn)))<
+                    if i-1 == fix((i-1) / 100)
         if W1av>0 && NB1(i,runn)>0
             xsl(jjcom1) = xsl(jjcom1) - 2*Vnn1/(2*mean(H(jjcom1))+Dsf);
             tnourished1(i,runn) = 1;
