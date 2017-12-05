@@ -73,7 +73,7 @@ f = 1e6;    % fixed cost of nourishment
 %this is where I will add something having to do with multiple existing
 %properties and their value relative to distance from oceanfront and width
 %of the beach
-P1 = 1.5e6; %NRM 2013
+P1 = 1.5e6; %NRM 2013 (1.5e6)
 P2 = 1.5e6; %same as P1--- needs to be changed to coastal commercial MA value?
 ir = 0.07; % 7% discount rate
 n = 25; % 25 years (NRM 2013)
@@ -222,10 +222,10 @@ for runn=1:runn
             end
             
             if ismember(j,jjcom1(:)) %for this test, community 1 is residential, so -40%OW (Rogers et al 2015)
-                %             Qow_B = 0.6*Qow_B;
-                %             Qow_H = 0.6*Qow_H;
-                Qow_B = Qow_B;  % (no overwash control)
-                Qow_H = Qow_H;
+                Qow_B = 0.6*Qow_B;
+                Qow_H = 0.6*Qow_H;
+                %Qow_B = Qow_B;  % (no overwash control)
+                %Qow_H = Qow_H;
             end
             
             if ismember(j,jjcom2(:)) %for this test, community 2 is commerical, so -90%OW (Rogers et al 2015)
@@ -315,22 +315,22 @@ for runn=1:runn
         
         % community 1 nourishment
         % Beta = annual benefit of this year and next 4 (community_year)
-        Beta1_1(i,runn) = nproperties*L1/dy * alpha1 * ((((Wn1+W1av)./W1(1,1))^b) - mean(W1(i,:)./W1(1,1))^b);
-        Beta1_2(i,runn) = nproperties*L1/dy * alpha1 * (((((Wn1+W1av)-2*slr1)./W1(1,1))^b) - (mean(W1(i,:)-2*slr1)./W1(1,1))^b);
-        Beta1_3(i,runn) = nproperties*L1/dy * alpha1 * (((((Wn1+W1av)-3*slr1)./W1(1,1))^b) - (mean(W1(i,:)-3*slr1)./W1(1,1))^b);
-        Beta1_4(i,runn) = nproperties*L1/dy * alpha1 * (((((Wn1+W1av)-4*slr1)./W1(1,1))^b) - (mean(W1(i,:)-4*slr1)./W1(1,1))^b);
-        Beta1_5(i,runn) = nproperties*L1/dy * alpha1 * (((((Wn1+W1av)-5*slr1)./W1(1,1))^b) - (mean(W1(i,:)-5*slr1)./W1(1,1))^b);
+        Beta1_1(i,runn) = nproperties*L1/dy * alpha1 * (((Wn1+W1av)./W1(1,1))^b);
+        Beta1_2(i,runn) = nproperties*L1/dy * alpha1 * ((((Wn1+W1av)-2*slr1)./W1(1,1))^b);
+        Beta1_3(i,runn) = nproperties*L1/dy * alpha1 * ((((Wn1+W1av)-3*slr1)./W1(1,1))^b);
+        Beta1_4(i,runn) = nproperties*L1/dy * alpha1 * ((((Wn1+W1av)-4*slr1)./W1(1,1))^b);
+        Beta1_5(i,runn) = nproperties*L1/dy * alpha1 * ((((Wn1+W1av)-5*slr1)./W1(1,1))^b);
         Benefit1(i,runn) = Beta1_1(i,runn)/(1+ir)+Beta1_2(i,runn)/((1+ir).^2)+Beta1_3(i,runn)/(1+ir).^3+Beta1_4(i,runn)/(1+ir).^4+Beta1_5(i,runn)/(1+ir).^5; % benefit assuming retreat rate of last year
         Cost1(i,runn) = f + c/2 * Wn1 * L1 * Dsf + c * Wn1 * mean(H(jjcom1)) * L1;
         NB1(i,runn) = Benefit1(i,runn)-Cost1(i,runn);
         
         % community 1 managed retreat
         if min(W1(i,:))<=1
-            Beta1mr_1(i,runn) = nproperties*L1/dy * alpha1 * ((((Wn1+W1av)./W1(1,1))^b) - mean(W1(i,:)./W1(1,1))^b);
-            Beta1mr_2(i,runn) = nproperties*L1/dy * alpha1 * (((((Wn1+W1av)-2*slr1)./W1(1,1))^b) - (mean(W1(i,:)-2*slr1)./W1(1,1))^b);
-            Beta1mr_3(i,runn) = nproperties*L1/dy * alpha1 * (((((Wn1+W1av)-3*slr1)./W1(1,1))^b) - (mean(W1(i,:)-3*slr1)./W1(1,1))^b);
-            Beta1mr_4(i,runn) = nproperties*L1/dy * alpha1 * (((((Wn1+W1av)-4*slr1)./W1(1,1))^b) - (mean(W1(i,:)-4*slr1)./W1(1,1))^b);
-            Beta1mr_5(i,runn) = nproperties*L1/dy * alpha1 * (((((Wn1+W1av)-5*slr1)./W1(1,1))^b) - (mean(W1(i,:)-5*slr1)./W1(1,1))^b);
+            Beta1mr_1(i,runn) = nproperties*L1/dy * alpha1 * (((Wn1+W1av)./W1(1,1))^b);
+            Beta1mr_2(i,runn) = nproperties*L1/dy * alpha1 * ((((Wn1+W1av)-2*slr1)./W1(1,1))^b);
+            Beta1mr_3(i,runn) = nproperties*L1/dy * alpha1 * ((((Wn1+W1av)-3*slr1)./W1(1,1))^b);
+            Beta1mr_4(i,runn) = nproperties*L1/dy * alpha1 * ((((Wn1+W1av)-4*slr1)./W1(1,1))^b);
+            Beta1mr_5(i,runn) = nproperties*L1/dy * alpha1 * ((((Wn1+W1av)-5*slr1)./W1(1,1))^b);
             Benefit1mr(i,runn) = Beta1mr_1(i,runn)/(1+ir)+Beta1mr_2(i,runn)/(1+ir).^2+Beta1mr_3(i,runn)/(1+ir).^3+Beta1mr_4(i,runn)/(1+ir).^4+Beta1mr_5(i,runn)/(1+ir).^5; % benefit assuming that retreat rate of last year
             %Cost1mr(i,runn) = dem*dy/nproperties*propertysize + alpha1*nproperties*L1/dy;
             %         Cost1mr(i,runn) = alpha1*nproperties*L1/dy;
@@ -340,22 +340,22 @@ for runn=1:runn
         
         
         % community 2 nourishment
-        Beta2_1(i,runn) = nproperties*L1/dy * alpha1 * ((((Wn1+W1av)./W1(1,1))^b) - mean(W1(i,:)./W1(1,1))^b);
-        Beta2_2(i,runn) = nproperties*L1/dy * alpha1 * (((((Wn1+W1av)-2*slr2)./W1(1,1))^b) - (mean(W1(i,:)-2*slr2)./W1(1,1))^b);
-        Beta2_3(i,runn) = nproperties*L1/dy * alpha1 * (((((Wn1+W1av)-3*slr2)./W1(1,1))^b) - (mean(W1(i,:)-3*slr2)./W1(1,1))^b);
-        Beta2_4(i,runn) = nproperties*L1/dy * alpha1 * (((((Wn1+W1av)-4*slr2)./W1(1,1))^b) - (mean(W1(i,:)-4*slr2)./W1(1,1))^b);
-        Beta2_5(i,runn) = nproperties*L1/dy * alpha1 * (((((Wn1+W1av)-5*slr2)./W1(1,1))^b) - (mean(W1(i,:)-5*slr2)./W1(1,1))^b);
+        Beta2_1(i,runn) = nproperties*L1/dy * alpha1 * (((Wn1+W1av)./W1(1,1))^b);
+        Beta2_2(i,runn) = nproperties*L1/dy * alpha1 * ((((Wn1+W1av)-2*slr2)./W1(1,1))^b);
+        Beta2_3(i,runn) = nproperties*L1/dy * alpha1 * ((((Wn1+W1av)-3*slr2)./W1(1,1))^b);
+        Beta2_4(i,runn) = nproperties*L1/dy * alpha1 * ((((Wn1+W1av)-4*slr2)./W1(1,1))^b);
+        Beta2_5(i,runn) = nproperties*L1/dy * alpha1 * ((((Wn1+W1av)-5*slr2)./W1(1,1))^b);
         Benefit2(i,runn) = Beta2_1(i,runn)/(1+ir)+Beta2_2(i,runn)/(1+ir).^2+Beta2_3(i,runn)/(1+ir).^3+Beta2_4(i,runn)/(1+ir).^4+Beta2_5(i,runn)/(1+ir).^5; % benefit assuming that retreat rate of last year
         Cost2(i,runn) = f + c/2 * Wn2 * L2 * Dsf + c * Wn2 * mean(H(jjcom2)) * L2;
         NB2(i,runn) = Benefit2(i,runn)-Cost2(i,runn);
         
         % community 2 managed retreat
         if min(W2(i,:))<=1
-            Beta2mr_1(i,runn) = nproperties*L1/dy * alpha1 * ((((Wn1+W1av)./W1(1,1))^b) - mean(W1(i,:)./W1(1,1))^b);
-            Beta2mr_2(i,runn) = nproperties*L1/dy * alpha1 * (((((Wn1+W1av)-2*slr2)./W1(1,1))^b) - (mean(W1(i,:)-2*slr2)./W1(1,1))^b);
-            Beta2mr_3(i,runn) = nproperties*L1/dy * alpha1 * (((((Wn1+W1av)-3*slr2)./W1(1,1))^b) - (mean(W1(i,:)-3*slr2)./W1(1,1))^b);
-            Beta2mr_4(i,runn) = nproperties*L1/dy * alpha1 * (((((Wn1+W1av)-4*slr2)./W1(1,1))^b) - (mean(W1(i,:)-4*slr2)./W1(1,1))^b);
-            Beta2mr_5(i,runn) = nproperties*L1/dy * alpha1 * (((((Wn1+W1av)-5*slr2)./W1(1,1))^b) - (mean(W1(i,:)-5*slr2)./W1(1,1))^b);
+            Beta2mr_1(i,runn) = nproperties*L1/dy * alpha1 * (((Wn1+W1av)./W1(1,1))^b);
+            Beta2mr_2(i,runn) = nproperties*L1/dy * alpha1 * ((((Wn1+W1av)-2*slr2)./W1(1,1))^b);
+            Beta2mr_3(i,runn) = nproperties*L1/dy * alpha1 * ((((Wn1+W1av)-3*slr2)./W1(1,1))^b);
+            Beta2mr_4(i,runn) = nproperties*L1/dy * alpha1 * ((((Wn1+W1av)-4*slr2)./W1(1,1))^b);
+            Beta2mr_5(i,runn) = nproperties*L1/dy * alpha1 * ((((Wn1+W1av)-5*slr2)./W1(1,1))^b);
             Benefit2mr(i,runn) = Beta2mr_1(i,runn)/(1+ir)+Beta2mr_2(i,runn)/(1+ir).^2+Beta2mr_3(i,runn)/(1+ir).^3+Beta2mr_4(i,runn)/(1+ir).^4+Beta2mr_5(i,runn)/(1+ir).^5; % benefit assuming that retreat rate of last year
             %         Benefit2mr(i,runn) = Beta2mr(i,runn)/(1+ir)+Beta2mr(i,runn)/(1+ir).^2+Beta2mr(i,runn)/(1+ir).^3+Beta2mr(i,runn)/(1+ir).^4+Beta2mr(i,runn)/(1+ir).^5; % benefit assuming that width will not change over next 5 years
             %Cost2mr(i,runn) = dem*dy/nproperties*propertysize + alpha2*nproperties*L2/dy;
