@@ -11,9 +11,16 @@
 
 %%runs = [the different runs you have for that variable];
 %%runn = length(runs);               % change var (or number to have something the length of the total number of runs)
-%runs = [330:-10:300]; %one example of initial width changing runs
-runs=[0.001 0.003 0.005 0.02];
+runs = [330:-1:300]; %one example of initial width changing runs
+% runs=[0.001 0.003 0.005 0.01 0.02]; % one example of increasing sl rise rate
 runn = length(runs);
+sl_aAGU = 0.009;
+
+% n1_w_sl_009 = nnourished1;
+% n2_w_sl_009 = nnourished2;
+% mr1_w_sl_009 = nmanret1;
+% mr2_1_sl_009= nmanret2;
+% save('sla_009_W_300_330','n1_w_sl_009','n2_w_sl_009','mr1_w_sl_009','mr2_1_sl_009')
 
 
 % which n is running
@@ -112,8 +119,8 @@ tnourished1 = zeros(ts,length(runs));
 tnourished2 = zeros(ts,length(runs));
 tmanret1 = zeros(ts,length(runs));
 tmanret2 = zeros(ts,length(runs));
-inourished1 = nan(ts,length(runs));
-inourished2 = nan(ts,length(runs));
+inourished1 = zeros(ts,length(runs));
+inourished2 = zeros(ts,length(runs));
 imanret1 = nan(ts,length(runs));
 imanret2 = nan(ts,length(runs));
 TBtwN1 = nan(ts,length(runs));
@@ -144,7 +151,9 @@ for runn=1:runn
     %input variables
     %     Wstart=runs(runn);
     %     Wstart=400;
-    sl_a=runs(runn);
+    Wstart = runs(runn);
+    %sl_a=runs(runn);
+    sl_a=sl_aAGU;
     
     
     %%%% Sea level
@@ -381,7 +390,7 @@ for runn=1:runn
         %community 1
         %if (mean(xsl(jjcom1)) >= location1) && (Beta1 > Cost1)
         if i > 500
-            if sum(find(inourished1(i-500:i,runn)))<1
+            if sum(find(tnourished1(i-500:i,runn)))<1
                 if W1av>0 && NB1(i,runn)>0
                     xsl(jjcom1) = xsl(jjcom1) - 2*Vnn1/(2*mean(H(jjcom1))+Dsf);
                     tnourished1(i,runn) = 1;
@@ -401,7 +410,7 @@ for runn=1:runn
                 end
             end
             
-            if sum(find(inourished1(i-500:i,runn)))<1
+            if sum(find(tnourished1(i-500:i,runn)))<1
                 %community 2
                 if W2av>0 && NB2(i,runn)>0
                     xsl(jjcom2) = xsl(jjcom2) - 2*Vnn2/(2*mean(H(jjcom2))+Dsf);
@@ -588,6 +597,14 @@ for runn=1:runn
     % set(gca,'Fontsize', fs)
     % set(gcf,'PaperPositionMode','auto')
 end
+
+
+
+
+
+
+
+
 % %%
 % figure()
 % for runn=1:length(runs)
