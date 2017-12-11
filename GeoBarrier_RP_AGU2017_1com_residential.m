@@ -14,13 +14,13 @@
 runs = [330:-1:300]; %one example of initial width changing runs
 % runs=[0.001 0.003 0.005 0.01 0.02]; % one example of increasing sl rise rate
 runn = length(runs);
-sl_aAGU = 0.009;
+sl_aAGU = 0.016;
 
-% n1_w_sl_009 = nnourished1;
-% n2_w_sl_009 = nnourished2;
-% mr1_w_sl_009 = nmanret1;
-% mr2_1_sl_009= nmanret2;
-% save('sla_009_W_300_330','n1_w_sl_009','n2_w_sl_009','mr1_w_sl_009','mr2_1_sl_009')
+% n1_w_sl_016 = nnourished1;
+% n2_w_sl_016 = nnourished2;
+% mr1_w_sl_016 = nmanret1;
+% mr2_1_sl_016= nmanret2;
+% save('sla_016_W_300_330','n1_w_sl_016','n2_w_sl_016','mr1_w_sl_016','mr2_1_sl_016')
 
 
 % which n is running
@@ -656,3 +656,4 @@ end
 % set(gca,'fontweight','bold')
 % set(gca,'Fontsize', fs)
 % set(gcf,'PaperPositionMode','auto')
+close all

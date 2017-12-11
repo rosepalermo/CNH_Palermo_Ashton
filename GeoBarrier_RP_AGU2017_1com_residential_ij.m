@@ -14,13 +14,13 @@
 runs = [330:-1:300]; %one example of initial width changing runs
 % runs=[0.001 0.003 0.005 0.01 0.02]; % one example of increasing sl rise rate
 runn = length(runs);
-sl_aAGU = 0.008;
+sl_aAGU = 0.003;
 
-n1_w_sl_008 = nnourished1;
-n2_w_sl_008 = nnourished2;
-mr1_w_sl_008 = nmanret1;
-mr2_1_sl_008= nmanret2;
-save('sla_008_W_300_330','n1_w_sl_008','n2_w_sl_008','mr1_w_sl_008','mr2_1_sl_008')
+% n1_w_sl_02 = nnourished1;
+% n2_w_sl_02 = nnourished2;
+% mr1_w_sl_02 = nmanret1;
+% mr2_1_sl_02= nmanret2;
+% save('sla_02_W_300_330','n1_w_sl_02','n2_w_sl_02','mr1_w_sl_02','mr2_1_sl_02')
 
 
 % which n is running
@@ -390,7 +390,7 @@ for runn=1:runn
         %community 1
         %if (mean(xsl(jjcom1)) >= location1) && (Beta1 > Cost1)
         if i > 500
-            if sum(find(tnourished1(i-500:i,runn)))<1
+            if sum(tnourished1(i-500:i,runn))<1 %|| W1av<=0
                 if W1av>0 && NB1(i,runn)>0
                     xsl(jjcom1) = xsl(jjcom1) - 2*Vnn1/(2*mean(H(jjcom1))+Dsf);
                     tnourished1(i,runn) = 1;
@@ -410,7 +410,7 @@ for runn=1:runn
                 end
             end
             
-            if sum(find(tnourished1(i-500:i,runn)))<1
+            if sum(tnourished2(i-500:i,runn))<1 %|| W2av<=0
                 %community 2
                 if W2av>0 && NB2(i,runn)>0
                     xsl(jjcom2) = xsl(jjcom2) - 2*Vnn2/(2*mean(H(jjcom2))+Dsf);
@@ -512,8 +512,8 @@ for runn=1:runn
     
     %% calculate things to plot about nourishment
     % number of times nourished
-    nnourished1(1,runn) = sum(tnourished1(:,runn),1)
-    nnourished2(1,runn) = sum(tnourished2(:,runn),1)
+    nnourished1(1,runn) = sum(tnourished1(:,runn),1);
+    nnourished2(1,runn) = sum(tnourished2(:,runn),1);
     % which times nourished
     inourished1(1:nnourished1(1,runn),runn) = find(tnourished1(:,runn)>0);
     inourished2(1:nnourished2(1,runn),runn) = find(tnourished2(:,runn)>0);
@@ -522,8 +522,31 @@ for runn=1:runn
     TBtwN2(1:nnourished2(1,runn)-1,runn) = diff(inourished2(1:nnourished2(1,runn),runn))/Tsteps;
     
     
-    nmanret1(1,runn) = sum(tmanret1(:,runn))
-    nmanret2(1,runn) = sum(tmanret2(:,runn))
+    nmanret1(1,runn) = sum(tmanret1(:,runn));
+    nmanret2(1,runn) = sum(tmanret2(:,runn));
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     imanret1(1:nmanret1(1,runn),runn) = find(tmanret1(:,runn)>0);
     imanret2(1:nmanret2(1,runn),runn) = find(tmanret2(:,runn)>0);
     TBtwMR1(1:nmanret1(1,runn)-1,runn) = diff(imanret1(1:nmanret1(1,runn),runn))/Tsteps;
@@ -656,3 +679,4 @@ end
 % set(gca,'fontweight','bold')
 % set(gca,'Fontsize', fs)
 % set(gcf,'PaperPositionMode','auto')
+% close all
