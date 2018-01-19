@@ -18,7 +18,7 @@ dy = 200; % Spacing alongshore (m)
 Yn = 200; % number of Y cells
 
 % SL rise rate = a + bt
-sl_a = 0.002; %m/yr
+sl_a = 0.0345; %m/yr
 sl_b = 0; % If b=0 constant sea-level rise
 
 % Barrier Variables - here assume these are constant across barrier, these
@@ -40,7 +40,7 @@ astfac = .5; % fractional diffusivity (i.e. angular wave distribution reduces di
 % Perturbation Controls
 
 pertpart = 0.2; % fraction of shoreline to be pert
-Wpert = 150; % width of pert
+Wpert = We; % width of pert
 Wstart = We; % width of not pert
 
 %pertwidth = 10;
