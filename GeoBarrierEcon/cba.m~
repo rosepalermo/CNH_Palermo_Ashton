@@ -1,4 +1,4 @@
-function [NBn,NBm]=cba(nyears,nproperties,L,dy,alpha,b,slr,Wn,Wav,Wo,p)
+function [nNB,mNB]=cba(nyears,nproperties,L,dy,alpha,b,slr,Wn,Wav,Wmin,Wo,p,f,c,Hav,Dsf)
 % this function calculates the net benefit of nourishment and of managed
 % retreat based on the work we did for 2017 AGU
 
@@ -12,65 +12,41 @@ function [NBn,NBm]=cba(nyears,nproperties,L,dy,alpha,b,slr,Wn,Wav,Wo,p)
 % slr - shoreline retreat rate based on previous year
 % Wn - width of nourishment project
 % Wav - average width of the beach in front of the community
+% Wmin - minimum width of beach in front of the community at this timestep
 % Wo - reference beach width
 % p - property cross shore length
+% f - fixed cost of nourishment
+% c - per unit cost of nourishment sand
+% Hav - average height of barrier to nourish
+% Dsf - depth of shoreface
+
+%% nourishment
 
 % benefit of nourishment over nyears
-Beta = zeros(1,nyears);
-if nyears >= 1
-    Beta(1,1) = nproperties*L/dy * alpha * ((Wn + Wav)./ Wo).^b - (Wav ./ Wo).^b;
-end
-
-if nyears >= 2
-    Beta(1,2) = nproperties*L/dy * alpha * ((Wn + Wav)./ Wo).^b - (Wav-2*slr ./ Wo).^b;
-end
-
-if nyears >= 3
-    Beta(1,3) = nproperties*L/dy * alpha * ((Wn + Wav)./ Wo).^b - (Wav-3*slr ./ Wo).^b;
-end
-
-if nyears >= 4
-    Beta(1,4) = nproperties*L/dy * alpha * ((Wn + Wav)./ Wo).^b - (Wav-4*slr ./ Wo).^b;
-end
-
-if nyears >= 5
-    Beta(1,5) = nproperties*L/dy * alpha * ((Wn + Wav)./ Wo).^b - (Wav-5*slr ./ Wo).^b;
-end
-
-if nyears >= 6
-    Beta(1,6) = nproperties*L/dy * alpha * ((Wn + Wav)./ Wo).^b - (Wav-6*slr ./ Wo).^b;
-end
-
-if nyears >= 7
-    Beta(1,7) = nproperties*L/dy * alpha * ((Wn + Wav)./ Wo).^b - (Wav-7*slr ./ Wo).^b;
-end
-
-if nyears >= 8
-    Beta(1,8) = nproperties*L/dy * alpha * ((Wn + Wav)./ Wo).^b - (Wav-8*slr ./ Wo).^b;
-end
-
-if nyears >= 9
-    Beta(1,9) = nproperties*L/dy * alpha * ((Wn + Wav)./ Wo).^b - (Wav-9*slr ./ Wo).^b;
-end
-
-if nyears >= 10
-    Beta(1,10) = nproperties*L/dy * alpha * ((Wn + Wav)./ Wo).^b - (Wav-10*slr ./ Wo).^b;
-end
-
-Benefit = sum(Beta);
+nBeta = zeros(1,nyears);
+idx = 1:nyears;
+nBeta(1,idx) = nproperties*L/dy * alpha * ((Wn + Wav)./ Wo).^b - (Wav-idx*slr ./ Wo).^b;
+nBenefit = sum(nBeta);
 
 % cost of nourishment
-Cost
-        % community 1 nourishment
-        % Beta = annual benefit of this year and next 4 (community_year)
-        Beta1_1(i,runn) = nproperties*L1/dy * alpha1 * ((((Wn1+W1av)./W1(1,1))^b) - mean(W1(i,:)./W1(1,1))^b);
-        Beta1_2(i,runn) = nproperties*L1/dy * alpha1 * (((((Wn1+W1av)-2*slr1)./W1(1,1))^b) - (mean(W1(i,:)-2*slr1)./W1(1,1))^b);
-        Beta1_3(i,runn) = nproperties*L1/dy * alpha1 * (((((Wn1+W1av)-3*slr1)./W1(1,1))^b) - (mean(W1(i,:)-3*slr1)./W1(1,1))^b);
-        Beta1_4(i,runn) = nproperties*L1/dy * alpha1 * (((((Wn1+W1av)-4*slr1)./W1(1,1))^b) - (mean(W1(i,:)-4*slr1)./W1(1,1))^b);
-        Beta1_5(i,runn) = nproperties*L1/dy * alpha1 * (((((Wn1+W1av)-5*slr1)./W1(1,1))^b) - (mean(W1(i,:)-5*slr1)./W1(1,1))^b);
-        Benefit1(i,runn) = Beta1_1(i,runn)/(1+ir)+Beta1_2(i,runn)/((1+ir).^2)+Beta1_3(i,runn)/(1+ir).^3+Beta1_4(i,runn)/(1+ir).^4+Beta1_5(i,runn)/(1+ir).^5; % benefit assuming retreat rate of last year
-        Cost1(i,runn) = f + c/2 * Wn1 * L1 * Dsf + c * Wn1 * mean(H(jjcom1)) * L1;
-        NB1(i,runn) = Benefit1(i,runn)-Cost1(i,runn);
+nCost = f + c/2 * Wn * L * Dsf + c * Wn * Hav * L1;
+
+% net benefit of nourishment
+nNB = nBenefit - nCost;
+
+%% managed retreat
+
+% benefit of managed retreat
+mBeta = zeros(1,nyears);
+idx = 1:nyears;
+mBeta(1,idx) = nproperties*L/dy * alpha * ((p + Wav)./ Wo).^b - (Wav-idx*slr ./ Wo).^b;
+mBenefit = sum(mBeta);
+
+% cost of managed retreat
+mCost = nproperties * alpha;
+
+% net benefit of nourishment
+mNB = mBenefit - mCost;
         
         % community 1 managed retreat
         if min(W1(i,:))<=1
