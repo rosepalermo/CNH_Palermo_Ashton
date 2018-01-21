@@ -16,7 +16,7 @@ function [NBn,NBm]=cba(nyears,nproperties,L,dy,alpha,b,slr,Wn,Wav,Wo)
 
 if nyears>=1
     
-    Beta1 = nproperties*L
+    Beta = nproperties*L/dy * alpha * ((Wn + Wav)./ Wo).^b - 
         % community 1 nourishment
         % Beta = annual benefit of this year and next 4 (community_year)
         Beta1_1(i,runn) = nproperties*L1/dy * alpha1 * ((((Wn1+W1av)./W1(1,1))^b) - mean(W1(i,:)./W1(1,1))^b);
