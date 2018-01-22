@@ -23,23 +23,12 @@ for runn=1:runn
     H(Yi) =He;             % barrier height
     
     %%%% Set community locations
-    jjcom = zeros(size(Yi));
-    jjcom1 = 21:25;             % 1 represents community 1
-    jjcom2 = 56:60;             % 2 represents community 2
-    com1w0 = 49;                % 1 initial width *NRM paper (49 meters)
-    com2w0 = 49;                % 2 initial width *NRM paper
     location1 = mean(xsl(jjcom1))+com1w0;            % cross shore location of comm 1
     location2 = mean(xsl(jjcom2))+com2w0;            % cross shore location of comm 2
     locationdiff = location1 - location2;
     W1 = zeros(ts,length(jjcom1));   % for width of beach in front of comm1
     W2 = zeros(ts,length(jjcom2));   % for width of beach in front of comm2
-    propertysize = 50;          % width of properties (cross-shore)
-    nproperties = 2;              % number of properties per dy
-    dem = 8000;                  % estimated cost of demolishing a home ~1500-2000 sq ft
-    L1 = (jjcom1(end)-jjcom1(1))*dy;    %length of comm 1
-    L2 = (jjcom2(end)-jjcom2(1))*dy;    %length of comm 2
-    %xsl(jjcom)=xbb(jjcom)-Wcom;   % sl in front of communities if different
-    notcomm = setdiff(Yi,jjcom); %part of the shoreline not on community
+
     %%%% Zero the Save Variables
     Xtoe_save = zeros(tsavetimes, ys);
     Xsl_save = zeros(tsavetimes, ys);
@@ -173,11 +162,11 @@ for runn=1:runn
         %% here is where an economic model should go
         
         %community 1
-        [nNB,mNB]=cba(5,nproperties,L1,dy,alpha1,b,slr1,Wn1,W1av,min(W1(i,:)),W1(1,1),propertysize,f,c,mean(H(jjcom1)),Dsf,ir);
+        [nNB,mNB]=cba(nyears,nproperties,L1,dy,alpha1,b,slr1,Wn1,W1av,min(W1(i,:)),W1(1,1),propertysize,f,c,mean(H(jjcom1)),Dsf,ir);
         NB1(i,runn) = nNB;
         NB1mr(i,runn) =mNB;
         %community 2
-        [nNB,mNB]=cba(5,nproperties,L2,dy,alpha2,b,slr2,Wn2,W2av,min(W2(i,:)),W2(1,1),propertysize,f,c,mean(H(jjcom2)),Dsf,ir);
+        [nNB,mNB]=cba(nyears,nproperties,L2,dy,alpha2,b,slr2,Wn2,W2av,min(W2(i,:)),W2(1,1),propertysize,f,c,mean(H(jjcom2)),Dsf,ir);
         NB2(i,runn) = nNB;
         NB2mr(i,runn) =mNB;
 
@@ -330,29 +319,6 @@ for runn=1:runn
     
     nmanret1(1,runn) = sum(tmanret1(:,runn));
     nmanret2(1,runn) = sum(tmanret2(:,runn));
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
     imanret1(1:nmanret1(1,runn),runn) = find(tmanret1(:,runn)>0);
     imanret2(1:nmanret2(1,runn),runn) = find(tmanret2(:,runn)>0);
     TBtwMR1(1:nmanret1(1,runn)-1,runn) = diff(imanret1(1:nmanret1(1,runn),runn))/Tsteps;

@@ -41,6 +41,17 @@ astfac = .5; % fractional diffusivity (i.e. angular wave distribution reduces di
 K2=0.34/2*astfac; %m^(3/5)s^(-6/5)
 Ka=K2*Ho^(12/5)*To^(1/5) * 365*86400; %convert to m^3/year
 
+%%%% Community location inputs
+% jjcom = zeros(size(Yi));
+jjcom1 = 21:25;             % 1 represents community 1
+jjcom2 = 56:60;             % 2 represents community 2
+com1w0 = 49;                % 1 initial width *NRM paper (49 meters)
+com2w0 = 49;                % 2 initial width *NRM paper
+propertysize = 50;          % width of properties (cross-shore)
+nproperties = 2;              % number of properties per dy
+dem = 8000;                  % estimated cost of demolishing a home ~1500-2000 sq ft
+L1 = (jjcom1(end)-jjcom1(1))*dy;    %length of comm 1
+L2 = (jjcom2(end)-jjcom2(1))*dy;    %length of comm 2
 
 %%%% Community and Cost Benefit Analysis Controls--- (Slott 2008)
 f = 1e6;    % fixed cost of nourishment
@@ -51,6 +62,7 @@ f = 1e6;    % fixed cost of nourishment
 P1 = 1.5e6; %NRM 2013 (1.5e6)
 P2 = 1.5e6; %same as P1--- needs to be changed to coastal commercial MA value?
 ir = 0.07; % 7% discount rate
+nyears = 5; % nyears of project (how long they look into the future)
 n = 25; % 25 years (NRM 2013)
 alpha1 = P1*ir*((1+ir)^n)./(((1+ir)^n)-1);     % annual value of community 1
 alpha2 = P2*ir*((1+ir)^n)./(((1+ir)^n)-1);     % annual value of community 2
