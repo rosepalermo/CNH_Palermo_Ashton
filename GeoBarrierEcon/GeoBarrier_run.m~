@@ -28,7 +28,7 @@ for runn=1:runn
     locationdiff = com(1).location - com(2).location;
     com(1).W = zeros(ts,length(com(1).jj));   % for width of beach in front of comm1
     com(2).W = zeros(ts,length(com(2).jj));   % for width of beach in front of comm2
-    
+
     %%%% Zero the Save Variables
     Xtoe_save = zeros(tsavetimes, ys);
     Xsl_save = zeros(tsavetimes, ys);
@@ -136,16 +136,16 @@ for runn=1:runn
             com(c).W(i,:) = (com(c).location - xsl(com(c).jj)); % beach width
             com(c).Wav(i,runn) = mean(com(c).W(i,:),2);
         end
-        
-        %         % save all of the shorelines because it will evaluate the retreat rate
-        %         % at each year
+
+%         % save all of the shorelines because it will evaluate the retreat rate
+%         % at each year
         xsl_saveall(i,:) = xsl;
         
         %amount of of shoreline retreat from this year to previous year
         
         if i>100
             for c = 1:ncom
-                com(c).slr = (mean(xsl_saveall(i,com(c).jj))-mean(xsl_saveall(i-100,com(c).jj)))/100;
+            com(c).slr = (mean(xsl_saveall(i,com(c).jj))-mean(xsl_saveall(i-100,com(c).jj)))/100;
             end
         end
         
@@ -162,14 +162,14 @@ for runn=1:runn
         end
         
         %% economics
-        
+
         for c = 1:ncom
             [nNB,mNB]=cba(nyears,nproperties,com(c).L,dy,com(c).alpha,b,com(c).slr,com(c).Wn,com(c).Wav(i,runn),min(com(c).W(i,:)),com(c).W(1,1),propertysize,f,c,mean(H(com(c).jj)),Dsf,ir);
             com(c).NB(i,runn) = nNB;
             com(c).NBmr(i,runn) =mNB;
         end
-        
-        
+
+
         %% nourishing
         
         for c = 1:ncom
@@ -178,23 +178,23 @@ for runn=1:runn
                 if min(com(c).W(i,:))>0 && com(c).NB(i,runn)>0 && sum(com(c).tnourished(i-500:i,runn))<1
                     xsl(com(c).jj) = xsl(com(c).jj) - 2*com(c).Vnn/(2*mean(H(com(c).jj))+Dsf);
                     com(c).tnourished(i,runn) = 1;
-                    % if width < 0 & MR<N --> nourish
+                % if width < 0 & MR<N --> nourish
                 elseif min(com(c).W(i,:))<=0 && com(c).NBmr(i,runn)<com(c).NB(i,runn)
                     xsl(com(c).jj) = xsl(com(c).jj) - 2*com(c).Vnn/(2*mean(H(com(c).jj))+Dsf);
                     com(c).tnourished(i,runn) = 1;
-                    %if width < 0 & MR>N --> retreat
+                %if width < 0 & MR>N --> retreat
                 elseif min(com(c).W(i,:))<=0 && com(c).NBmr(i,runn)>com(c).NB(i,runn)
                     com(c).location = mean(xsl(com(c).jj))+propertysize;
                     com(c).tmanret(i,runn) = 1;
                     %recalculate width
                     com(c).W(i,:) = (com(c).location - xsl(com(c).jj)); %beach width
-                    % if width > 0 & NB< 0 --> continue
+                % if width > 0 & NB< 0 --> continue
                 elseif com(c).Wav(i,runn)>0 && com(c).NB(i,runn)<0
                     xsl(com(c).jj) = xsl(com(c).jj);
                 end
             end
         end
-        
+
         %% Variable storage ?
         if (mod(i,savenum)- 1 == 0)
             tsi = (i-1)/savenum +1;
@@ -208,6 +208,8 @@ for runn=1:runn
         %% Plots
         if (mod(i,plotnum)- 1 == 0)
             i;
+            
+            
             % PLAN VIEW
             axes2 = subplot(3,1,2);
             box(axes2,'on');
@@ -218,7 +220,7 @@ for runn=1:runn
             plot(Y/1000,xbb/1000,'r', 'linewidth',2)
             
             for c = 1:ncom
-                plot(Y(com(c).jj)/1000,xsl(com(c).jj)/1000,'Color',com(c).color,'linewidth',2)
+            plot(Y(com(c).jj)/1000,xsl(com(c).jj)/1000,'Color',com(c).color,'linewidth',2)
             end
             
             xlabel('alongshore location (km)')
@@ -232,13 +234,13 @@ for runn=1:runn
             hold on
             
             for c = 1:ncom
-                jplot = floor((com(c).jj(c)+com(c).jj(end))./2); % Which profile youre plotting
-                % compute the z's
-                Db= Dsf - xbb(j)*B(j); zt=Z-Dsf; zs=Z; ztop=Z+H(j);
-                % plot the barrier parts
-                Xplot=[xtoe(jplot) xsl(jplot) xsl(jplot) xbb(jplot) xbb(jplot)]/1000;
-                Zplot=[zt     zs     ztop   ztop   -Db ];
-                plot(Xplot,Zplot,'Color',com(c).color)
+            jplot = floor((com(c).jj(c)+com(c).jj(end))./2); % Which profile youre plotting
+            % compute the z's
+            Db= Dsf - xbb(j)*B(j); zt=Z-Dsf; zs=Z; ztop=Z+H(j);
+            % plot the barrier parts
+            Xplot=[xtoe(jplot) xsl(jplot) xsl(jplot) xbb(jplot) xbb(jplot)]/1000;
+            Zplot=[zt     zs     ztop   ztop   -Db ];
+            plot(Xplot,Zplot,'Color',com(c).color)
             end
             
             % plot a shoreface
@@ -256,17 +258,17 @@ for runn=1:runn
     
     %% calculate things to plot about nourishment
     for c = 1:ncom
-        % number of times nourished
-        com(c).nnourished(1,runn) = sum(com(c).tnourished(:,runn),1);
-        % which times nourished
-        com(c).inourished(1:com(c).nnourished(1,runn),runn) = find(com(c).tnourished(:,runn)>0);
-        % time between nourishments
-        com(c).TBtwN(1:com(c).nnourished(1,runn)-1,runn) = diff(com(c).inourished(1:com(c).nnourished(1,runn),runn))/Tsteps;
-        %number of managed retreates, when retreated, time btw retreats
-        com(c).nmanret(1,runn) = sum(com(c).tmanret(:,runn));
-        com(c).imanret(1:com(c).nmanret(1,runn),runn) = find(com(c).tmanret(:,runn)>0);
-        com(c).TBtwMR(1:com(c).nmanret(1,runn)-1,runn) = diff(com(c).imanret(1:com(c).nmanret(1,runn),runn))/Tsteps;
-        
+    % number of times nourished
+    com(c).nnourished(1,runn) = sum(com(c).tnourished(:,runn),1);
+    % which times nourished
+    com(c).inourished(1:com(c).nnourished(1,runn),runn) = find(com(c).tnourished(:,runn)>0);
+    % time between nourishments
+    com(c).TBtwN(1:com(c).nnourished(1,runn)-1,runn) = diff(com(c).inourished(1:com(c).nnourished(1,runn),runn))/Tsteps;
+    %number of managed retreates, when retreated, time btw retreats
+    com(c).nmanret(1,runn) = sum(com(c).tmanret(:,runn));
+    com(c).imanret(1:com(c).nmanret(1,runn),runn) = find(com(c).tmanret(:,runn)>0);
+    com(c).TBtwMR(1:com(c).nmanret(1,runn)-1,runn) = diff(com(c).imanret(1:com(c).nmanret(1,runn),runn))/Tsteps;
+
     end
     %%
     % time plot
@@ -275,13 +277,20 @@ for runn=1:runn
     hold(axes1,'all');
     
     for c = 1:ncom
-        jplot = floor((com(c).jj(1)+com(c).jj(end))./2); %plot middle of com1
-        %ppp = Xsl_save(:,jplot)
-        plot(tsavei*Tsave,Xsl_save(:,jplot)/1000,'--','Color',com(c).color, 'linewidth',2)
-        plot(tsavei*Tsave,Xb_save(:,jplot)/1000,'Color',com(c).color, 'linewidth',2)
+    jplot = floor((com(c).jj(1)+com(c).jj(end))./2); %plot middle of com1
+    %ppp = Xsl_save(:,jplot)
+    plot(tsavei*Tsave,Xsl_save(:,jplot)/1000,'--','Color',com(c).color, 'linewidth',2)
+    plot(tsavei*Tsave,Xb_save(:,jplot)/1000,'Color',com(c).color, 'linewidth',2)
     end
-
-
+%     
+%     %jplot = floor(Yn/2)    %plot middle of comm2
+%     jplot = floor((com(2).jj(1)+com(2).jj(end))./2);  %plot community 2
+%     plot(tsavei*Tsave,Xsl_save(:,jplot)/1000,'--b', 'linewidth',2)
+%     plot(tsavei*Tsave,Xb_save(:,jplot)/1000,'--r', 'linewidth',2)
+    
+    
+    %axis([0 Tmax 0.5 (max(xbb)+100)/1000])
+    % axis([0 Tmax 0.6 0.9])
     xlabel('time (years)')
     ylabel('onshore location (km)')
     set(gca,'fontweight','bold')
@@ -294,7 +303,7 @@ for runn=1:runn
     hold on
     c=1;
     for c = 1:ncom
-        scatter(com(c).NB(com(c).inourished(1:com(c).nnourished(1,runn),runn),runn),com(c).Wav(com(c).inourished(1:com(c).nnourished(1,runn),runn),runn),com(c).color);
+    scatter(com(c).NB(com(c).inourished(1:com(c).nnourished(1,runn),runn),runn),com(c).Wav(com(c).inourished(1:com(c).nnourished(1,runn),runn),runn),com(c).color);
     end
     xlabel('Net Benefit')
     ylabel('mean Width of community before nourishment (m)')
@@ -304,7 +313,7 @@ for runn=1:runn
     set(gca,'fontweight','bold')
     set(gca,'Fontsize', fs)
     set(gcf,'PaperPositionMode','auto')
-    
+
 end
 
 toc
