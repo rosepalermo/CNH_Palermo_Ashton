@@ -74,19 +74,16 @@ for runn=1:runn
                 Qow_B=Qow_max*Vd_B/Vd;
             end
             
-            if com(1).jj(1)<=j && j<=com(1).jj(end) %for this test, community 1 is residential, so -40%OW (Rogers et al 2015)
-                Qow_B = 0.6*Qow_B;
-                Qow_H = 0.6*Qow_H;
-                %Qow_B = Qow_B;  % (no overwash control)
-                %Qow_H = Qow_H;
-            end
-            
-            if com(2).jj(1)<=j && j<=com(2).jj(end) %for this test, community 2 is commerical, so -90%OW (Rogers et al 2015)
-                Qow_B = 0.1*Qow_B;
-                Qow_H = 0.1*Qow_H;
+            %limit ow for residential and commercial communities
+            for c = 1:ncom
+                if com(c).jj(c)<=j && j<=com(c).jj(end)
+                    Qow_B = com(c).Kow*Qow_B;
+                    Qow_H = com(c).Kow*Qow_H;
+                end
             end
             
             Qow=Qow_H+Qow_B;
+            
             %shoreface flux
             Qsf=Ksf*(Ae-A);
             
@@ -134,7 +131,7 @@ for runn=1:runn
         
         for c = 1:ncom
             com(c).W(i,:) = (com(c).location - xsl(com(c).jj)); % beach width
-            com(c).Wav(i,runn) = mean(com(c).W(i,:),2);
+            com(c).Wav(i,runn) = mean(com(c).W(i,:),2); %average width BEFORE NOURISHMENT
         end
         
         %         % save all of the shorelines because it will evaluate the retreat rate
@@ -175,7 +172,7 @@ for runn=1:runn
         for c = 1:ncom
             if i > 500
                 %if width and NB > 0 --> nourish
-                if min(com(c).W(i,:))>0 && com(c).NB(i,runn)>0 && sum(com(c).tnourished(i-500:i,runn))<1
+                if min(com(c).W(i,:))>0 && com(c).NB(i,runn)>0 && sum(com(c).tnourished(i-nyears*100:i,runn))<1
                     xsl(com(c).jj) = xsl(com(c).jj) - 2*com(c).Vnn/(2*mean(H(com(c).jj))+Dsf);
                     com(c).tnourished(i,runn) = 1;
                     % if width < 0 & MR<N --> nourish
@@ -280,8 +277,8 @@ for runn=1:runn
         plot(tsavei*Tsave,Xsl_save(:,jplot)/1000,'--','Color',com(c).color, 'linewidth',2)
         plot(tsavei*Tsave,Xb_save(:,jplot)/1000,'Color',com(c).color, 'linewidth',2)
     end
-
-
+    
+    
     xlabel('time (years)')
     ylabel('onshore location (km)')
     set(gca,'fontweight','bold')

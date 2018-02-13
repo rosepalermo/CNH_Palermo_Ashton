@@ -47,6 +47,8 @@ com(1).jj = 21:25;             % 1 represents community 1
 com(2).jj = 56:60;             % 2 represents community 2
 com(1).w0 = 49;                % 1 initial width *NRM paper (49 meters)
 com(2).w0 = 49;                % 2 initial width *NRM paper
+com(1).Kow = 0.6;              % residential, 40% overwash lost (Rogers et al 2015)
+com(2).Kow = 0.1;              % commercial, 90% overwash lost (Rogers et al 2015)
 propertysize = 50;          % width of properties (cross-shore)
 nproperties = 2;              % number of properties per dy
 dem = 8000;                  % estimated cost of demolishing a home ~1500-2000 sq ft
@@ -72,6 +74,8 @@ c = 5;              % unit cost of sand /volume
 b = 0.2632;          % exponent from Pompe & Rinehard 1995-- first row of houses = 0.2632; OR Landry 2007 (whole community)= 0.085, and NRM 2013 =0.157 (reasonable for coastal homes in NE)
 com(1).Wn = 20; %width to add in nourishment
 com(2).Wn = 20; %width to add in nourishment
+
+%LOCATIONS ARE SET IN THE RUN LOOP
 
 
 % Plot Control
