@@ -24,9 +24,6 @@ function [nNB,mNB]=cba(nyears,nproperties,L,dy,alpha,b,slr,Wn,Wav,Wmin,Wo,p,f,c,
 
 % benefit of nourishment over nyears
 
-%%%
-% ROSE TALK TO ANDREW ABOUT THIS. INCLUDES B(0)->B(NYEARS)
-%%%
 nBeta = nan(1,nyears+1);
 idx = 0:nyears;
 nBeta(1,idx+1) = nproperties*L/dy * alpha * (((Wn + Wav - idx*slr)./ Wo).^b - ((Wav-idx*slr) ./ Wo).^b);
