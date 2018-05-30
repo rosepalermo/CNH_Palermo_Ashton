@@ -28,7 +28,7 @@ k=1;
 A=Ae;W=We;H=He; %Barrier initially in equlibrium
 xt=0;xs=Dt/A;xb=xs+W;xso=xs;Z=Dt;
 Db=Z-B*xb; %Initial back barrier depth (meters) 
-X=Xo;
+% X=Xo;
 %% Variable initialization %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 XS=zeros(1,n);
 for i=1:n
@@ -53,10 +53,10 @@ xtdot=2*Qsf*(1/(Dt+2*H)+1/Dt)+2*zdot/A;
 H=H+Hdot*dt; if H<0;tdrown_H = t(i);break; end
 xb=xb+xbdot*dt;
 xsold=xs;
-xs=xs+xsdot*dt-2*Vnn/(2*H+Dt);
+xs=xs+xsdot*dt;-2*Vnn/(2*H+Dt);
 xt=xt+xtdot*dt;
 %% Distance to water%%%%%%%%%%%%%%%%%%%%%
-X=Xo-(xs-Dt/Ae);
+% X=Xo-(xs-Dt/Ae);
 % if xs<xso;Qnn=(xsold-xso)*(H+Dt/2);X=Xo;xs=xso;end
 
 %% Additional parameters

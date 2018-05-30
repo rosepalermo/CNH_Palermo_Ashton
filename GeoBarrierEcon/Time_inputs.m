@@ -1,5 +1,5 @@
 % Time
-Tmax = 100;    % Runing time (years)-- was 500 years
+Tmax = 500;    % Runing time (years)-- was 500 years
 Tsteps = 100;    % time steps per year
 Tsave = 0.5;     % Save T how often (years), can be float
 
@@ -10,10 +10,11 @@ ts=length(t);   % time steps
 ti = 1:ts;      % time i's
 
 % Plot Control
-plottimes = 8;
+plottimes = 4;
 xaspect = 1.5; yaspect = 1.5;
 %xshoreplot = 1.5;
 fs = 14;
+
 
 % Save times
 tsavetimes = Tmax/Tsave;

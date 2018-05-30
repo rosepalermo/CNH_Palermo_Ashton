@@ -6,10 +6,10 @@ close all;clear all;
 % inputs
 GeoBarrier_inputs
 Time_inputs
-Community_inputs
+% Community_inputs
 
 if exist('ncom')
-    community_on = false;
+    community_on = true;
 else
     community_on = false;
 end
@@ -289,7 +289,7 @@ for kk=1:length(kks)
                     % plot the barrier parts
                     Xplot=[xtoe(jplot) xsl(jplot) xsl(jplot) xbb(jplot) xbb(jplot)]/1000;
                     Zplot=[zt     zs     ztop   ztop   -Db ];
-                    plot(Xplot,Zplot,'Color',com(c).color)
+                    plot(Xplot,Zplot,'Color','k')
             end
             
             
@@ -338,8 +338,8 @@ for kk=1:length(kks)
     if ~community_on
             jplot = floor(length(Yi)./2); % Which profile youre plotting, the middle of the barrier
             %ppp = Xsl_save(:,jplot)
-            plot(tsavei*Tsave,xsl_save(:,jplot)/1000,'--','Color',com(c).color, 'linewidth',2)
-            plot(tsavei*Tsave,Xb_save(:,jplot)/1000,'Color',com(c).color, 'linewidth',2)
+            plot(tsavei*Tsave,xsl_save(:,jplot)/1000,'--','Color','k', 'linewidth',2)
+            plot(tsavei*Tsave,Xb_save(:,jplot)/1000,'Color','k', 'linewidth',2)
     end
     
     xlabel('time (years)')
