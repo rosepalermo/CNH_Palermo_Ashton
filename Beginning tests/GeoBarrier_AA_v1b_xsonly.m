@@ -9,7 +9,7 @@ clear; close all;
 rrr = 1;
 
 % Time
-Tmax = 1000;    % Runing time (years)
+Tmax = 10000;    % Runing time (years)
 Tsteps = 100;    % time steps per year
 Tsave = .5;     % Save T how often (years), can be float
 
@@ -18,7 +18,7 @@ dy = 200; % Spacing alongshore (m)
 Yn = 1000; % number of Y cells
 
 % SL rise rate = a + bt
-sl_a = 0.0345; %m/yr
+sl_a = 0.008; %m/yr
 sl_b = 0; % If b=0 constant sea-level rise
 
 % Barrier Variables - here assume these are constant across barrier, these
@@ -76,7 +76,7 @@ B=ones(1,ys) * Bslope; % Basement Slope, can be different
 xtoe(Yi)=0;            % X toe
 xsl(Yi)=Dsf/Ae;        % X shoreline
 % W(Yi)=Wstart;          % Barrier width (m)
-W(Yi) = randi([We-10,We],[1,ys]);
+W(Yi) = randi([We,We+100],[1,ys]);
 xbb(Yi)=xsl(Yi)+W(Yi); % X backbarrier
 H(Yi) =He;             % barrier height
 
@@ -117,7 +117,8 @@ for i=1:ts
         % Compute local geometries from the saved arrays
         A=Dsf/(xsl(j)-xtoe(j)); % Shroeface Slope
         W(j)=xbb(j)-xsl(j);    % Barrier Width
-        Db= Dsf + Z - xbb(j)*B(j); % This is set from the original domain - could use some work
+        Db= min(Dsf + Z - xbb(j)*B(j),2); 
+%         Db= Dsf + Z - xbb(j)*B(j); % This is set from the original domain - could use some work
         % Compute Deficit volume Vd, overwash flux Qow, and shoreface flux Qsf
         %Deficit Volume
         Vd_H=(He-H(j))*W(j);
@@ -153,37 +154,37 @@ for i=1:ts
         % Do changes- look for failure
         H(j)=H(j)+Hdot*dt;
         if H(j)<0;
-            tdrown_H=ti(i);
-            break;
+            tdrown_H(i,j)=ti(i);
+           % break;
         end
         xbb(j)=xbb(j)+xbdot*dt;
         xsl(j)=xsl(j)+xsdot*dt;
         xtoe(j)=xtoe(j)+xtdot*dt;
         if xbb(j)-xsl(j)<0;
-            tdrown_W(j)=ti(i);
-            break
+            tdrown_W(i,j)=ti(i);
+           % break
         end
     end
     
     %% ALONG-SHORE %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     
-    % compute de fluxes - fluxes across rt cell border
-    for j=1:(ys-1)
-        F(j) = (Ka * dt) * (xsl(j+1) - xsl(j))/dy;
-        %             F(j)=Ka/(2*(H(j)+H(j-1))/2+Dsf)*(xsl(j)-xsl(j-1))*dt*3650;
-    end
-    F(ys) = (Ka * dt) * (xsl(1) - xsl(ys))/dy;
-    
-    % change the shoreline
-    for j=2:(ys)
-        heff = H(j) + Dsf;
-        dsl = (F(j)-F(j-1))/dy/heff; % note positive sl change = erosion
-        xsl(j) = xsl(j) + dsl;
-    end
-    heff = H(1) + Dsf;
-    dsl = (F(1)-F(ys))/dy/heff;
-    xsl(1) = xsl(1) + dsl;
-    
+%     % compute de fluxes - fluxes across rt cell border
+%     for j=1:(ys-1)
+%         F(j) = (Ka * dt) * (xsl(j+1) - xsl(j))/dy;
+%         %             F(j)=Ka/(2*(H(j)+H(j-1))/2+Dsf)*(xsl(j)-xsl(j-1))*dt*3650;
+%     end
+%     F(ys) = (Ka * dt) * (xsl(1) - xsl(ys))/dy;
+%     
+%     % change the shoreline
+%     for j=2:(ys)
+%         heff = H(j) + Dsf;
+%         dsl = (F(j)-F(j-1))/dy/heff; % note positive sl change = erosion
+%         xsl(j) = xsl(j) + dsl;
+%     end
+%     heff = H(1) + Dsf;
+%     dsl = (F(1)-F(ys))/dy/heff;
+%     xsl(1) = xsl(1) + dsl;
+%     
     %% Variable storage ?
     if (mod(i,savenum)- 1 == 0)
         tsi = (i-1)/savenum +1;

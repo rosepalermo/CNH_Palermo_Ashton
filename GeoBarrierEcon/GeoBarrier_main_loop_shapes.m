@@ -1,21 +1,50 @@
 function GeoBarrier_main_loop_shapes(m)
+%
+% if m == 1
+%     Gen_BarrierIC %set barrier inital conditions (include those above)
+%     %BarrierIC_LBI %cartoon of Long Beach Island. This is trash. Need the
+%     %              %real data
+% elseif m == 2
+%     BarrierIC_small_W_in_middle
+%
+% elseif m == 3
+%     BarrierIC_large_W_in_middle
+%
+% elseif m == 4
+%     BarrierIC_small_W_1st_half
+%
+% elseif m== 5
+%     BarrierIC_small_W_2nd_half
+%
+% elseif m == 6
+%     BarrierIC_bump_middle_sl_bb
+%
+% elseif m == 7
+%     BarrierIC_bendback_middle_sl
+%
+% % elseif m == 8
+% %     BarrierIC_randW
+% end
+
+
+
 %% Barrier geometric model with coupled Alongshore. %%%%%%%%%%%%%%%
 % Jorge Lorenzo Trueba adopted by Andrew Ashton starting 2-2015
 % adopted by Rose Palermo starting 2-2017
 % close all;clear all;
 
 % inputs
-GeoBarrier_inputs
+GeoBarrier_Inputs
 Time_inputs
-% Community_inputs
 
-save_on = true;
 
-if exist('ncom')
-    community_on = true;
-else
-    community_on = false;
-end
+xsonly = false;
+save_on = false;
+developed_on = false; % this has to be true for either commercial or residential to matter
+commercial = true;
+residential = false;
+community_on = true;
+
 
 %% TIME LOOP %%%%%%%%%%%%%%%%%%%%
 
@@ -23,12 +52,6 @@ end
 Z=0;             % trying z= 0 which is the sea level
 
 %     %%%% Set the Domain Variables for the barrier
-%     B=ones(1,ys) * Bslope; % Basement Slope, can be different
-%     xtoe(Yi)=0;            % X toe
-%     xsl(Yi)=Dsf/Ae;        % X shoreline
-%     W(Yi)=Wstart;          % Barrier width (m)
-%     xbb(Yi)=xsl(Yi)+W(Yi); % X backbarrier
-%     H(Yi) =He;             % barrier height
 
 if m == 1
     Gen_BarrierIC %set barrier inital conditions (include those above)
@@ -36,25 +59,32 @@ if m == 1
     %              %real data
 elseif m == 2
     BarrierIC_small_W_in_middle
-    
+
 elseif m == 3
     BarrierIC_large_W_in_middle
-    
+
 elseif m == 4
     BarrierIC_small_W_1st_half
-    
+
 elseif m== 5
     BarrierIC_small_W_2nd_half
-    
+
 elseif m == 6
     BarrierIC_bump_middle_sl_bb
-    
+
 elseif m == 7
-    BarrierIC_bump_middle_sl
-    
-elseif m == 8
     BarrierIC_bendback_middle_sl
+
+% elseif m == 8
+%     BarrierIC_randW
 end
+
+
+% set community variables
+if community_on
+Community_inputs
+end
+
 
 if community_on
     %%%% Set community locations
@@ -70,6 +100,7 @@ xsl_save = zeros(tsavetimes, ys);
 Xb_save = zeros(tsavetimes, ys);
 H_save= zeros(tsavetimes, ys);
 xsl_saveall = zeros(ts,length(Yi));
+xbb_saveall = zeros(ts,length(Yi));
 QowH_saveall = zeros(ts,length(Yi));
 QowB_saveall = zeros(ts,length(Yi));
 Qow_saveall = zeros(ts,length(Yi));
@@ -80,11 +111,11 @@ jplot = floor(length(Yi)./2); % Which profile youre plotting, the middle of the 
 
 
 
-figure()
+h = figure();
 for i=1:ts
     
     % SL curve
-    zdot = sl_a+2*sl_b*t(i); %Base-level rise rate (m/year)
+    zdot = sl_a+sl_b*t(i); %Base-level rise rate (m/year)
     Z = Z+zdot*dt;
     
     % Re/Set run variables
@@ -123,6 +154,21 @@ for i=1:ts
         
         %limit ow for residential and commercial communities
         
+        if developed_on
+            if commercial
+                if buff<=j && j<=Yn+buff
+                    Qow_B = 0.1*Qow_B;
+                    Qow_H = 0.1*Qow_H;
+                end
+            elseif residential
+                if buff<=j && j<=Yn+buff
+                    Qow_B = 0.6*Qow_B;
+                    Qow_H = 0.6*Qow_H;
+                end
+            end
+        end
+        
+        
         if community_on
             for c = 1:ncom
                 if com(c).jj(1)<=j && j<=com(c).jj(end)
@@ -136,7 +182,6 @@ for i=1:ts
         QowH_saveall(i,j) = Qow_H;
         QowB_saveall(i,j) = Qow_B;
         Qow_saveall(i,j) = Qow;
-        W_saveall(i,j) = W;
         
         
         
@@ -156,73 +201,80 @@ for i=1:ts
         H(j)=H(j)+Hdot*dt;
         if H(j)<0
             tdrown_H=ti(i);
-            break;
         end
+        
         xbb(j)=xbb(j)+xbdot*dt;
         xsl(j)=xsl(j)+xsdot*dt;
         xtoe(j)=xtoe(j)+xtdot*dt;
         if xbb(j)-xsl(j)<0
             tdrown_W=ti(i);
-            break;
         end
+        
+        xbb_saveall(i,j) = xbb(j);
+        
     end
     
     %% ALONG-SHORE %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     
-    % compute de fluxes - fluxes across rt cell border
-    for j=1:(ys-1)
-        F(j) = (Ka * dt) * (xsl(j+1) - xsl(j))/dy;
-        %             F(j)=Ka/(2*(H(j)+H(j-1))/2+Dsf)*(xsl(j)-xsl(j-1))*dt*3650;
-    end
-    F(ys) = (Ka * dt) * (xsl(1) - xsl(ys))/dy;
-    Qast_saveall(i,:) = F;
-    
-    % change the shoreline
-    for j=2:(ys)
-        heff = H(j) + Dsf;
-        dsl = (F(j)-F(j-1))/dy/heff; % note positive sl change = erosion
-        xsl(j) = xsl(j) + dsl;
-    end
-    
-    heff = H(1) + Dsf;
-    dsl = (F(1)-F(ys))/dy/heff;
-    xsl(1) = xsl(1) + dsl;
-    
-    if community_on
-        for c = 1:ncom
-            com(c).W(i,:) = (com(c).location - xsl(com(c).jj)); % beach width
-            com(c).Wav(i) = mean(com(c).W(i,:),2); %average width BEFORE NOURISHMENT
+    if ~xsonly
+        % compute de fluxes - fluxes across rt cell border
+        for j=1:(ys-1)
+            F(j) = (Ka * dt) * (xsl(j+1) - xsl(j))/dy;
+            %             F(j)=Ka/(2*(H(j)+H(j-1))/2+Dsf)*(xsl(j)-xsl(j-1))*dt*3650;
         end
-    end
-    
-    %         % save all of the shorelines because it will evaluate the retreat rate
-    %         % at each year
-    xsl_saveall(i,:) = xsl;
-    
-    %amount of of shoreline retreat from this year to previous year
-    if community_on
-        if i>100
+        F(ys) = (Ka * dt) * (xsl(1) - xsl(ys))/dy;
+        Qast_saveall(i,:) = F;
+        
+        % change the shoreline
+        for j=2:(ys)
+            heff = H(j) + Dsf;
+            dsl = (F(j)-F(j-1))/dy/heff; % note positive sl change = erosion
+            xsl(j) = xsl(j) + dsl;
+        end
+        
+        heff = H(1) + Dsf;
+        dsl = (F(1)-F(ys))/dy/heff;
+        xsl(1) = xsl(1) + dsl;
+        
+        if community_on
             for c = 1:ncom
-                com(c).slr = (mean(xsl_saveall(i,com(c).jj))-mean(xsl_saveall(i-100,com(c).jj)))/100;
+                com(c).W(i,:) = (com(c).location - xsl(com(c).jj)); % beach width
+                com(c).Wav(i) = mean(com(c).W(i,:),2); %average width BEFORE NOURISHMENT
             end
         end
-    end
-    
-    if community_on
-        if i<100 % in the first year we'll just say no change
-            for c = 1:ncom
-                com(c).slr = 0;
+        
+        
+        
+        %amount of of shoreline retreat from this year to previous year
+        if community_on
+            if i>100
+                for c = 1:ncom
+                    com(c).slr = (mean(xsl_saveall(i,com(c).jj))-mean(xsl_saveall(i-100,com(c).jj)))/100;
+                end
             end
         end
+        
+        if community_on
+            if i<100 % in the first year we'll just say no change
+                for c = 1:ncom
+                    com(c).slr = 0;
+                end
+            end
+        end
+        
+        Yvnn= [0,0,Dsf];
+        if community_on
+            for c = 1:ncom
+                com(c).Xvnn = [mean(xsl(com(c).jj)),mean(xsl(com(c).jj))-com(c).Wn,mean(xtoe(com(c).jj))];
+                com(c).Vnn = polyarea(com(c).Xvnn,Yvnn)+com(c).Wn*mean(H(com(c).jj));
+            end
+        end
+        
+    end
+    if xsonly
+        Qast_saveall(i,:) = 0;
     end
     
-    Yvnn= [0,0,Dsf];
-    if community_on
-        for c = 1:ncom
-            com(c).Xvnn = [mean(xsl(com(c).jj)),mean(xsl(com(c).jj))-com(c).Wn,mean(xtoe(com(c).jj))];
-            com(c).Vnn = polyarea(com(c).Xvnn,Yvnn)+com(c).Wn*mean(H(com(c).jj));
-        end
-    end
     
     %% economics
     if community_on
@@ -259,6 +311,9 @@ for i=1:ts
             end
         end
     end
+    
+    %% save variables now that all changes have been made
+    W_saveall(i,:) = xbb-xsl;
     
     %% Variable storage ?
     if (mod(i,savenum)- 1 == 0)
@@ -404,17 +459,39 @@ xlabel('Alongshore position (km)')
 ylabel('shoreline change rate over whole simulation')
 
 
+
+QowB_saveall = QowB_saveall(:,(1+buff:length(Y)-buff));
+QowH_saveall = QowH_saveall(:,(1+buff:length(Y)-buff));
+Qow_saveall = Qow_saveall(:,(1+buff:length(Y)-buff));
+Qsf_saveall = Qsf_saveall(:,(1+buff:length(Y)-buff));
+Qast_saveall = Qast_saveall(:,(1+buff:length(Y)-buff));
+W_saveall = W_saveall(:,(1+buff:length(Y)-buff));
+xsl_saveall = xsl_saveall(:,(1+buff:length(Y)-buff));
 if save_on
-    QowB_saveall = QowB_saveall(:,(buff:length(Y)-buff));
-    QowH_saveall = QowH_saveall(:,(buff:length(Y)-buff));
-    Qow_saveall = Qow_saveall(:,(buff:length(Y)-buff));
-    Qsf_saveall = Qsf_saveall(:,(buff:length(Y)-buff));
-    Qast_saveall = Qast_saveall(:,(buff:length(Y)-buff));
-    W_saveall = W_saveall(:,(buff:length(Y)-buff));
-    filename = sprintf('natural_%s_OW%d_K%d_SL_%0.3f.mat',shape,Qow_max,Ksf,sl_a);
-    % filename = sprintf('developed_gen_OW%d_K%d_SL_%d',Qow_max,Ksf,sl_a);
-    % filename = sprintf('populated_gen_OW%d_K%d_SL_%d',Qow_max,Ksf,sl_a);
- 
-    save(filename,'QowB_saveall','QowH_saveall','Qow_saveall','Qsf_saveall','Qast_saveall','W_saveall','t','Y','buff','sl_a','sl_b','Qow_max','Ksf','shape','jplot','community_on','save_on')
+    if xsonly
+        filename = sprintf('/Users/rosepalermo/Documents/Research/Alongshore coupled/GeoBarrierModelOutput/xsonly_%s_OW%d_K%d_SL_%d_diff%d',shape,Qow_max,Ksf,sl_a*1000,astfac*10);
+    elseif developed_on
+        if commercial
+            filename = sprintf('/Users/rosepalermo/Documents/Research/Alongshore coupled/GeoBarrierModelOutput/developedc_%s_OW%d_K%d_SL_%d_diff%d',shape,Qow_max,Ksf,sl_a*1000,astfac*10);
+        elseif residential
+            filename = sprintf('/Users/rosepalermo/Documents/Research/Alongshore coupled/GeoBarrierModelOutput/developedr_%s_OW%d_K%d_SL_%d_diff%d',shape,Qow_max,Ksf,sl_a*1000,astfac*10);
+        end
+    elseif community_on
+        filename = sprintf('/Users/rosepalermo/Documents/Research/Alongshore coupled/GeoBarrierModelOutput/populated_%s_OW%d_K%d_SL_%d_diff%d',shape,Qow_max,Ksf,sl_a*1000,astfac*10);
+    else
+        filename = sprintf('/Users/rosepalermo/Documents/Research/Alongshore coupled/GeoBarrierModelOutput/natural_%s_OW%d_K%d_SL_%d_diff%d',shape,Qow_max,Ksf,sl_a*1000,astfac*10);
+    end
+    
+    if community_on
+        fig = '.fig'; figname = strcat(filename,fig);
+        saveas(h,figname)
+        save(filename,'QowB_saveall','QowH_saveall','Qow_saveall','Qsf_saveall','Qast_saveall','W_saveall','t','Y','buff','sl_a','sl_b','Qow_max','Ksf','shape','jplot','community_on','save_on','astfac','xbb_saveall','xsl_saveall','c')
+    else
+        fig = '.fig'; figname = strcat(filename,fig);
+        saveas(h,figname)
+        save(filename,'QowB_saveall','QowH_saveall','Qow_saveall','Qsf_saveall','Qast_saveall','W_saveall','t','Y','buff','sl_a','sl_b','Qow_max','Ksf','shape','jplot','community_on','save_on','astfac','xbb_saveall','xsl_saveall')
+    end
 end
+
+plot_GB
 end

@@ -1,13 +1,13 @@
 %%%% Community variables to explicitly define for each
 ncom = 2;                      % number of communities
-com(1).jj = buffer+20:buffer+30;             % 1 represents community 1
-com(2).jj = buffer+70:buffer+90;             % 2 represents community 2
+com(1).jj = buff+20:buff+30;             % 1 represents community 1
+com(2).jj = buff+70:buff+90;             % 2 represents community 2
 com(1).w0 = 49;                % 1 initial beach width *NRM paper (49 meters)
 com(2).w0 = 49;                % 2 initial beach width *NRM paper
-com(1).W0 = 450;               % 1 initial barrier width
-com(2).W0 = 1100;               % 2 initial barrier width
+com(1).W0 = mean(W(com(1).jj(1):com(1).jj(end)));% 1 initial barrier width
+com(2).W0 = mean(W(com(2).jj(1):com(2).jj(end)));; % 2 initial barrier width
 com(1).Kow = 0.6;              % residential, 40% overwash lost (Rogers et al 2015)
-com(2).Kow = 0.6;              % residential too
+com(2).Kow = 0.1;              % residential too
                                % commercial, 90% overwash lost (Rogers et al 2015)
 com(1).propertysize = 50;          % width of properties (cross-shore)
 com(2).propertysize = 50;          % width of properties (cross-shore)
