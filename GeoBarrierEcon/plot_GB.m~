@@ -160,8 +160,7 @@ end
 
 %plot total amount of shoreline change across barrier
 h = figure()
-sc_total = xsl_saveall(end,:) - xsl_saveall(1,:);
-plot(sc_total,Y(1+buff:length(Y)-buff)/1000)
+
 
 % % plot animation
 %
