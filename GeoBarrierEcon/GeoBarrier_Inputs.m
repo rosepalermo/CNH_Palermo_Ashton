@@ -10,10 +10,28 @@ dy = 100; % Spacing alongshore (m)
 buff = 1;
 
 % SL rise rate = a + bt
-sl_a = 0.003; %m/yr
+sl_a = 0.004; %m/yr
 zzs = 0.001:0.001:0.003;
 sl_b = 0; % If b=0 constant sea-level rise
-%RCP2.6 = 5.8688e-06; RCP
+
+if exist('sl')
+    if sl == 1 % RCP2.6
+        sl_b = 0.000065;
+        RCP = 26;
+    elseif sl == 2 % RCP4.5
+        sl_b = 0.0000288;
+        RCP = 45;
+    elseif sl == 3 % RCP6.0
+        sl_b = 0.0000509;
+        RCP = 60;
+    elseif sl ==4 % RCP8.5
+        sl_b = 0.0000960;
+        RCP = 85;
+    end
+end
+%RCP2.6 = a = 0.0041748~0.004, b = 0.000065; RCP4.5 = a = 0.0040879~0.0004,
+%b = 0.0000288; RCP6.0 = a = 0.0039862~0.004, b = 0.0000509; RCP85 = a =
+%0.0042945~0.004, b = 0.0000960
 
 % Barrier Variables - here assume these are constant across barrier, these
 % could also be varied for some cases perhaps

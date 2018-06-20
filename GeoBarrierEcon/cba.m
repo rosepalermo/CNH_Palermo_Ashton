@@ -1,4 +1,4 @@
-function [nNB,mNB]=cba(nyears,nproperties,L,dy,alpha,b,slr,Wn,Wav,Wmin,Wo,p,f,c,Hav,Dsf,ir)
+function [nNB,mNB]=cba(nyears,npropertiesll,L,dy,alpha,b,slr,Wn,Wav,Wmin,Wo,p,f,cost,Hav,Dsf,ir,dist2oc0,dist2oc,dist2bb0,dist2bb,kappa,kkappa,npropxs,subsidies)
 % this function calculates the net benefit of nourishment and of managed
 % retreat based on the work we did for 2017 AGU
 
@@ -20,17 +20,22 @@ function [nNB,mNB]=cba(nyears,nproperties,L,dy,alpha,b,slr,Wn,Wav,Wmin,Wo,p,f,c,
 % Hav - average height of barrier to nourish
 % Dsf - depth of shoreface
 
+
 %% nourishment
 
 % benefit of nourishment over nyears
-
 nBeta = nan(1,nyears+1);
 idx = 0:nyears;
-nBeta(1,idx+1) = nproperties*L/dy * alpha * (((Wn + Wav - idx*slr)./ Wo).^b - ((Wav-idx*slr) ./ Wo).^b);
+
+% this is alpha * nproperties * w^b
+nBeta(1,idx+1) = nansum(npropxs)* alpha * (((Wn + Wav - idx*slr)./ Wo).^b - ((Wav-idx*slr) ./ Wo).^b);
+
+% nBeta(1,idx+1) = npropertiesll*L/dy * alpha * (((Wn + Wav - idx*slr)./ Wo).^b - ((Wav-idx*slr) ./ Wo).^b) .* (nansum(nansum((dist2oc).^kappa))) .* nansum(nansum(((dist2bb).^kkappa)));
+
 nBenefit = sum(nBeta./((1+ir).^idx));
 
 % cost of nourishment
-nCost = f + c/2 * Wn * L * Dsf + c * Wn * Hav * L;
+nCost = (f + cost/2 * Wn * L * Dsf + cost * Wn * Hav * L )*(1-subsidies);
 
 % net benefit of nourishment
 nNB = nBenefit - nCost;
@@ -42,10 +47,12 @@ mBeta = nan(1,nyears+1);
 mCost = nan;
 idx = 0:nyears;
 if Wmin <=1
-    mBeta(1,idx+1) = nproperties*L/dy * alpha * (((p + Wav)./ Wo).^b - ((Wav-idx*slr) ./ Wo).^b);
-    
+    % this is alpha * nproperties * w^b
+    mBeta(1,idx+1) = nansum(npropxs)* alpha * ((((p + Wav)./ Wo).^b) - (((Wav-idx*slr) ./ Wo).^b));
+%     mBeta(1,idx+1) = npropertiesll*L/dy * alpha * ((((p + Wav)./ Wo).^b) - (((Wav-idx*slr) ./ Wo).^b)) .* (nansum(nansum((dist2oc).^kappa))) .* nansum(nansum(((dist2bb).^kkappa)));
+
     % cost of managed retreat
-    mCost = nproperties*L/dy * alpha;
+    mCost = npropertiesll*L/dy * alpha;
 end
 % net benefit of nourishment
 mBenefit = sum(mBeta./((1+ir).^idx));
