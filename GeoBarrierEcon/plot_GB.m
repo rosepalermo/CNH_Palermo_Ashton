@@ -54,7 +54,9 @@ pcolor(t,Y(1+buff:length(Y)-buff)/1000,transpose(QowH_saveall))
 colormap parula
 colorbar
 shading flat
-set(gca,'clim',[0,mean(median(QowH_saveall))+2*mean(std(QowH_saveall))])
+if mean(median(QowH_saveall))> 0 
+    set(gca,'clim',[0,mean(median(QowH_saveall))+2*mean(std(QowH_saveall))])
+end
 title('OW_H')
 
 
@@ -64,7 +66,9 @@ pcolor(t,Y(1+buff:length(Y)-buff)/1000,transpose(QowB_saveall))
 colormap parula
 colorbar
 shading flat
+if mean(median(QowB_saveall)) > 0 
 set(gca,'clim',[0,mean(median(QowB_saveall))+2*mean(std(QowB_saveall))])
+end
 title('OW_B')
 
 % plot OW_
@@ -74,8 +78,9 @@ colormap parula
 colorbar
 shading flat
 title('OW')
+if mean(median(Qow_saveall)) > 0
 set(gca,'clim',[0,mean(median(Qow_saveall))+2*mean(std(Qow_saveall))])
-
+end
 
 % plot Qsf
 ax4 = subplot(2,4,4);

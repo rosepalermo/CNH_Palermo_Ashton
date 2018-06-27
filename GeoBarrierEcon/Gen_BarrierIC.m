@@ -20,7 +20,7 @@ Y = 0:dy:(Yn+(2*buff))*dy;
 B=ones(1,ys) * Bslope; % Basement Slope, can be different
     xtoe(Yi)=0;            % X toe
     xsl(Yi)=Dsf/Ae;        % X shoreline
-    W(Yi)=Wstart-100;          % Barrier width (m)
+    W(Yi)=We-150;          % Barrier width (m)
     xbb(Yi)=xsl(Yi)+W(Yi); % X backbarrier
     H(Yi) =He;             % barrier height
     

@@ -28,7 +28,7 @@ nBeta = nan(1,nyears+1);
 idx = 0:nyears;
 
 % this is alpha * nproperties * w^b
-nBeta(1,idx+1) = nansum(npropxs)* alpha * (((Wn + Wav - idx*slr)./ Wo).^b - ((Wav-idx*slr) ./ Wo).^b);
+nBeta(1,idx+1) = npropertiesll * nansum(npropxs)* alpha * ((((Wn + Wav - idx*slr)./ Wo).^b) - (((Wav-idx*slr) ./ Wo).^b));
 
 % nBeta(1,idx+1) = npropertiesll*L/dy * alpha * (((Wn + Wav - idx*slr)./ Wo).^b - ((Wav-idx*slr) ./ Wo).^b) .* (nansum(nansum((dist2oc).^kappa))) .* nansum(nansum(((dist2bb).^kkappa)));
 
@@ -46,14 +46,21 @@ nNB = nBenefit - nCost;
 mBeta = nan(1,nyears+1);
 mCost = nan;
 idx = 0:nyears;
-if Wmin <=1
+% if Wmin <=1
+    
+    % marginal benefit? benefit the houses left recieve from the width of
+    % the beach
+    mBeta(1,idx+1) = (npropertiesll * nansum(npropxs) - npropertiesll*L/dy)* alpha * ((((p + Wav-idx*slr)./ Wo).^b) - (((Wav-idx*slr) ./ Wo).^b));
+    
     % this is alpha * nproperties * w^b
-    mBeta(1,idx+1) = nansum(npropxs)* alpha * ((((p + Wav)./ Wo).^b) - (((Wav-idx*slr) ./ Wo).^b));
-%     mBeta(1,idx+1) = npropertiesll*L/dy * alpha * ((((p + Wav)./ Wo).^b) - (((Wav-idx*slr) ./ Wo).^b)) .* (nansum(nansum((dist2oc).^kappa))) .* nansum(nansum(((dist2bb).^kkappa)));
-
+    %     mBeta(1,idx+1) = npropertiesll * nansum(npropxs)* alpha * ((((p + Wav)./ Wo).^b) - (((Wav-idx*slr) ./ Wo).^b));
+    %     mBeta(1,idx+1) = npropertiesll*L/dy * alpha * ((((p + Wav)./ Wo).^b) - (((Wav-idx*slr) ./ Wo).^b)) .* (nansum(nansum((dist2oc).^kappa))) .* nansum(nansum(((dist2bb).^kkappa)));
+    
     % cost of managed retreat
-    mCost = npropertiesll*L/dy * alpha;
-end
+    %     mCost = npropertiesll*L/dy * alpha; % this cost would be the
+    %     community buying out the properties
+    mCost = 0; % 0 assumes no buyout
+% end
 % net benefit of nourishment
 mBenefit = sum(mBeta./((1+ir).^idx));
 mNB = mBenefit - mCost;

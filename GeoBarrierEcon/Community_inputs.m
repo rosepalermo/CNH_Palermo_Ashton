@@ -52,6 +52,7 @@ for c = 1:ncom
     com(c).Vnn = 0;
     com(c).tnourished = zeros(ts,1);
     com(c).tmanret = zeros(ts,1);
+    com(c).tcommunityfail = zeros(ts,1);
     com(c).nnourished = zeros(1,1);
     com(c).nmanret = nan(1,1);
     com(c).inourished = zeros(ts,1);
