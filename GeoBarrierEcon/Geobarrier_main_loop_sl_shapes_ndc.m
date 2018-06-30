@@ -1,4 +1,4 @@
-function     GeoBarrier_main_loop_sl_shapes_ndc(m,sl,ndc)
+function     GeoBarrier_main_loop_sl_shapes_ndc(m,sl,ndc,AA)
 
 %% Barrier geometric model with coupled Alongshore. %%%%%%%%%%%%%%%
 % Jorge Lorenzo Trueba adopted by Andrew Ashton starting 2-2015
@@ -520,25 +520,25 @@ for i=1:ts
     if save_on
         if xsonly
             foldername = "/Users/rosepalermo/Documents/Research/Alongshore coupled/GeoBarrierModelOutput/xsonly/";
-            filename = sprintf('XS_%s_OW%d_K%d_SLa%d_diff%d',shape,Qow_max,Ksf,sl_a*1000,astfac*10);
+            filename = sprintf('XS_%s_OW%d_K%d_SLa%d_diff%d',shape,Qow_max,Ksf,sl_a*1000,astfac*1000);
         elseif developed_on
             if commercial
                 foldername = "/Users/rosepalermo/Documents/Research/Alongshore coupled/GeoBarrierModelOutput/developedc/";
-                filename = sprintf('DC_%s_OW%d_K%d_SLa%d_diff%d',shape,Qow_max,Ksf,sl_a*1000,astfac*10);
+                filename = sprintf('DC_%s_OW%d_K%d_SLa%d_diff%d',shape,Qow_max,Ksf,sl_a*1000,astfac*100);
             elseif residential
                 foldername = "/Users/rosepalermo/Documents/Research/Alongshore coupled/GeoBarrierModelOutput/developedr/";
-                filename = sprintf('DR_%s_OW%d_K%d_SLa%d_diff%d',shape,Qow_max,Ksf,sl_a*1000,astfac*10);
+                filename = sprintf('DR_%s_OW%d_K%d_SLa%d_diff%d',shape,Qow_max,Ksf,sl_a*1000,astfac*100);
             elseif comres_on
                 foldername = "/Users/rosepalermo/Documents/Research/Alongshore coupled/GeoBarrierModelOutput/developedcr/";
-                filename = sprintf('DCR_%s_OW%d_K%d_SLa%d_diff%d',shape,Qow_max,Ksf,sl_a*1000,astfac*10);
+                filename = sprintf('DCR_%s_OW%d_K%d_SLa%d_diff%d',shape,Qow_max,Ksf,sl_a*1000,astfac*100);
                 
             end
         elseif community_on
             foldername = "/Users/rosepalermo/Documents/Research/Alongshore coupled/GeoBarrierModelOutput/populated/";
-            filename = sprintf('COM_%s_OW%d_K%d_SLa%d_diff%d',shape,Qow_max,Ksf,sl_a*1000,astfac*10);
+            filename = sprintf('COM_%s_OW%d_K%d_SLa%d_diff%d',shape,Qow_max,Ksf,sl_a*1000,astfac*100);
         else
             foldername = "/Users/rosepalermo/Documents/Research/Alongshore coupled/GeoBarrierModelOutput/natural/";
-            filename = sprintf('NAT_%s_OW%d_K%d_SLa%d_diff%d',shape,Qow_max,Ksf,sl_a*1000,astfac*10);
+            filename = sprintf('NAT_%s_OW%d_K%d_SLa%d_diff%d',shape,Qow_max,Ksf,sl_a*1000,astfac*100);
         end
         savefilename = strcat(foldername,filename);
         

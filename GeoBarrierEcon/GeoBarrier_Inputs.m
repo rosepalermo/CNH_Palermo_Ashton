@@ -44,7 +44,27 @@ Wstart = We;
 % Alongshore input physical parameters
 To= 8; % Wave period (seconds)
 Ho= 1; % Wave heigth (m) (sic Jorge)
-astfac = .5; % fractional diffusivity (i.e. angular wave distribution reduces diffusivity by what)
+if AA == 1
+    astfac = 0.01;
+elseif AA == 2
+    astfac = 0.05;
+elseif AA == 3
+    astfac = 0.1;
+elseif AA == 4
+    astfac = 0.2;
+elseif AA == 5
+    astfac = 0.3;
+elseif AA == 6
+    astfac = 0.4;
+elseif AA == 7
+    astfac = 0.5;
+elseif AA == 8
+    astfac = 0.6;
+elseif AA == 9
+    astfac = 0.7;
+end
+
+% astfac = .01; % fractional diffusivity (i.e. angular wave distribution reduces diffusivity by what)
 % some alongshore coefficients
 K2=0.34/2*astfac; %m^(3/5)s^(-6/5)
 Ka=K2*Ho^(12/5)*To^(1/5) * 365*86400; %convert to m^3/year
