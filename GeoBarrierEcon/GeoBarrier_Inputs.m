@@ -23,6 +23,10 @@ if exist('sl')
         sl_a = 0.005;
     elseif sl == 4
         sl_a = 0.1;
+    elseif sl == 5
+        sl_a = 0.01;
+    elseif sl==6
+        sl_a = 0.05;
     end
 
 end
@@ -33,13 +37,27 @@ Dsf = 10; % Shoreface Toe depth (meters). Typically in the range 10-20m
 We = 300; % Equilibrium width (meters)
 He = 2;   % Equilibrium heigth (meters)
 Ae = 0.015;    % Equilibrium shoreface slope3
-Qow_max = 50;% Maximum overwash flux (m^2/year) Emily Carruthers estimates: 2.4 - 8.5; ?Masetti 2008: 24-48
 qows = 0:10:80;
+% Qow_max = 50;% Maximum overwash flux (m^2/year) Emily Carruthers estimates: 2.4 - 8.5; ?Masetti 2008: 24-48
 Vd_max = 100; % Maximum deficit volume (m^2)
 Ksf = 200;  % Shoreface Flux constant (m^2/year)
 kks = 0:1000:10000; 
 Bslope = 0.001; %basement slope
 Wstart = We;    
+
+if QW == 1
+    Qow_max = 5;
+elseif QW == 2
+    Qow_max = 10;
+elseif QW == 3
+    Qow_max = 20;
+elseif QW == 4
+    Qow_max = 30;
+elseif QW == 5
+    Qow_max = 40;
+elseif QW == 6
+    Qow_max = 50;
+end
 
 % Alongshore input physical parameters
 To= 8; % Wave period (seconds)

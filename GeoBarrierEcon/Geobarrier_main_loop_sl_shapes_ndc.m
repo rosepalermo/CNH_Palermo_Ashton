@@ -1,4 +1,4 @@
-function     GeoBarrier_main_loop_sl_shapes_ndc(m,sl,ndc,AA)
+function     GeoBarrier_main_loop_sl_shapes_ndc(m,sl,ndc,AA,QW)
 
 %% Barrier geometric model with coupled Alongshore. %%%%%%%%%%%%%%%
 % Jorge Lorenzo Trueba adopted by Andrew Ashton starting 2-2015
@@ -12,6 +12,7 @@ Time_inputs
 
 xsonly = false;
 save_on = true;
+plot_on = false;
 community_on = false;
 if ndc == 1
     developed_on = false;
@@ -135,9 +136,10 @@ W_saveall = zeros(ts,length(Yi));
 jplot = floor(length(Yi)./2); % Which profile youre plotting, the middle of the barrier
 
 
-
-h = figure();
-h.Position = [0,0,1000,1000]
+if plot_on
+    h = figure();
+    h.Position = [0,0,1000,1000]
+end
 for i=1:ts
     
     % SL curve
@@ -202,192 +204,193 @@ for i=1:ts
                 end
             end
         end
-            
-            
-            if community_on
-                for c = 1:ncom
-                    if com(c).jj(1)<=j && j<=com(c).jj(end)
-                        Qow_B = com(c).Kow*Qow_B;
-                        Qow_H = com(c).Kow*Qow_H;
-                    end
+        
+        
+        if community_on
+            for c = 1:ncom
+                if com(c).jj(1)<=j && j<=com(c).jj(end)
+                    Qow_B = com(c).Kow*Qow_B;
+                    Qow_H = com(c).Kow*Qow_H;
                 end
             end
-            
-            Qow=Qow_H+Qow_B;
-            QowH_saveall(i,j) = Qow_H;
-            QowB_saveall(i,j) = Qow_B;
-            Qow_saveall(i,j) = Qow;
-            
-            
-            
-            %shoreface flux
-            Qsf=Ksf*(Ae-A);
-            
-            Qsf_saveall(i,j) = Qsf;
-            
-            % Barrier evolution ----
-            % compute changes
-            Hdot=Qow_H/W-zdot;
-            xbdot=Qow_B/(H(j)+Db);
-            xsdot=2*Qow/(Dsf+2*H(j))-4*Qsf*(H(j)+Dsf)/(2*H(j)+Dsf)^2;
-            xtdot=2*Qsf*(1/(Dsf+2*H(j))+1/Dsf)+2*zdot/A;
-            
-            % Do changes- look for failure
-            H(j)=H(j)+Hdot*dt;
-            if H(j)<0
-                tdrown_H=ti(i);
-            end
-            
-            xbb(j)=xbb(j)+xbdot*dt;
-            xsl(j)=xsl(j)+xsdot*dt;
-            xtoe(j)=xtoe(j)+xtdot*dt;
-            if xbb(j)-xsl(j)<0
-                tdrown_W=ti(i);
-            end
-            
-            xbb_saveall(i,j) = xbb(j);
-            
+        end
+        
+        Qow=Qow_H+Qow_B;
+        QowH_saveall(i,j) = Qow_H;
+        QowB_saveall(i,j) = Qow_B;
+        Qow_saveall(i,j) = Qow;
+        
+        
+        
+        %shoreface flux
+        Qsf=Ksf*(Ae-A);
+        
+        Qsf_saveall(i,j) = Qsf;
+        
+        % Barrier evolution ----
+        % compute changes
+        Hdot=Qow_H/W-zdot;
+        xbdot=Qow_B/(H(j)+Db);
+        xsdot=2*Qow/(Dsf+2*H(j))-4*Qsf*(H(j)+Dsf)/(2*H(j)+Dsf)^2;
+        xtdot=2*Qsf*(1/(Dsf+2*H(j))+1/Dsf)+2*zdot/A;
+        
+        % Do changes- look for failure
+        H(j)=H(j)+Hdot*dt;
+        if H(j)<0
+            tdrown_H=ti(i);
+        end
+        
+        xbb(j)=xbb(j)+xbdot*dt;
+        xsl(j)=xsl(j)+xsdot*dt;
+        xtoe(j)=xtoe(j)+xtdot*dt;
+        if xbb(j)-xsl(j)<0
+            tdrown_W=ti(i);
+        end
+        
+        xbb_saveall(i,j) = xbb(j);
+        
     end
-        
-        %% ALONG-SHORE %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-        
-        if ~xsonly
-            % compute de fluxes - fluxes across rt cell border
-            for j=1:(ys-1)
-                F(j) = (Ka * dt) * (xsl(j+1) - xsl(j))/dy;
-                %             F(j)=Ka/(2*(H(j)+H(j-1))/2+Dsf)*(xsl(j)-xsl(j-1))*dt*3650;
-            end
-            F(ys) = (Ka * dt) * (xsl(1) - xsl(ys))/dy;
-            Qast_saveall(i,:) = F;
-            
-            % change the shoreline
-            for j=2:(ys)
-                heff = H(j) + Dsf;
-                dsl = (F(j)-F(j-1))/dy/heff; % note positive sl change = erosion
-                xsl(j) = xsl(j) + dsl;
-            end
-            
-            heff = H(1) + Dsf;
-            dsl = (F(1)-F(ys))/dy/heff;
-            xsl(1) = xsl(1) + dsl;
-            
-            if community_on
-                for c = 1:ncom
-                    com(c).W(i,:) = (com(c).yfirsthouse - xsl(com(c).jj)); % beach width
-                    com(c).Wav(i) = mean(com(c).W(i,:),2); %average width BEFORE NOURISHMENT
-                end
-                
-                %amount of of shoreline retreat from this year to previous year
-                if i>100
-                    for c = 1:ncom
-                        com(c).slr = (mean(xsl_saveall(i,com(c).jj))-mean(xsl_saveall(i-100,com(c).jj)))/100;
-                    end
-                    
-                elseif i<100 % in the first year we'll just say no change
-                    for c = 1:ncom
-                        com(c).slr = 0;
-                    end
-                end
-                
-                Yvnn= [0,0,Dsf];
-                for c = 1:ncom
-                    com(c).Xvnn = [mean(xsl(com(c).jj)),mean(xsl(com(c).jj))-com(c).Wn,mean(xtoe(com(c).jj))];
-                    com(c).Vnn = polyarea(com(c).Xvnn,Yvnn)+com(c).Wn*mean(H(com(c).jj));
-                end
-            end
-            
+    
+    %% ALONG-SHORE %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    
+    if ~xsonly
+        % compute de fluxes - fluxes across rt cell border
+        for j=1:(ys-1)
+            F(j) = (Ka * dt) * (xsl(j+1) - xsl(j))/dy;
+            %             F(j)=Ka/(2*(H(j)+H(j-1))/2+Dsf)*(xsl(j)-xsl(j-1))*dt*3650;
         end
-        if xsonly
-            Qast_saveall(i,:) = 0;
+        F(ys) = (Ka * dt) * (xsl(1) - xsl(ys))/dy;
+        Qast_saveall(i,:) = F;
+        
+        % change the shoreline
+        for j=2:(ys)
+            heff = H(j) + Dsf;
+            dsl = (F(j)-F(j-1))/dy/heff; % note positive sl change = erosion
+            xsl(j) = xsl(j) + dsl;
         end
         
+        heff = H(1) + Dsf;
+        dsl = (F(1)-F(ys))/dy/heff;
+        xsl(1) = xsl(1) + dsl;
         
-        %% economics
-        if community_on
-            
-            for c = 1:ncom
-                if sum(com(c).npropxs)>0
-                    %calculate distances to ocean and bay
-                    com(c).npropxs = floor((com(c).housingbb - com(c).yfirsthouse)/com(c).propertysize);
-                    com(c).dist2oc = zeros(length(com(c).jj),max((com(c).npropxs)));
-                    com(c).dist2bb = zeros(length(com(c).jj),max((com(c).npropxs)));
-                    for ll = 1:length(com(c).jj)
-                        % dist2oc0
-                        for l = 1:(max(com(c).npropxs))
-                            com(c).dist2oc(ll,l) = 16-l;
-                        end
-                        if l > (com(c).npropxs(ll)) % put nans in because use maximum for community
-                            com(c).dist2oc(end-l:l) = NaN;
-                        end
-                        
-                        %dist2bb0
-                        for l = 1:(max(com(c).npropxs))
-                            com(c).dist2bb(ll,end+1-l) = 16-l;
-                        end
-                        if l > (com(c).npropxs(ll)) % put nans in because use maximum for community
-                            com(c).dist2bb(1:end-l) = NaN;
-                        end
-                    end
-                    if size(com(c).dist2oc,2)<size(com(c).dist2oc0,2)
-                        com(c).dist2oc = cat(2,zeros(length(com(c).jj),(size(com(c).dist2oc0,2) - size(com(c).dist2oc,2))),com(c).dist2oc);
-                        com(c).dist2bb = cat(2,zeros(length(com(c).jj),(size(com(c).dist2bb0,2) - size(com(c).dist2bb,2))),com(c).dist2bb);
-                    end
-                    
-                    
-                    % run economic model to find net benefit
-                    [nNB,mNB]=cba(nyears,com(c).npropertiesll,com(c).L,dy,com(c).alpha,b,com(c).slr,com(c).Wn,com(c).Wav(i),min(com(c).W(i,:)),com(c).W(1,1),com(c).propertysize,f,cost,mean(H(com(c).jj)),Dsf,ir,com(c).dist2oc0,com(c).dist2oc,com(c).dist2bb0,com(c).dist2bb,kappa,kkappa,com(c).npropxs,subsidies);
-                    
-                    com(c).NB(i) = nNB;
-                    com(c).NBmr(i) =mNB;
-                else
-                    com(c).tcommunityfail(i) = i;
-                end
-            end
-        end
-        
-        
-        %% nourishing
         if community_on
             for c = 1:ncom
-                if sum(com(c).npropxs)>0
-                    if i > nyears*Tsteps
-                        %if width and NB > 0 --> nourish
-                        if ((min(com(c).W(i,:))>1) && (com(c).NB(i)>0)) && (sum(com(c).tnourished(i-nyears*Tsteps:i))<1)
-                            xsl(com(c).jj) = xsl(com(c).jj) - 2*com(c).Vnn/(2*mean(H(com(c).jj))+Dsf);
-                            com(c).tnourished(i) = 1;
-                            % if width < 0 & MR<N --> nourish
-                        elseif ((min(com(c).W(i,:))<=1) && (com(c).NBmr(i)<com(c).NB(i))) && (sum(com(c).tnourished(i-nyears*Tsteps:i))<1)
-                            xsl(com(c).jj) = xsl(com(c).jj) - 2*com(c).Vnn/(2*mean(H(com(c).jj))+Dsf);
-                            com(c).tnourished(i) = 1;
-                            %if width < 0 & MR>N --> retreat
-                        elseif (min(com(c).W(i,:))<=1) && ((com(c).NBmr(i)>com(c).NB(i))||sum(com(c).tnourished(i-nyears*Tsteps:i))>1)
-                            com(c).yfirsthouse = com(c).yfirsthouse + com(c).propertysize;
-                            com(c).tmanret(i) = 1;
-                            %recalculate width
-                            com(c).W(i,:) = (com(c).yfirsthouse - xsl(com(c).jj)); %beach width
-                            % if width > 0 & NB< 0 --> continue
-                        elseif (com(c).Wav(i)>1) && (com(c).NB(i)<0)
-                            xsl(com(c).jj) = xsl(com(c).jj);
-                        end
+                com(c).W(i,:) = (com(c).yfirsthouse - xsl(com(c).jj)); % beach width
+                com(c).Wav(i) = mean(com(c).W(i,:),2); %average width BEFORE NOURISHMENT
+            end
+            
+            %amount of of shoreline retreat from this year to previous year
+            if i>100
+                for c = 1:ncom
+                    com(c).slr = (mean(xsl_saveall(i,com(c).jj))-mean(xsl_saveall(i-100,com(c).jj)))/100;
+                end
+                
+            elseif i<100 % in the first year we'll just say no change
+                for c = 1:ncom
+                    com(c).slr = 0;
+                end
+            end
+            
+            Yvnn= [0,0,Dsf];
+            for c = 1:ncom
+                com(c).Xvnn = [mean(xsl(com(c).jj)),mean(xsl(com(c).jj))-com(c).Wn,mean(xtoe(com(c).jj))];
+                com(c).Vnn = polyarea(com(c).Xvnn,Yvnn)+com(c).Wn*mean(H(com(c).jj));
+            end
+        end
+        
+    end
+    if xsonly
+        Qast_saveall(i,:) = 0;
+    end
+    
+    
+    %% economics
+    if community_on
+        
+        for c = 1:ncom
+            if sum(com(c).npropxs)>0
+                %calculate distances to ocean and bay
+                com(c).npropxs = floor((com(c).housingbb - com(c).yfirsthouse)/com(c).propertysize);
+                com(c).dist2oc = zeros(length(com(c).jj),max((com(c).npropxs)));
+                com(c).dist2bb = zeros(length(com(c).jj),max((com(c).npropxs)));
+                for ll = 1:length(com(c).jj)
+                    % dist2oc0
+                    for l = 1:(max(com(c).npropxs))
+                        com(c).dist2oc(ll,l) = 16-l;
+                    end
+                    if l > (com(c).npropxs(ll)) % put nans in because use maximum for community
+                        com(c).dist2oc(end-l:l) = NaN;
+                    end
+                    
+                    %dist2bb0
+                    for l = 1:(max(com(c).npropxs))
+                        com(c).dist2bb(ll,end+1-l) = 16-l;
+                    end
+                    if l > (com(c).npropxs(ll)) % put nans in because use maximum for community
+                        com(c).dist2bb(1:end-l) = NaN;
+                    end
+                end
+                if size(com(c).dist2oc,2)<size(com(c).dist2oc0,2)
+                    com(c).dist2oc = cat(2,zeros(length(com(c).jj),(size(com(c).dist2oc0,2) - size(com(c).dist2oc,2))),com(c).dist2oc);
+                    com(c).dist2bb = cat(2,zeros(length(com(c).jj),(size(com(c).dist2bb0,2) - size(com(c).dist2bb,2))),com(c).dist2bb);
+                end
+                
+                
+                % run economic model to find net benefit
+                [nNB,mNB]=cba(nyears,com(c).npropertiesll,com(c).L,dy,com(c).alpha,b,com(c).slr,com(c).Wn,com(c).Wav(i),min(com(c).W(i,:)),com(c).W(1,1),com(c).propertysize,f,cost,mean(H(com(c).jj)),Dsf,ir,com(c).dist2oc0,com(c).dist2oc,com(c).dist2bb0,com(c).dist2bb,kappa,kkappa,com(c).npropxs,subsidies);
+                
+                com(c).NB(i) = nNB;
+                com(c).NBmr(i) =mNB;
+            else
+                com(c).tcommunityfail(i) = i;
+            end
+        end
+    end
+    
+    
+    %% nourishing
+    if community_on
+        for c = 1:ncom
+            if sum(com(c).npropxs)>0
+                if i > nyears*Tsteps
+                    %if width and NB > 0 --> nourish
+                    if ((min(com(c).W(i,:))>1) && (com(c).NB(i)>0)) && (sum(com(c).tnourished(i-nyears*Tsteps:i))<1)
+                        xsl(com(c).jj) = xsl(com(c).jj) - 2*com(c).Vnn/(2*mean(H(com(c).jj))+Dsf);
+                        com(c).tnourished(i) = 1;
+                        % if width < 0 & MR<N --> nourish
+                    elseif ((min(com(c).W(i,:))<=1) && (com(c).NBmr(i)<com(c).NB(i))) && (sum(com(c).tnourished(i-nyears*Tsteps:i))<1)
+                        xsl(com(c).jj) = xsl(com(c).jj) - 2*com(c).Vnn/(2*mean(H(com(c).jj))+Dsf);
+                        com(c).tnourished(i) = 1;
+                        %if width < 0 & MR>N --> retreat
+                    elseif (min(com(c).W(i,:))<=1) && ((com(c).NBmr(i)>com(c).NB(i))||sum(com(c).tnourished(i-nyears*Tsteps:i))>1)
+                        com(c).yfirsthouse = com(c).yfirsthouse + com(c).propertysize;
+                        com(c).tmanret(i) = 1;
+                        %recalculate width
+                        com(c).W(i,:) = (com(c).yfirsthouse - xsl(com(c).jj)); %beach width
+                        % if width > 0 & NB< 0 --> continue
+                    elseif (com(c).Wav(i)>1) && (com(c).NB(i)<0)
+                        xsl(com(c).jj) = xsl(com(c).jj);
                     end
                 end
             end
         end
-        
-        %% save variables now that all changes have been made
-        W_saveall(i,:) = xbb-xsl;
-        
-        %% Variable storage ?
-        if (mod(i,savenum)- 1 == 0)
-            tsi = (i-1)/savenum +1;
-            Xtoe_save(tsi,:) = xtoe;
-            xsl_save(tsi,:) = xsl;
-            Xb_save(tsi,:) = xbb;
-            H_save(tsi,:)= H;
-        end
-        xsl_saveall(i,:) = xsl;
-        
-        %% Plots
+    end
+    
+    %% save variables now that all changes have been made
+    W_saveall(i,:) = xbb-xsl;
+    
+    %% Variable storage ?
+    if (mod(i,savenum)- 1 == 0)
+        tsi = (i-1)/savenum +1;
+        Xtoe_save(tsi,:) = xtoe;
+        xsl_save(tsi,:) = xsl;
+        Xb_save(tsi,:) = xbb;
+        H_save(tsi,:)= H;
+    end
+    xsl_saveall(i,:) = xsl;
+    
+    %% Plots
+    if plot_on
         if (mod(i,plotnum)- 1 == 0)
             i;
             % PLAN VIEW
@@ -450,24 +453,26 @@ for i=1:ts
             set(gca,'Fontsize', fs)
         end
     end
-    
-    %% calculate things to plot about nourishment
-    if community_on
-        for c = 1:ncom
-            % number of times nourished
-            com(c).nnourished(1) = sum(com(c).tnourished(:),1);
-            % which times nourished
-            com(c).inourished(1:com(c).nnourished(1)) = find(com(c).tnourished(:)>0);
-            % time between nourishments
-            com(c).TBtwN(1:com(c).nnourished(1)-1) = diff(com(c).inourished(1:com(c).nnourished(1)))/Tsteps;
-            %number of managed retreates, when retreated, time btw retreats
-            com(c).nmanret(1) = sum(com(c).tmanret(:));
-            com(c).imanret(1:com(c).nmanret(1)) = find(com(c).tmanret(:)>0);
-            com(c).TBtwMR(1:com(c).nmanret(1)-1) = diff(com(c).imanret(1:com(c).nmanret(1)))/Tsteps;
-        end
-    end
+end
 
-    %%
+%% calculate things to plot about nourishment
+if community_on
+    for c = 1:ncom
+        % number of times nourished
+        com(c).nnourished(1) = sum(com(c).tnourished(:),1);
+        % which times nourished
+        com(c).inourished(1:com(c).nnourished(1)) = find(com(c).tnourished(:)>0);
+        % time between nourishments
+        com(c).TBtwN(1:com(c).nnourished(1)-1) = diff(com(c).inourished(1:com(c).nnourished(1)))/Tsteps;
+        %number of managed retreates, when retreated, time btw retreats
+        com(c).nmanret(1) = sum(com(c).tmanret(:));
+        com(c).imanret(1:com(c).nmanret(1)) = find(com(c).tmanret(:)>0);
+        com(c).TBtwMR(1:com(c).nmanret(1)-1) = diff(com(c).imanret(1:com(c).nmanret(1)))/Tsteps;
+    end
+end
+
+%%
+if plot_on
     % time plot
     axes1 = subplot(4,1,1);
     box(axes1,'on');
@@ -504,44 +509,46 @@ for i=1:ts
     xlabel('Alongshore position (km)')
     ylabel('shoreline change rate over whole simulation')
     
-    
-    
-    
-    
-    
-    
-    QowB_saveall = QowB_saveall(:,(1+buff:length(Y)-buff));
-    QowH_saveall = QowH_saveall(:,(1+buff:length(Y)-buff));
-    Qow_saveall = Qow_saveall(:,(1+buff:length(Y)-buff));
-    Qsf_saveall = Qsf_saveall(:,(1+buff:length(Y)-buff));
-    Qast_saveall = Qast_saveall(:,(1+buff:length(Y)-buff));
-    W_saveall = W_saveall(:,(1+buff:length(Y)-buff));
-    xsl_saveall = xsl_saveall(:,(1+buff:length(Y)-buff));
-    if save_on
-        if xsonly
-            foldername = "/Users/rosepalermo/Documents/Research/Alongshore coupled/GeoBarrierModelOutput/xsonly/";
-            filename = sprintf('XS_%s_OW%d_K%d_SLa%d_diff%d',shape,Qow_max,Ksf,sl_a*1000,astfac*1000);
-        elseif developed_on
-            if commercial
-                foldername = "/Users/rosepalermo/Documents/Research/Alongshore coupled/GeoBarrierModelOutput/developedc/";
-                filename = sprintf('DC_%s_OW%d_K%d_SLa%d_diff%d',shape,Qow_max,Ksf,sl_a*1000,astfac*100);
-            elseif residential
-                foldername = "/Users/rosepalermo/Documents/Research/Alongshore coupled/GeoBarrierModelOutput/developedr/";
-                filename = sprintf('DR_%s_OW%d_K%d_SLa%d_diff%d',shape,Qow_max,Ksf,sl_a*1000,astfac*100);
-            elseif comres_on
-                foldername = "/Users/rosepalermo/Documents/Research/Alongshore coupled/GeoBarrierModelOutput/developedcr/";
-                filename = sprintf('DCR_%s_OW%d_K%d_SLa%d_diff%d',shape,Qow_max,Ksf,sl_a*1000,astfac*100);
-                
-            end
-        elseif community_on
-            foldername = "/Users/rosepalermo/Documents/Research/Alongshore coupled/GeoBarrierModelOutput/populated/";
-            filename = sprintf('COM_%s_OW%d_K%d_SLa%d_diff%d',shape,Qow_max,Ksf,sl_a*1000,astfac*100);
-        else
-            foldername = "/Users/rosepalermo/Documents/Research/Alongshore coupled/GeoBarrierModelOutput/natural/";
-            filename = sprintf('NAT_%s_OW%d_K%d_SLa%d_diff%d',shape,Qow_max,Ksf,sl_a*1000,astfac*100);
+end
+
+
+
+
+
+QowB_saveall = QowB_saveall(:,(1+buff:length(Y)-buff));
+QowH_saveall = QowH_saveall(:,(1+buff:length(Y)-buff));
+Qow_saveall = Qow_saveall(:,(1+buff:length(Y)-buff));
+Qsf_saveall = Qsf_saveall(:,(1+buff:length(Y)-buff));
+Qast_saveall = Qast_saveall(:,(1+buff:length(Y)-buff));
+W_saveall = W_saveall(:,(1+buff:length(Y)-buff));
+xsl_saveall = xsl_saveall(:,(1+buff:length(Y)-buff));
+if save_on
+    if xsonly
+        foldername = "/Users/rosepalermo/Documents/Research/Alongshore coupled/GeoBarrierModelOutput/xsonly/";
+        filename = sprintf('XS_%s_OW%d_K%d_SLa%d_diff%d',shape,Qow_max,Ksf,sl_a*1000,astfac*1000);
+    elseif developed_on
+        if commercial
+            foldername = "/Users/rosepalermo/Documents/Research/Alongshore coupled/GeoBarrierModelOutput/developedc/";
+            filename = sprintf('DC_%s_OW%d_K%d_SLa%d_diff%d',shape,Qow_max,Ksf,sl_a*1000,astfac*100);
+        elseif residential
+            foldername = "/Users/rosepalermo/Documents/Research/Alongshore coupled/GeoBarrierModelOutput/developedr/";
+            filename = sprintf('DR_%s_OW%d_K%d_SLa%d_diff%d',shape,Qow_max,Ksf,sl_a*1000,astfac*100);
+        elseif comres_on
+            foldername = "/Users/rosepalermo/Documents/Research/Alongshore coupled/GeoBarrierModelOutput/developedcr/";
+            filename = sprintf('DCR_%s_OW%d_K%d_SLa%d_diff%d',shape,Qow_max,Ksf,sl_a*1000,astfac*100);
+            
         end
-        savefilename = strcat(foldername,filename);
-        
+    elseif community_on
+        foldername = "/Users/rosepalermo/Documents/Research/Alongshore coupled/GeoBarrierModelOutput/populated/";
+        filename = sprintf('COM_%s_OW%d_K%d_SLa%d_diff%d',shape,Qow_max,Ksf,sl_a*1000,astfac*100);
+    else
+        %             foldername = "/Users/rosepalermo/Documents/Research/Alongshore coupled/GeoBarrierModelOutput/natural/";
+        foldername = "/Volumes/Rose Palermo hard drive/GeoBarrierModelOutput/natural only/";
+        filename = sprintf('NAT_%s_OW%d_K%d_SLa%d_diff%d',shape,Qow_max,Ksf,sl_a*1000,astfac*100);
+    end
+    savefilename = strcat(foldername,filename);
+    
+    if plot_on
         if community_on
             fig = '.png'; figname = strcat(foldername,filename,fig);
             saveas(h,figname)
@@ -552,7 +559,16 @@ for i=1:ts
             save(savefilename,'QowB_saveall','QowH_saveall','Qow_saveall','Qsf_saveall','Qast_saveall','W_saveall','t','Y','buff','sl_a','sl_b','Qow_max','Ksf','shape','jplot','community_on','save_on','astfac','xbb_saveall','xsl_saveall','filename','foldername')
         end
     end
-    
+    if ~plot_on
+        if community_on
+            save(savefilename,'QowB_saveall','QowH_saveall','Qow_saveall','Qsf_saveall','Qast_saveall','W_saveall','t','Y','buff','sl_a','sl_b','Qow_max','Ksf','shape','jplot','community_on','save_on','astfac','xbb_saveall','xsl_saveall','filename','foldername','com')
+        else
+            save(savefilename,'QowB_saveall','QowH_saveall','Qow_saveall','Qsf_saveall','Qast_saveall','W_saveall','t','Y','buff','sl_a','sl_b','Qow_max','Ksf','shape','jplot','community_on','save_on','astfac','xbb_saveall','xsl_saveall','filename','foldername')
+        end
+    end
+end
+
+if plot_on
     if community_on
         h = figure()
         h.Position = [0,0,1000,1000]
@@ -574,8 +590,9 @@ for i=1:ts
             saveas(h,figname)
         end
     end
-    
-    plot_GB
-    
+end
+
+%     plot_GB
+
 
 end
