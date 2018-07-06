@@ -76,10 +76,6 @@ elseif AA == 6
     astfac = 0.4;
 elseif AA == 7
     astfac = 0.5;
-elseif AA == 8
-    astfac = 0.6;
-elseif AA == 9
-    astfac = 0.7;
 end
 
 % astfac = .01; % fractional diffusivity (i.e. angular wave distribution reduces diffusivity by what)

@@ -130,6 +130,8 @@ xbb_saveall = zeros(ts,length(Yi));
 QowH_saveall = zeros(ts,length(Yi));
 QowB_saveall = zeros(ts,length(Yi));
 Qow_saveall = zeros(ts,length(Yi));
+xsxldot_saveall = zeros(ts,length(Yi));
+llxldot_saveall = zeros(ts,length(Yi));
 Qsf_saveall = zeros(ts,length(Yi));
 Qast_saveall = zeros(ts,length(Yi));
 W_saveall = zeros(ts,length(Yi));
@@ -232,6 +234,7 @@ for i=1:ts
         Hdot=Qow_H/W-zdot;
         xbdot=Qow_B/(H(j)+Db);
         xsdot=2*Qow/(Dsf+2*H(j))-4*Qsf*(H(j)+Dsf)/(2*H(j)+Dsf)^2;
+        xsxldot_saveall(i,j) = xsdot;
         xtdot=2*Qsf*(1/(Dsf+2*H(j))+1/Dsf)+2*zdot/A;
         
         % Do changes- look for failure
@@ -266,11 +269,13 @@ for i=1:ts
         for j=2:(ys)
             heff = H(j) + Dsf;
             dsl = (F(j)-F(j-1))/dy/heff; % note positive sl change = erosion
+            llxldot_saveall(i,j) = dsl*dy*heff;
             xsl(j) = xsl(j) + dsl;
         end
         
         heff = H(1) + Dsf;
         dsl = (F(1)-F(ys))/dy/heff;
+        llxldot_saveall(i,ys) = dsl*dy*heff;
         xsl(1) = xsl(1) + dsl;
         
         if community_on
@@ -542,8 +547,8 @@ if save_on
         foldername = "/Users/rosepalermo/Documents/Research/Alongshore coupled/GeoBarrierModelOutput/populated/";
         filename = sprintf('COM_%s_OW%d_K%d_SLa%d_diff%d',shape,Qow_max,Ksf,sl_a*1000,astfac*100);
     else
-        %             foldername = "/Users/rosepalermo/Documents/Research/Alongshore coupled/GeoBarrierModelOutput/natural/";
-        foldername = "/Volumes/Rose Palermo hard drive/GeoBarrierModelOutput/natural only/";
+                    foldername = "/Users/rosepalermo/Documents/Research/Alongshore coupled/GeoBarrierModelOutput/natural/";
+%         foldername = "/Volumes/Rose Palermo hard drive/GeoBarrierModelOutput/natural only/";
         filename = sprintf('NAT_%s_OW%d_K%d_SLa%d_diff%d',shape,Qow_max,Ksf,sl_a*1000,astfac*100);
     end
     savefilename = strcat(foldername,filename);
@@ -552,18 +557,18 @@ if save_on
         if community_on
             fig = '.png'; figname = strcat(foldername,filename,fig);
             saveas(h,figname)
-            save(savefilename,'QowB_saveall','QowH_saveall','Qow_saveall','Qsf_saveall','Qast_saveall','W_saveall','t','Y','buff','sl_a','sl_b','Qow_max','Ksf','shape','jplot','community_on','save_on','astfac','xbb_saveall','xsl_saveall','filename','foldername','com')
+            save(savefilename,'QowB_saveall','QowH_saveall','Qow_saveall','Qsf_saveall','Qast_saveall','W_saveall','t','Y','buff','sl_a','sl_b','Qow_max','Ksf','shape','jplot','community_on','save_on','astfac','xbb_saveall','xsl_saveall','filename','foldername','com','llxldot_saveall')
         else
             fig = '.png'; figname = strcat(foldername,filename,fig);
             saveas(h,figname)
-            save(savefilename,'QowB_saveall','QowH_saveall','Qow_saveall','Qsf_saveall','Qast_saveall','W_saveall','t','Y','buff','sl_a','sl_b','Qow_max','Ksf','shape','jplot','community_on','save_on','astfac','xbb_saveall','xsl_saveall','filename','foldername')
+            save(savefilename,'QowB_saveall','QowH_saveall','Qow_saveall','Qsf_saveall','Qast_saveall','W_saveall','t','Y','buff','sl_a','sl_b','Qow_max','Ksf','shape','jplot','community_on','save_on','astfac','xbb_saveall','xsl_saveall','filename','foldername','llxldot_saveall')
         end
     end
     if ~plot_on
         if community_on
-            save(savefilename,'QowB_saveall','QowH_saveall','Qow_saveall','Qsf_saveall','Qast_saveall','W_saveall','t','Y','buff','sl_a','sl_b','Qow_max','Ksf','shape','jplot','community_on','save_on','astfac','xbb_saveall','xsl_saveall','filename','foldername','com')
+            save(savefilename,'QowB_saveall','QowH_saveall','Qow_saveall','Qsf_saveall','Qast_saveall','W_saveall','t','Y','buff','sl_a','sl_b','Qow_max','Ksf','shape','jplot','community_on','save_on','astfac','xbb_saveall','xsl_saveall','filename','foldername','com','llxldot_saveall')
         else
-            save(savefilename,'QowB_saveall','QowH_saveall','Qow_saveall','Qsf_saveall','Qast_saveall','W_saveall','t','Y','buff','sl_a','sl_b','Qow_max','Ksf','shape','jplot','community_on','save_on','astfac','xbb_saveall','xsl_saveall','filename','foldername')
+            save(savefilename,'QowB_saveall','QowH_saveall','Qow_saveall','Qsf_saveall','Qast_saveall','W_saveall','t','Y','buff','sl_a','sl_b','Qow_max','Ksf','shape','jplot','community_on','save_on','astfac','xbb_saveall','xsl_saveall','filename','foldername','llxldot_saveall')
         end
     end
 end
