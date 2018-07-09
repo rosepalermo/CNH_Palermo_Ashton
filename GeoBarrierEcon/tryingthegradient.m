@@ -1,13 +1,28 @@
 addpath('/Users/rosepalermo/Documents/Research/Alongshore coupled/GeoBarrierModelOutput/natural')
 load('NAT_sWmid_OW20_K200_SLa4_diff10.mat')
-llxldot_saveall = llxldot_saveall(:,1+buff:end-buff);
-figure()
-W = Qow_saveall./(abs(llxldot_saveall));%*100);
-subplot(2,1,1); imagesc(t,Y(1+buff:end-buff),abs(W)'); set(gca,'clim',[0 2])
-title('W')
-subplot(2,1,2); imagesc(t,Y(1+buff:end-buff),abs(W_saveall)'); set(gca,'clim',[150 300])
-title('Width')
+llxldot_saveall = -llxldot_saveall(:,1+buff:end-buff);
 
+
+
+% figure()
+% W_ratio = Qow_saveall./(-llxldot_saveall);%*100);
+% subplot(2,1,1); imagesc(t,Y(1+buff:end-buff),(W_ratio)'); set(gca,'clim',[0 2])
+% title('W')
+% subplot(2,1,2); imagesc(t,Y(1+buff:end-buff),(W_saveall)'); set(gca,'clim',[150 300])
+% title('Width')
+h = figure()
+h.Position = [440   488   711   317];
+
+plot(Y(1+buff:end-buff),xsl_saveall(1,:),'b','LineWidth',2)
+hold on
+plot(Y(1+buff:end-buff),xbb_saveall(1,buff+1:end-buff),'r','LineWidth',2)
+plot(Y(1+buff:end-buff),xsl_saveall(5000,:),'b','LineWidth',2)
+plot(Y(1+buff:end-buff),xbb_saveall(5000,buff+1:end-buff),'r','LineWidth',2)
+plot(Y(1+buff:end-buff),xsl_saveall(9150,:),'b','LineWidth',2)
+plot(Y(1+buff:end-buff),xbb_saveall(9150,buff+1:end-buff),'r','LineWidth',2)
+plot(Y(1+buff:end-buff),xsl_saveall(end,:),'b','LineWidth',2)
+plot(Y(1+buff:end-buff),xbb_saveall(end,buff+1:end-buff),'r','LineWidth',2)
+set(gca,'xlim',[Y(1) Y(end)])
 
 H = figure(); 
 H.Position = [671   302   709   503];
@@ -42,44 +57,48 @@ hold on;
 plot(t,Qow_saveall(:,10),'--','Color',[0.7 0.7 0.7],'LineWidth',2); 
 xlabel('time (years)')
 ylabel('Sediment flux (m^3/yr)')
-legend('Qast (@ 5000 m) ','Qow (@ 5000 m)','Qast (@ 1000 m)','Qow (@ 1000 m)')
+legend('Qast gradient ','Qow ')%,'Qast gradient (@ 1000 m)','Qow (@ 1000 m)')
 set(gca,'FontSize',14)
 set(gca,'ylim',[-Qow_max Qow_max])
 
-subplot(2,2,4)
-plot(t,W(:,50),'k','LineWidth',2)
+ax3 = subplot(2,2,4)
+plot(t,W_ratio(:,50),'k','LineWidth',2)
 hold on
-plot(t,W(:,10),'k--','LineWidth',2)
-set(gca,'ylim',[0 2],'xlim',[0 t(end)])
+plot(t,W_ratio(:,10),'k--','LineWidth',2)
+set(gca,'ylim',[-2 2],'xlim',[0 t(end)])
 set(gca,'FontSize',14)
+colormap(ax3,gray(4))
 xlabel('time (years)')
 ylabel('W = Qow/Qast')
 
 figure()
-subplot(1,3,1)
+ax1 = subplot(1,3,1)
 imagesc(t,Y(1+buff:end-buff),Qow_saveall')
 set(gca,'ydir','normal','FontSize',12)
-set(gca,'clim',[0 50])
+set(gca,'clim',[0 Qow_max])
 xlabel('time(years)')
 ylabel('alongshore distance (meters)')
-title('0.4')
+% title('Qow')
+colormap(ax1,redblue)
 colorbar
 
-subplot(1,3,2)
+ax2 = subplot(1,3,2)
 imagesc(t,Y(1+buff:end-buff),llxldot_saveall')
 set(gca,'ydir','normal','FontSize',12)
-set(gca,'clim',[-200 200])
+% set(gca,'clim',[-200 200])
 xlabel('time (years)')
 ylabel('alongshore distance (meters)')
-title('Qast')
+% title('Qast')
+colormap(ax2,redblue)
 colorbar
 
-subplot(1,3,3)
-Wratio = Qow_saveall./llxldot_saveall;
-imagesc(t,Y(1+buff:end-buff),abs(Wratio)')
+ax3 = subplot(1,3,3)
+Wratio = Qow_saveall./-llxldot_saveall;
+imagesc(t,Y(1+buff:end-buff),(Wratio)')
 set(gca,'ydir','normal','FontSize',12)
-set(gca,'clim',[0 2])
+set(gca,'clim',[-2 2])
 xlabel('time(years)')
 ylabel('alongshore distance (meters)')
-title('Washover ratio (Qow/Qast)')
+colormap(ax3,gray(4))
+% title('Washover ratio (Qow/Qast)')
 colorbar

@@ -12,7 +12,7 @@ Time_inputs
 
 xsonly = false;
 save_on = true;
-plot_on = false;
+plot_on = true;
 community_on = false;
 if ndc == 1
     developed_on = false;
@@ -60,7 +60,8 @@ elseif m == 2
     BarrierIC_small_W_in_middle
     
 elseif m == 3
-    BarrierIC_large_W_in_middle
+%     BarrierIC_large_W_in_middle
+    BarrierIC_Mantoloking
     
 elseif m == 4
     BarrierIC_small_W_1st_half
