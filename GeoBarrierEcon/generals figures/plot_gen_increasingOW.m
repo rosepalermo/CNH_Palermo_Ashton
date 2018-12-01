@@ -30,7 +30,7 @@ set(gca,'FontSize',14)
 set(gca,'ylim',[150 350])
 
 
-load('NAT_gen_OW20_K200_SLa4_diff5.mat')
+load('NAT_gen_OW30_K200_SLa4_diff5.mat')
 figure(1)
 hold on
 plot(Y(1+buff:end-buff),xsl_saveall(end,:),'Color',[0.4 0.4 0.4],'LineWidth',2)
@@ -70,7 +70,7 @@ xlabel('time (years)')
 ylabel('crossshore position (meters)')
 set(gca,'FontSize',14)
 set(gca,'ylim',[650 900])
-legend('max Qow = 50','max Qow = 20','max Qow = 5','location','southeast')
+legend('max Qow = 50','max Qow = 30 (40% less)','max Qow = 5 (90% less)','location','southeast')
 
 subplot(2,1,2)
 plot(t,W_saveall(:,50),'Color',[0.8 0.8 0.8],'LineWidth',2)

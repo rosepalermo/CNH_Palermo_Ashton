@@ -1,6 +1,6 @@
 
-% addpath('/Users/rosepalermo/Documents/Research/Alongshore coupled/GeoBarrierModelOutput/natural only')
-% load('NAT_sWmid_OW20_K200_SLa3_diff1.mat')
+addpath('/Users/rosepalermo/Documents/Research/Alongshore coupled/GeoBarrierModelOutput/natural only')
+load('NAT_sWmid_OW20_K200_SLa4_diff30.mat')
 Y = Y(1+buff:end-buff);
 xbb_saveall = xbb_saveall(:,1+buff:end-buff);
 W = Qow_saveall./abs(Qast_saveall);
@@ -17,6 +17,7 @@ plot(Y,xbb_saveall(5000,:),'r','LineWidth',2)
 plot(Y,xsl_saveall(end,:),'b','LineWidth',2)
 plot(Y,xbb_saveall(end,:),'r','LineWidth',2)
 set(gca,'xlim',[Y(1) Y(end)])
+
 
 
 H = figure(); 

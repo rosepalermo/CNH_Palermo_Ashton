@@ -1,4 +1,4 @@
-function [nNB,mNB]=cba(nyears,npropertiesll,L,dy,alpha,b,slr,Wn,Wav,Wmin,Wo,p,f,cost,Hav,Dsf,ir,dist2oc0,dist2oc,dist2bb0,dist2bb,kappa,kkappa,npropxs,subsidies)
+function [nNB,mNB]=cba(nyears,npropertiesll,L,dy,alpha,b,slr,Wn,Wav,Wmin,Wo,p,f,cost,Hav,Dsf,dr,dist2oc0,dist2oc,dist2bb0,dist2bb,kappa,kkappa,npropxs,subsidies)
 % this function calculates the net benefit of nourishment and of managed
 % retreat based on the work we did for 2017 AGU
 
@@ -32,7 +32,7 @@ nBeta(1,idx+1) = npropertiesll * nansum(npropxs)* alpha * ((((Wn + Wav - idx*slr
 
 % nBeta(1,idx+1) = npropertiesll*L/dy * alpha * (((Wn + Wav - idx*slr)./ Wo).^b - ((Wav-idx*slr) ./ Wo).^b) .* (nansum(nansum((dist2oc).^kappa))) .* nansum(nansum(((dist2bb).^kkappa)));
 
-nBenefit = sum(nBeta./((1+ir).^idx));
+nBenefit = sum(nBeta./((1+dr).^idx));
 
 % cost of nourishment
 nCost = (f + cost/2 * Wn * L * Dsf + cost * Wn * Hav * L )*(1-subsidies);
@@ -62,6 +62,6 @@ idx = 0:nyears;
     mCost = 0; % 0 assumes no buyout
 % end
 % net benefit of nourishment
-mBenefit = sum(mBeta./((1+ir).^idx));
+mBenefit = sum(mBeta./((1+dr).^idx));
 mNB = mBenefit - mCost;
 

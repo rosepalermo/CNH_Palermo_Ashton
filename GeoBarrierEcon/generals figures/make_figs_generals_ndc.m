@@ -8,7 +8,7 @@ p = 1; pp = 1;
 for i = 2 % 1:length(Usla)
     UNDCplot = [4;3;2;1];
     sp = 1;
-    for iii = 1:length(UNDC)
+    for iii = 4%1:length(UNDC)
         j = ([A(aa).shape.sl_a] == Usla(i)) & ([A(aa).shape.NDC] == UNDC(UNDCplot(iii)));
         j = j & ([A(aa).shape.astfac] == UFD(5)) & ([A(aa).shape.Qow_max] == UQOW(3));
         i_struct = A(aa).shape(j);
@@ -26,68 +26,82 @@ for i = 2 % 1:length(Usla)
         pp = pp+1;
         
         figure(2)
-        ax(p) = subplot(4,4,p)
+        ax(p) = subplot(1,5,p)
         imagesc(t,Y(1+buff:end-buff),[i_struct.Qow_saveall]')
         set(gca,'ydir','normal','FontSize',12)
         set(gca,'clim',[0 20])
+%         if p>12
         xlabel('time (years)')
+%         end
         ylabel('alongshore distance (m)')
-        if p<5
-            title('Q overwash')
-        end
+%         if p<6
+            title('Q_o_w')
+%         end
         colormap(ax(p),bluewhitered)
         colorbar
         p = p+1;
         
-        ax(p) = subplot(4,4,p);
+        ax(p) = subplot(1,5,p);
         imagesc(t,Y(1+buff:end-buff),[i_struct.llxldot_saveall]')
         set(gca,'ydir','normal','FontSize',12)
         set(gca,'clim',[-10 10])
+%         if p>16
         xlabel('time (years)')
-        ylabel('alongshore distance (m)')
+%         end
+%         ylabel('alongshore distance (m)')
         colormap(ax(p),redblue)
-        if p<5
-            title('AST Gradient')
-        end
+%         if p<6
+            title('\Delta Q_a_s_t')
+%         end
         colorbar
         p = p+1;
         
-        ax(p) = subplot(4,4,p);
+        ax(p) = subplot(1,5,p);
         imagesc(t,Y(1+buff:end-buff),([i_struct.Wratio]'))
         set(gca,'ydir','normal','FontSize',12)
         set(gca,'clim',[-2 2])
+%         if p>16
         xlabel('time (years)')
-        ylabel('alongshore distance (m)')
-        if p<5
+%         end
+%         ylabel('alongshore distance (m)')
+%         if p<6
             title('Washover ratio (W)')
-        end
-        colormap(ax(p),gray(4))
+%         end
+        colormap(ax(p),parula(4))
         colorbar
         p = p+1;
         
-        ax(p) = subplot(4,4,p);
-        imagesc(t,Y(1+buff:end-buff),abs([i_struct.W_saveall])')
+        ax(p) = subplot(1,5,p);
+        imagesc(t,Y(1+buff:end-buff),[i_struct.W_saveall]')
         set(gca,'ydir','normal','FontSize',12)
         set(gca,'clim',[150 310])
+%         if p>15
         xlabel('time (years)')
-        ylabel('alongshore distance (m)')
-        if p<5
+%         end
+%         ylabel('alongshore distance (m)')
+%         if p<6
             title('Width')
-        end
+%         end
         colorbar
         colormap(ax(p),gray)
         p = p+1;
         
-        %         subplot(4,4,p)
-        %         plot([i_struct.slc_all(end,:)],Y(1+buff:end-buff),'k','LineWidth',2)
-        %         set(gca,'ydir','normal','FontSize',12)
-        %         set(gca,'xlim',[70 130])
-        %         ylabel('alongshore distance (m)')
-        %         xlabel('shoreline change (meters)')
-        % %         title('shoreline change after 200 years (meters)')
-        %         p = p+1;
+                subplot(1,5,p)
+%                 slcchange = [zeros(1,length(Y)-2*buff);i_struct.slc_all(2:end,:)-i_struct.slc_all(1,:)];
+%                 imagesc(t,Y(1+buff:end-buff),slcchange')
+                plot([i_struct.slc_all(end,:)],Y(1+buff:end-buff),'k','LineWidth',2)
+                set(gca,'ydir','normal','FontSize',12)
+                set(gca,'xlim',[mean(i_struct.slc_all(end,:))-1.5 mean(i_struct.slc_all(end,:))+1.5])
+%                 ylabel('alongshore distance (m)')
+%                 if p>16
+                xlabel('shoreline change (meters)')
+%                 end
+%                 if p<6
+                title('\Delta x_s_l after 200 years')
+%                 end
+                p = p+1;
         
-        %         subplot(4,4,p)
+        %         subplot(1,5,p)
         %         plot(max([i_struct.slc_all]),Y(1+buff:end-buff))
         %         set(gca,'ydir','normal','FontSize',12)
         %         set(gca,'xlim',[110 130])
