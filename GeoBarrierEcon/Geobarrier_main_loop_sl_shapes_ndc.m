@@ -51,33 +51,8 @@ end
 Z=0;             % trying z= 0 which is the sea level
 
 %     %%%% Set the Domain Variables for the barrier
+BarrierIC_small_W_in_middle(mbw)
 
-if m == 1
-    Gen_BarrierIC %set barrier inital conditions (include those above)
-    %BarrierIC_LBI %cartoon of Long Beach Island. This is trash. Need the
-    %              %real data
-elseif m == 2
-    BarrierIC_small_W_in_middle
-    
-elseif m == 3
-%     BarrierIC_large_W_in_middle
-    BarrierIC_Mantoloking
-    
-elseif m == 4
-    BarrierIC_small_W_1st_half
-    
-elseif m== 5
-    BarrierIC_small_W_2nd_half
-    
-elseif m == 6
-    BarrierIC_bump_middle_sl_bb
-    
-elseif m == 7
-    BarrierIC_bendback_middle_sl
-    
-    % elseif m == 8
-    %     BarrierIC_randW
-end
 
 
 % set community variables

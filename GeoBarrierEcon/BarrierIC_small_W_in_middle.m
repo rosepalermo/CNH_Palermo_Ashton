@@ -1,3 +1,7 @@
+function BarrierIC_small_W_in_middle(mbw)
+
+EL = mbw*10;
+
 shape = 'sWmid';
 
 % Space
@@ -10,7 +14,7 @@ Yi = 1:ys;       % Y i's
 
 %     %%%% Set the Domain Variables for the barrier
 W(Yi) = Wstart;
-W(ys/3:2*ys/3) = W(ys/3:2*ys/3)-150;
+W(ys/3-EL:2*ys/3+EL) = W(ys/3-EL:2*ys/3+EL)-150;
 
 W = cat(2,W(1)*ones(1,buff),W,W(end)*ones(1,buff));
 
@@ -26,5 +30,7 @@ xtoe(Yi)=0;            % X toe
 xbb(Yi)=xsl(Yi)+W(Yi); % X backbarrier
 H(Yi) =He;             % barrier height
 
+
+end
     
    
