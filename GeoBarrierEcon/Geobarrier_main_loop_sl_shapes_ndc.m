@@ -524,26 +524,26 @@ W_saveall = W_saveall(:,(1+buff:length(Y)-buff));
 xsl_saveall = xsl_saveall(:,(1+buff:length(Y)-buff));
 if save_on
     if xsonly
-        foldername = "/Users/rosepalermo/Documents/Research/Alongshore coupled/GeoBarrierModelOutput/xsonly/";
+%         foldername = "/Users/rosepalermo/Documents/Research/Alongshore coupled/GeoBarrierModelOutput/xsonly/";
         filename = sprintf('XS_%s_OW%d_K%d_SLa%d_diff%d',shape,Qow_max,Ksf,sl_a*1000,astfac*1000);
     elseif developed_on
         if commercial
-            foldername = "/Users/rosepalermo/Documents/Research/Alongshore coupled/GeoBarrierModelOutput/developedc/";
+            foldername = "D:\Model Output Generals\developedc\";
             filename = sprintf('DC_%s_OW%d_K%d_SLa%d_diff%d',shape,Qow_max,Ksf,sl_a*1000,astfac*100);
         elseif residential
-            foldername = "/Users/rosepalermo/Documents/Research/Alongshore coupled/GeoBarrierModelOutput/developedr/";
+            foldername = "D:\Model Output Generals\developedr\";
             filename = sprintf('DR_%s_OW%d_K%d_SLa%d_diff%d',shape,Qow_max,Ksf,sl_a*1000,astfac*100);
         elseif comres_on
-            foldername = "/Users/rosepalermo/Documents/Research/Alongshore coupled/GeoBarrierModelOutput/developedcr/";
+            foldername = "D:\Model Output Generals\developedcr\";
             filename = sprintf('DCR_%s_OW%d_K%d_SLa%d_diff%d',shape,Qow_max,Ksf,sl_a*1000,astfac*100);
             
         end
     elseif community_on
-        foldername = "/Users/rosepalermo/Documents/Research/Alongshore coupled/GeoBarrierModelOutput/populated/";
+%         foldername = "/Users/rosepalermo/Documents/Research/Alongshore coupled/GeoBarrierModelOutput/populated/";
         filename = sprintf('COM_%s_OW%d_K%d_SLa%d_diff%d',shape,Qow_max,Ksf,sl_a*1000,astfac*100);
     else
         %             foldername = "/Users/rosepalermo/Documents/Research/Alongshore coupled/GeoBarrierModelOutput/natural/";
-        foldername = "/Volumes/Rose Palermo hard drive/GeoBarrierModelOutput/natural only/";
+        foldername = "D:\Model Output Generals\natural\";
         filename = sprintf('NAT_%s_OW%d_K%d_SLa%d_diff%d',shape,Qow_max,Ksf,sl_a*1000,astfac*100);
     end
     savefilename = strcat(foldername,filename);

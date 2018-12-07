@@ -18,7 +18,7 @@
 % 
 % theFiles = [theFiles1; theFiles2; theFiles3; theFiles4];
 
-foldername = "/Volumes/Rose Palermo hard drive/GeoBarrierModelOutput/natural only/";
+foldername = "D:\GeoBarrierModelOutput\natural only\";
 filepattern = fullfile(foldername,'*.mat');
 theFiles = dir(filepattern);
 addpath(foldername)
