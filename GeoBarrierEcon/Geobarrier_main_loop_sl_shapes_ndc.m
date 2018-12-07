@@ -1,4 +1,4 @@
-function     GeoBarrier_main_loop_sl_shapes_ndc(m,sl,ndc,AA,QW)
+function     GeoBarrier_main_loop_sl_shapes_ndc(mbw,sl,ndc,AA,QW,shape_)
 
 %% Barrier geometric model with coupled Alongshore. %%%%%%%%%%%%%%%
 % Jorge Lorenzo Trueba adopted by Andrew Ashton starting 2-2015
@@ -51,8 +51,15 @@ end
 Z=0;             % trying z= 0 which is the sea level
 
 %     %%%% Set the Domain Variables for the barrier
-BarrierIC_small_W_in_middle(mbw)
-
+if shape_ == 1
+BarrierIC_small_W_in_middle % mbw 1:5 happens
+elseif shape_ == 2
+BarnegatBay1
+elseif shape_ == 3
+BarnegatBay2
+elseif shape_ == 4
+BarnegatBay3
+end
 
 
 % set community variables
@@ -133,9 +140,12 @@ for i=1:ts
         % Compute local geometries from the saved arrays
         A=Dsf/(xsl(j)-xtoe(j)); % Shoreface Slope
         W=xbb(j)-xsl(j);    % Barrier Width
-        Db= min(Dsf + Z - xbb(j)*B(j),2); % Either calculated from the slope or 2m (~mean of Long Island data), whichever is smaller
-        %                         Db= (Dsf + Z - xbb(j)*B(j));
-        
+        if shape_ ~=1
+            Db= min(Dsf + Z - xbb(j)*B(j),Dbb(j)); % Either calculated from the slope or Barnegat Bay Data
+        else
+            Db= min(Dsf + Z - xbb(j)*B(j),2); % Either calculated from the slope or 2m (~mean of Long Island data), whichever is smaller
+            %                         Db= (Dsf + Z - xbb(j)*B(j));
+        end
         
         % Compute Deficit volume Vd, overwash flux Qow, and shoreface flux Qsf
         %Deficit Volume
@@ -391,8 +401,11 @@ for i=1:ts
             
             xlabel('alongshore location (km)')
             ylabel('onshore location (km)')
-            
+            if buff == 0
+%               axis([Y(1) Y(end) 0.5 (max(xbb)+100)])
+            else
             axis([Y(buff)/1000 Y(buff+Yn)/1000 0.5 (max(xbb)+100)/1000])
+            end
             set(gca,'fontweight','bold')
             set(gca,'Fontsize', fs)
             
@@ -485,7 +498,11 @@ if plot_on
     xsl_cr = (xsl_save(1,:)-xsl_save(end,:))./Tmax;
     axes4 = subplot(4,1,4);
     plot(Y/1000,xsl_cr,'b', 'linewidth',2)
-    axis([Y(buff)/1000 Y(buff+Yn)/1000 min(xsl_cr) max(xsl_cr)+1])
+    if buff == 0
+%         axis([Y(1) Y(end) min(xsl_cr) max(xsl_cr)+1])
+    else
+        axis([Y(buff)/1000 Y(buff+Yn)/1000 min(xsl_cr) max(xsl_cr)+1])
+    end
     linkaxes([axes2,axes4],'x')
     xlabel('Alongshore position (km)')
     ylabel('shoreline change rate over whole simulation')
@@ -505,25 +522,25 @@ W_saveall = W_saveall(:,(1+buff:length(Y)-buff));
 xsl_saveall = xsl_saveall(:,(1+buff:length(Y)-buff));
 if save_on
     if xsonly
-        foldername = "/Users/rosepalermo/Documents/Research/Alongshore coupled/GeoBarrierModelOutput/xsonly/";
+        foldername = "/Users/rosepalermo/Dropbox (MIT)/AGU2018/change middle width/xsonly/";
         filename = sprintf('XS_%s_OW%d_K%d_SLa%d_diff%d',shape,Qow_max,Ksf,sl_a*1000,astfac*1000);
     elseif developed_on
         if commercial
-            foldername = "/Users/rosepalermo/Documents/Research/Alongshore coupled/GeoBarrierModelOutput/developedc/";
+            foldername = "/Users/rosepalermo/Dropbox (MIT)/AGU2018/change middle width/developedc/";
             filename = sprintf('DC_%s_OW%d_K%d_SLa%d_diff%d',shape,Qow_max,Ksf,sl_a*1000,astfac*100);
         elseif residential
-            foldername = "/Users/rosepalermo/Documents/Research/Alongshore coupled/GeoBarrierModelOutput/developedr/";
+            foldername = "/Users/rosepalermo/Dropbox (MIT)/AGU2018/change middle width/developedr/";
             filename = sprintf('DR_%s_OW%d_K%d_SLa%d_diff%d',shape,Qow_max,Ksf,sl_a*1000,astfac*100);
         elseif comres_on
-            foldername = "/Users/rosepalermo/Documents/Research/Alongshore coupled/GeoBarrierModelOutput/developedcr/";
+            foldername = "/Users/rosepalermo/Dropbox (MIT)/AGU2018/change middle width/developedcr/";
             filename = sprintf('DCR_%s_OW%d_K%d_SLa%d_diff%d',shape,Qow_max,Ksf,sl_a*1000,astfac*100);
             
         end
     elseif community_on
-        foldername = "/Users/rosepalermo/Documents/Research/Alongshore coupled/GeoBarrierModelOutput/populated/";
+        foldername = "/Users/rosepalermo/Dropbox (MIT)/AGU2018/change middle width/populated/";
         filename = sprintf('COM_%s_OW%d_K%d_SLa%d_diff%d',shape,Qow_max,Ksf,sl_a*1000,astfac*100);
     else
-                    foldername = "/Users/rosepalermo/Documents/Research/Alongshore coupled/GeoBarrierModelOutput/natural/";
+                    foldername = "/Users/rosepalermo/Dropbox (MIT)/AGU2018/change middle width/natural/";
 %         foldername = "/Volumes/Rose Palermo hard drive/GeoBarrierModelOutput/natural only/";
         filename = sprintf('NAT_%s_OW%d_K%d_SLa%d_diff%d',shape,Qow_max,Ksf,sl_a*1000,astfac*100);
     end

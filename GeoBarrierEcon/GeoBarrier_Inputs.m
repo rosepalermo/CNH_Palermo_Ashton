@@ -7,7 +7,11 @@
 
 % Space
 dy = 100; % Spacing alongshore (m)
-buff = 1;
+if shape_ == 1
+    buff = 1;
+else
+    buff = 0;
+end
 
 % SL rise rate = a + bt
 sl_a = 0.004; %m/yr
@@ -33,7 +37,12 @@ end
 
 % Barrier Variables - here assume these are constant across barrier, these
 % could also be varied for some cases perhaps
-Dsf = 10; % Shoreface Toe depth (meters). Typically in the range 10-20m
+
+if i == 1
+    Dsf = 10; % Shoreface Toe depth (meters). Typically in the range 10-20m
+else
+    Dsf = 16;
+end
 We = 300; % Equilibrium width (meters)
 He = 2;   % Equilibrium heigth (meters)
 Ae = 0.015;    % Equilibrium shoreface slope3
