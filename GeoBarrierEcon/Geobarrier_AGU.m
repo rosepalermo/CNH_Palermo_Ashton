@@ -1,4 +1,4 @@
-function     GeoBarrier_main_loop_sl_shapes_ndc(mbw,sl,ndc,AA,QW,shape_)
+function     GeoBarrier_AGU(mbw,sl,ndc,AA,QW,shape_)
 
 %% Barrier geometric model with coupled Alongshore. %%%%%%%%%%%%%%%
 % Jorge Lorenzo Trueba adopted by Andrew Ashton starting 2-2015
@@ -11,7 +11,7 @@ Time_inputs
 
 
 xsonly = false;
-save_on = false;
+save_on = true;
 plot_on = true;
 community_on = false;
 if ndc == 1
@@ -69,7 +69,7 @@ end
 
 % if developed on, make the middle part a community and the sides natural
 % for now
-if developed_on
+if developed_on && shape_ == 1
     devjj = Yi(floor(length(Yi)/3):floor(2/3*length(Yi)));
 end
 
@@ -227,6 +227,7 @@ for i=1:ts
         H(j)=H(j)+Hdot*dt;
         if H(j)<0
             tdrown_H=ti(i);
+            break
         end
         
         xbb(j)=xbb(j)+xbdot*dt;
@@ -234,12 +235,20 @@ for i=1:ts
         xtoe(j)=xtoe(j)+xtdot*dt;
         if xbb(j)-xsl(j)<0
             tdrown_W=ti(i);
+            break
         end
         
         xbb_saveall(i,j) = xbb(j);
         
     end
-    
+%     if xbb(j)-xsl(j)<0
+%         tdrown_W=ti(i);
+%         break
+%     end
+%     if H(j)<0
+%         tdrown_H=ti(i);
+%         break
+%     end
     %% ALONG-SHORE %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     
     if ~xsonly
@@ -522,27 +531,25 @@ W_saveall = W_saveall(:,(1+buff:length(Y)-buff));
 xsl_saveall = xsl_saveall(:,(1+buff:length(Y)-buff));
 if save_on
     if xsonly
-
-        foldername = "/Users/rosepalermo/Dropbox (MIT)/AGU2018/change middle width/xsonly/";
+        foldername = "/Users/rosepalermo/Dropbox (MIT)/AGU2018/BarnegatBay/model/xsonly/";
         filename = sprintf('XS_%s_OW%d_K%d_SLa%d_diff%d',shape,Qow_max,Ksf,sl_a*1000,astfac*1000);
     elseif developed_on
         if commercial
-            foldername = "/Users/rosepalermo/Dropbox (MIT)/AGU2018/change middle width/developedc/";
+            foldername = "/Users/rosepalermo/Dropbox (MIT)/AGU2018/BarnegatBay/model/developedc/";
             filename = sprintf('DC_%s_OW%d_K%d_SLa%d_diff%d',shape,Qow_max,Ksf,sl_a*1000,astfac*100);
         elseif residential
-            foldername = "/Users/rosepalermo/Dropbox (MIT)/AGU2018/change middle width/developedr/";
+            foldername = "/Users/rosepalermo/Dropbox (MIT)/AGU2018/BarnegatBay/model/developedr/";
             filename = sprintf('DR_%s_OW%d_K%d_SLa%d_diff%d',shape,Qow_max,Ksf,sl_a*1000,astfac*100);
         elseif comres_on
-            foldername = "/Users/rosepalermo/Dropbox (MIT)/AGU2018/change middle width/developedcr/";
+            foldername = "/Users/rosepalermo/Dropbox (MIT)/AGU2018/BarnegatBay/model/developedcr/";
             filename = sprintf('DCR_%s_OW%d_K%d_SLa%d_diff%d',shape,Qow_max,Ksf,sl_a*1000,astfac*100);
             
         end
     elseif community_on
-
-        foldername = "/Users/rosepalermo/Dropbox (MIT)/AGU2018/change middle width/populated/";
+        foldername = "/Users/rosepalermo/Dropbox (MIT)/AGU2018/BarnegatBay/model/populated/";
         filename = sprintf('COM_%s_OW%d_K%d_SLa%d_diff%d',shape,Qow_max,Ksf,sl_a*1000,astfac*100);
     else
-                    foldername = "/Users/rosepalermo/Dropbox (MIT)/AGU2018/change middle width/natural/";
+                    foldername = "/Users/rosepalermo/Dropbox (MIT)/AGU2018/BarnegatBay/model/natural/";
 %         foldername = "/Volumes/Rose Palermo hard drive/GeoBarrierModelOutput/natural only/";
         filename = sprintf('NAT_%s_OW%d_K%d_SLa%d_diff%d',shape,Qow_max,Ksf,sl_a*1000,astfac*100);
     end

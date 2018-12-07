@@ -1,9 +1,7 @@
-EL = mbw*5;
-
-shape = 'sWmid';
+shape = 'MantNJ';
 
 % Space
-Yn = 101; % number of Y cells
+Yn = 191; % number of Y cells
 
 %%%% Alongshore array dimensions (initial)
 Y=0:dy:Yn*dy;    % real y array
@@ -11,8 +9,9 @@ ys=length(Y);    % alongshore spots
 Yi = 1:ys;       % Y i's
 
 %     %%%% Set the Domain Variables for the barrier
-W(Yi) = Wstart;
-W(ceil(ys/2)-EL:ceil(ys/2)+EL) = W(ceil(ys/2)-EL:ceil(ys/2)+EL)-150;
+W(1:110) = 700;
+W(111:151) = 250;
+W(152:end) = 500;
 
 W = cat(2,W(1)*ones(1,buff),W,W(end)*ones(1,buff));
 
@@ -28,5 +27,5 @@ xtoe(Yi)=0;            % X toe
 xbb(Yi)=xsl(Yi)+W(Yi); % X backbarrier
 H(Yi) =He;             % barrier height
 
-
+    
    

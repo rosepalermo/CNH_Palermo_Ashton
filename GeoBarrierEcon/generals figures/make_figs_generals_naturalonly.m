@@ -18,7 +18,8 @@
 % 
 % theFiles = [theFiles1; theFiles2; theFiles3; theFiles4];
 
-foldername = "D:\GeoBarrierModelOutput\natural only\";
+
+foldername = "/Users/rosepalermo/Documents/Research/Alongshore coupled/GeoBarrierModelOutput/natural only/";
 filepattern = fullfile(foldername,'*.mat');
 theFiles = dir(filepattern);
 addpath(foldername)
@@ -58,6 +59,8 @@ for k = 1 : length(theFiles)
 %         NO(1,1).shape(gg).buff = buff;
 %         NO(1,1).shape(gg).Qsf_saveall = Qsf_saveall;
         NO(1,1).shape(gg).NDC = string(NO(1,1).shape(gg).name(1:3));
+        NO(1,1).shape(gg).slc_all = [zeros(1,size(xsl_saveall,2));(xsl_saveall(1,:) - xsl_saveall(2:end,:))];
+        NO(1,1).shape(gg).mslc_all = max(max([zeros(1,size(xsl_saveall,2));(xsl_saveall(2:end,:) - xsl_saveall(1,:))]));
         [maxQsf, index] = max(max(abs(Qsf_saveall(:,(length(Qsf_saveall(end,:))/3):(length(Qsf_saveall(end,:))*2/3)))));
         NO(1,1).shape(gg).MQsf = maxQsf * sign(Qsf_saveall(index));
         [maxQsf, index] = max(abs(Qsf_saveall(end,(length(Qsf_saveall(end,:))/3):(length(Qsf_saveall(end,:))*2/3))));
@@ -95,6 +98,8 @@ for k = 1 : length(theFiles)
 %         NO(2,1).shape(sm).buff = buff;
 %         NO(2,1).shape(sm).Qsf_saveall = Qsf_saveall;
         NO(2,1).shape(sm).NDC = string(NO(2,1).shape(sm).name(1:3));
+        NO(2,1).shape(sm).slc_all = [zeros(1,size(xsl_saveall,2));(xsl_saveall(1,:) - xsl_saveall(2:end,:))];
+        NO(2,1).shape(sm).mslc_all = max(max([zeros(1,size(xsl_saveall,2));(xsl_saveall(2:end,:) - xsl_saveall(1,:))]));
         [maxQsf, index] = max(max(abs(Qsf_saveall(:,(length(Qsf_saveall(end,:))/3):(length(Qsf_saveall(end,:))*2/3)))));
         NO(2,1).shape(sm).MQsf = maxQsf * sign(Qsf_saveall(index));
         [maxQsf, index] = max(abs(Qsf_saveall(end,(length(Qsf_saveall(end,:))/3):(length(Qsf_saveall(end,:))*2/3))));

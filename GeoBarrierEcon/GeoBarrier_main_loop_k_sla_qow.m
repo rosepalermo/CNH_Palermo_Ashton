@@ -199,7 +199,7 @@ for kk=1:length(kks)
         %% economics
         if community_on
             for c = 1:ncom
-                [nNB,mNB]=cba(nyears,com(c).nproperties,com(c).L,dy,com(c).alpha,b,com(c).slr,com(c).Wn,com(c).Wav(i,kk,qow,zz),min(com(c).W(i,:)),com(c).W(1,1),com(c).propertysize,f,c,mean(H(com(c).jj)),Dsf,ir);
+                [nNB,mNB]=cba(nyears,com(c).nproperties,com(c).L,dy,com(c).alpha,b,com(c).slr,com(c).Wn,com(c).Wav(i,kk,qow,zz),min(com(c).W(i,:)),com(c).W(1,1),com(c).propertysize,f,c,mean(H(com(c).jj)),Dsf,dr);
                 com(c).NB(i,kk,qow,zz) = nNB;
                 com(c).NBmr(i,kk,qow,zz) =mNB;
             end

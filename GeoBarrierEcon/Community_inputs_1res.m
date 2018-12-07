@@ -27,13 +27,12 @@ f = 1e6;    % fixed cost of nourishment
 %of the beach
 com(1).P = 1.5e6; %NRM 2013 (1.5e6)
 com(2).P = 350000; %same as P1--- needs to be changed to coastal commercial MA value?
-ir = 0.07; % 7% discount rate
+dr = 0.07; % 7% discount rate
 nyears = 5; % nyears of project (how long they look into the future)
 n = 25; % 25 years (NRM 2013)
-com(1).alpha = com(1).P*ir*((1+ir)^n)./(((1+ir)^n)-1);     % annual value of community 1/m along x axis
-com(2).alpha = com(2).P*ir*((1+ir)^n)./(((1+ir)^n)-1);     % annual value of community 2/m along x axis
-% com(1).alpha = com(1).npropertiesll*(com(1).P*ir*((1+ir)^n)./(((1+ir)^n)-1))/dy;     % annual value of community 1/m along x axis
-% com(2).alpha = com(1).npropertiesll*(com(2).P*ir*((1+ir)^n)./(((1+ir)^n)-1))/dy;     % annual value of community 2/m along x axis
+com(1).alpha = com(1).P*dr;     % annual value of community 1/m along x axis
+com(2).alpha = com(2).P*dr;     % annual value of community 2/m along x axis
+% other way would be P*((1+dr)^n)./(((1+ir)^n)-1); 
 
 cost = 7;              % unit cost of sand /volume
 b = 0.085;          % exponent from Pompe & Rinehard 1995-- first row of houses = 0.2632; OR Landry 2007 (whole community)= 0.085, and NRM 2013 =0.157 (reasonable for coastal homes in NE)

@@ -1,5 +1,5 @@
 % Time
-Tmax = 200;    % Runing time (years)-- was 500 years
+Tmax = 3000;    % Runing time (years)-- was 500 years
 Tsteps = 100;    % time steps per year
 Tsave = 0.5;     % Save T how often (years), can be float
 
@@ -19,5 +19,7 @@ fs = 14;
 % Save times
 tsavetimes = Tmax/Tsave;
 tsavei = 1:(tsavetimes+1); % array of save time
+% tsavei = 1:(tsavetimes); % array of save time
+
 plotnum = floor(Tmax/plottimes/dt);
 savenum = Tmax/tsavetimes/dt;
