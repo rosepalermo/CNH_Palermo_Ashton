@@ -1,5 +1,5 @@
 % Time
-Tmax = 3000;    % Runing time (years)-- was 500 years
+Tmax = 2000;    % Runing time (years)-- was 500 years
 Tsteps = 100;    % time steps per year
 Tsave = 0.5;     % Save T how often (years), can be float
 

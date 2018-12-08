@@ -9,7 +9,7 @@ addpath(foldername1,foldername2,foldername3,foldername4)
 
 filepattern = fullfile(foldername1,'*.mat');
 theFiles1 = dir(filepattern);
-filepattern = fullfile(foldername2,'*.mat');16
+filepattern = fullfile(foldername2,'*.mat');
 theFiles2 = dir(filepattern);
 filepattern = fullfile(foldername3,'*.mat');
 theFiles3 = dir(filepattern);
