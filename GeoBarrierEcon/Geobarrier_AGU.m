@@ -531,25 +531,25 @@ W_saveall = W_saveall(:,(1+buff:length(Y)-buff));
 xsl_saveall = xsl_saveall(:,(1+buff:length(Y)-buff));
 if save_on
     if xsonly
-        foldername = "/Users/rosepalermo/Dropbox (MIT)/AGU2018/BarnegatBay/model/xsonly/";
+        foldername = "D:\BI_AGU_2018\BarnegatBayModel\xsonly\";
         filename = sprintf('XS_%s_OW%d_K%d_SLa%d_diff%d',shape,Qow_max,Ksf,sl_a*1000,astfac*1000);
     elseif developed_on
         if commercial
-            foldername = "/Users/rosepalermo/Dropbox (MIT)/AGU2018/BarnegatBay/model/developedc/";
+            foldername = "D:\BI_AGU_2018\BarnegatBayModel\developedc\";
             filename = sprintf('DC_%s_OW%d_K%d_SLa%d_diff%d',shape,Qow_max,Ksf,sl_a*1000,astfac*100);
         elseif residential
-            foldername = "/Users/rosepalermo/Dropbox (MIT)/AGU2018/BarnegatBay/model/developedr/";
+            foldername = "D:\BI_AGU_2018\BarnegatBayModel\developedr\";
             filename = sprintf('DR_%s_OW%d_K%d_SLa%d_diff%d',shape,Qow_max,Ksf,sl_a*1000,astfac*100);
         elseif comres_on
-            foldername = "/Users/rosepalermo/Dropbox (MIT)/AGU2018/BarnegatBay/model/developedcr/";
+            foldername = "D:\BI_AGU_2018\BarnegatBayModel\developedcr\";
             filename = sprintf('DCR_%s_OW%d_K%d_SLa%d_diff%d',shape,Qow_max,Ksf,sl_a*1000,astfac*100);
             
         end
     elseif community_on
-        foldername = "/Users/rosepalermo/Dropbox (MIT)/AGU2018/BarnegatBay/model/populated/";
+        foldername = "D:\BI_AGU_2018\BarnegatBayModel\populated\";
         filename = sprintf('COM_%s_OW%d_K%d_SLa%d_diff%d',shape,Qow_max,Ksf,sl_a*1000,astfac*100);
     else
-                    foldername = "/Users/rosepalermo/Dropbox (MIT)/AGU2018/BarnegatBay/model/natural/";
+                    foldername = "D:\BI_AGU_2018\BarnegatBayModel\natural\";
 %         foldername = "/Volumes/Rose Palermo hard drive/GeoBarrierModelOutput/natural only/";
         filename = sprintf('NAT_%s_OW%d_K%d_SLa%d_diff%d',shape,Qow_max,Ksf,sl_a*1000,astfac*100);
     end

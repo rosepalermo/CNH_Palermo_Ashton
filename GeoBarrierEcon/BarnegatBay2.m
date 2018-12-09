@@ -1,5 +1,6 @@
 % Barnegat Bay 1
-addpath('/Users/rosepalermo/Documents/Research/Alongshore coupled/Barnegat Bay')
+% addpath('/Users/rosepalermo/Documents/Research/Alongshore coupled/Barnegat Bay')
+addpath('C:\Users\Rose Palermo\Documents\Alongshore_coupled\GIS\Barnegat bay')
 load('BarnegatBay2.mat')
 
 sl_x = flipud(sl_x);

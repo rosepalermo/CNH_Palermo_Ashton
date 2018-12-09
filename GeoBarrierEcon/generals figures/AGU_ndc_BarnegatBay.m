@@ -1,18 +1,17 @@
-aa = 2;
-Usla = unique([A_test(aa).shape.sl_a]);
-UNDC = unique([A_test(aa).shape.NDC]);
-UFD = unique([A_test(aa).shape.astfac]);
-UQOW = unique([A_test(aa).shape.Qow_max]);
+aa = 1;
+Usla = unique([bbay(aa).shape.sl_a]);
+UNDC = unique([bbay(aa).shape.NDC]);
+UFD = unique([bbay(aa).shape.astfac]);
+UQOW = unique([bbay(aa).shape.Qow_max]);
 sizing = zeros(length(UQOW),length(UFD));
 p = 1; pp = 1;
 for i = 2 % 1:length(Usla)
-    UNDCplot = [4;3;2;1];
+    UNDCplot = [3;2;1];
     sp = 1;
     for iii = 1:length(UNDC)
-
-        j = ([A(aa).shape.sl_a] == Usla(1)) & ([A(aa).shape.NDC] == UNDC(UNDCplot(iii)));
-        j = j & ([A(aa).shape.astfac] == UFD(1)) & ([A(aa).shape.Qow_max] == UQOW(1));
-        i_struct = A(aa).shape(j);
+        j = ([bbay(aa).shape.sl_a] == Usla(1)) & ([bbay(aa).shape.NDC] == UNDC(UNDCplot(iii)));
+        j = j & ([bbay(aa).shape.astfac] == UFD(1)) & ([bbay(aa).shape.Qow_max] == UQOW(1));
+        i_struct = bbay(aa).shape(j);
         
 %         figure(1)
 %         ax(pp) = subplot(2,2,pp);
@@ -69,7 +68,7 @@ for i = 2 % 1:length(Usla)
 %          %         if p<6
 %          title('Washover ratio (W)')
 %          %         end
-%          colormap(ax(p),parulA_test(4))
+%          colormap(ax(p),parula(4))
 %          colorbar
 %          p = p+1;
 %          
@@ -104,61 +103,45 @@ for i = 2 % 1:length(Usla)
 %          p = p+1;
          
          ppp=1;
-         h = figure();
-         h.Position = [2 243 1437 562];
+         figure()
          ax(ppp) = subplot(1,3,ppp);
          imagesc(t,Y(1+buff:end-buff),([i_struct.Wratio]'))
-         set(gca,'ydir','normal','FontSize',20)
-         set(gca,'ytick',[0:2000:10000])
-         set(gca,'xtick',[0:100:200])
+         set(gca,'ydir','normal','FontSize',12)
          set(gca,'clim',[-2 2])
          %         if p>16
          xlabel('time (years)')
          %         end
          %         ylabel('alongshore distance (m)')
          %         if p<6
-%          title('Washover ratio (W)')
-                 ylabel('alongshore distance (m)')
+         title('Washover ratio (W)')
          %         end
          colormap(ax(ppp),parula(4))
-         c =colorbar;
-         c.Ticks = ([-2:1:2]);
+         colorbar
          ppp = ppp+1;
          
          ax(ppp) = subplot(1,3,ppp);
          imagesc(t,Y(1+buff:end-buff),[i_struct.W_saveall]')
-         set(gca,'ydir','normal','FontSize',20)
-         set(gca,'clim',[140 310])
+         set(gca,'ydir','normal','FontSize',12)
+                 set(gca,'clim',[200 1600])
          %         if p>15
          xlabel('time (years)')
-         set(gca,'ytick',[0:2000:10000])
-         set(gca,'xtick',[0:100:200])
-         c = colorbar;
-         c.Label.String = 'Width (m)';
-        filler = [c.Label.Position(1)./3.*2 c.Label.Position(2) c.Label.Position(3)];
-        c.Label.Position = filler;
-        c.Ticks = ([140 310]);
          %         end
          %         ylabel('alongshore distance (m)')
          %         if p<6
-%          title('Width')
+         title('Width')
          %         end
+         colorbar
          colormap(ax(ppp),gray)
          ppp = ppp+1;
          
         ax(ppp) = subplot(1,3,ppp);
         imagesc(t,Y(1+buff:end-buff),[i_struct.Qsf_saveall]')
-        set(gca,'ydir','normal','FontSize',20)
-        set(gca,'clim',[-0.3 0.3])
-        set(gca,'ytick',[0:2000:10000])
-        set(gca,'xtick',[0:100:200])
+        set(gca,'ydir','normal','FontSize',12)
+%         set(gca,'clim',[0 0.15])
         xlabel('time (years)')
-        c = colorbar;
-        c.Ticks = ([-0.3 0 0.3]);
-        c.Label.String = 'Qsf (m^3/m/yr)';
-        filler = [c.Label.Position(1)./3.*2 c.Label.Position(2) c.Label.Position(3)];
-        c.Label.Position = filler;
+        ylabel('alongshore distance (m)')
         %         title('Qsf')
+        colorbar
         colormap(ax(ppp),bluewhitered)
         ppp = 1;         
        
