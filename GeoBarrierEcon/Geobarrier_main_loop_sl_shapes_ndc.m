@@ -11,7 +11,7 @@ Time_inputs
 
 
 xsonly = false;
-save_on = false;
+save_on = true;
 plot_on = true;
 community_on = false;
 if ndc == 1
@@ -523,26 +523,26 @@ xsl_saveall = xsl_saveall(:,(1+buff:length(Y)-buff));
 if save_on
     if xsonly
 
-        foldername = "/Users/rosepalermo/Dropbox (MIT)/AGU2018/change middle width/xsonly/";
+        foldername = "D:\Model Output AGU\xsonly\";
         filename = sprintf('XS_%s_OW%d_K%d_SLa%d_diff%d',shape,Qow_max,Ksf,sl_a*1000,astfac*1000);
     elseif developed_on
         if commercial
-            foldername = "/Users/rosepalermo/Dropbox (MIT)/AGU2018/change middle width/developedc/";
+            foldername = "D:\Model Output AGU\developedc\";
             filename = sprintf('DC_%s_OW%d_K%d_SLa%d_diff%d',shape,Qow_max,Ksf,sl_a*1000,astfac*100);
         elseif residential
-            foldername = "/Users/rosepalermo/Dropbox (MIT)/AGU2018/change middle width/developedr/";
+            foldername = "D:\Model Output AGU\developedr\";
             filename = sprintf('DR_%s_OW%d_K%d_SLa%d_diff%d',shape,Qow_max,Ksf,sl_a*1000,astfac*100);
         elseif comres_on
-            foldername = "/Users/rosepalermo/Dropbox (MIT)/AGU2018/change middle width/developedcr/";
+            foldername = "D:\Model Output AGU\developedcr\";
             filename = sprintf('DCR_%s_OW%d_K%d_SLa%d_diff%d',shape,Qow_max,Ksf,sl_a*1000,astfac*100);
             
         end
     elseif community_on
 
-        foldername = "/Users/rosepalermo/Dropbox (MIT)/AGU2018/change middle width/populated/";
+        foldername = "D:\Model Output AGU\populated\";
         filename = sprintf('COM_%s_OW%d_K%d_SLa%d_diff%d',shape,Qow_max,Ksf,sl_a*1000,astfac*100);
     else
-                    foldername = "/Users/rosepalermo/Dropbox (MIT)/AGU2018/change middle width/natural/";
+                    foldername = "D:\Model Output AGU\natural\";
 %         foldername = "/Volumes/Rose Palermo hard drive/GeoBarrierModelOutput/natural only/";
         filename = sprintf('NAT_%s_OW%d_K%d_SLa%d_diff%d',shape,Qow_max,Ksf,sl_a*1000,astfac*100);
     end

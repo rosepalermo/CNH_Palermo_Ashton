@@ -1,19 +1,18 @@
 
 
-foldername1 = 'D:\Model Output Generals\natural\';
-foldername2 = 'D:\Model Output Generals\developedr\';
-foldername3 = 'D:\Model Output Generals\developedc\';
-foldername4 = 'D:\Model Output Generals\developedcr\';
+foldername1 = 'D:\BI_AGU_2018\BarnegatBayModel\natural\';
+foldername2 = 'D:\BI_AGU_2018\BarnegatBayModel\developedr\';
+foldername3 = 'D:\BI_AGU_2018\BarnegatBayModel\developedc\';
 
 addpath(foldername1,foldername2,foldername3,foldername4)
 
-filepattern = fullfile(foldername1,'*OW20_K200_SLa4_diff30.mat');
+filepattern = fullfile(foldername1,'*.mat');
 theFiles1 = dir(filepattern);
-filepattern = fullfile(foldername2,'*OW20_K200_SLa4_diff30.mat');
+filepattern = fullfile(foldername2,'*.mat');
 theFiles2 = dir(filepattern);
-filepattern = fullfile(foldername3,'*OW20_K200_SLa4_diff30.mat');
+filepattern = fullfile(foldername3,'*.mat');
 theFiles3 = dir(filepattern);
-filepattern = fullfile(foldername4,'*OW20_K200_SLa4_diff30.mat');
+filepattern = fullfile(foldername4,'*.mat');
 theFiles4 = dir(filepattern);
 
 theFiles = [theFiles1; theFiles2; theFiles3; theFiles4];
@@ -22,7 +21,6 @@ astfac_all = [0.01;0.05;0.1;0.2;0.3;0.34;0.5];
 gen = struct;
 sWmid = struct;
 gg = 1;
-sm = 1;
 
 
 for k = 1 : length(theFiles)
@@ -32,89 +30,46 @@ for k = 1 : length(theFiles)
     load(fullFileName)
     shape = string(shape);
     
-    if shape == string('gen')
-        continue
-        A(1,1).shape(gg).name = baseFileName;
+    if shape == string('bbay2')
+        bbay(1,1).shape(gg).name = baseFileName;
         scr = cat(1,zeros(1,length(Y)-2*buff),xsl_saveall(101:end,:)-xsl_saveall(1:end-100,:));
-        A(1,1).shape(gg).Mscr = max(max(scr));
-        A(1,1).shape(gg).Msc = max(max(xsl_saveall(end,:) - xsl_saveall(1,:)));
-        A(1,1).shape(gg).sl_a = sl_a;
-        A(1,1).shape(gg).astfac = astfac;
-        A(1,1).shape(gg).shape = shape;
-        A(1,1).shape(gg).Qow_max = Qow_max;
-        A(1,1).shape(gg).Qast_saveall = Qast_saveall;
-        A(1,1).shape(gg).Y = Y;
-        A(1,1).shape(gg).t = t;
-        A(1,1).shape(gg).QowB_saveall = QowB_saveall;
-        A(1,1).shape(gg).QowH_saveall = QowH_saveall;
-        A(1,1).shape(gg).Qow_saveall = Qow_saveall;
-        A(1,1).shape(gg).W_saveall = W_saveall;
-        A(1,1).shape(gg).xsl_saveall = xsl_saveall;
-        A(1,1).shape(gg).Wratio = Qow_saveall./-llxldot_saveall;
-        A(1,1).shape(gg).llxldot_saveall = -llxldot_saveall;
-        A(1,1).shape(gg).slc_all = [zeros(1,size(xsl_saveall,2));(xsl_saveall(2:end,:) - xsl_saveall(1,:))];
-        A(1,1).shape(gg).mslc_all = max(max([zeros(1,size(xsl_saveall,2));(xsl_saveall(2:end,:) - xsl_saveall(1,:))]));
-        A(1,1).shape(gg).buff = buff;
-        A(1,1).shape(gg).Qsf_saveall = Qsf_saveall;
-        A(1,1).shape(gg).NDC = string(A(1,1).shape(gg).name(1:3));
+        bbay(1,1).shape(gg).Mscr = max(max(scr));
+        bbay(1,1).shape(gg).Msc = max(max(xsl_saveall(end,:) - xsl_saveall(1,:)));
+        bbay(1,1).shape(gg).sl_a = sl_a;
+        bbay(1,1).shape(gg).astfac = astfac;
+        bbay(1,1).shape(gg).shape = shape;
+        bbay(1,1).shape(gg).Qow_max = Qow_max;
+        bbay(1,1).shape(gg).Qast_saveall = Qast_saveall;
+        bbay(1,1).shape(gg).Y = Y;
+        bbay(1,1).shape(gg).t = t;
+        bbay(1,1).shape(gg).QowB_saveall = QowB_saveall;
+        bbay(1,1).shape(gg).QowH_saveall = QowH_saveall;
+        bbay(1,1).shape(gg).Qow_saveall = Qow_saveall;
+        bbay(1,1).shape(gg).W_saveall = W_saveall;
+        bbay(1,1).shape(gg).xsl_saveall = xsl_saveall;
+        bbay(1,1).shape(gg).Wratio = Qow_saveall./-llxldot_saveall;
+        bbay(1,1).shape(gg).llxldot_saveall = -llxldot_saveall;
+        bbay(1,1).shape(gg).slc_all = [zeros(1,size(xsl_saveall,2));(xsl_saveall(2:end,:) - xsl_saveall(1,:))];
+        bbay(1,1).shape(gg).mslc_all = max(max([zeros(1,size(xsl_saveall,2));(xsl_saveall(2:end,:) - xsl_saveall(1,:))]));
+        bbay(1,1).shape(gg).buff = buff;
+        bbay(1,1).shape(gg).Qsf_saveall = Qsf_saveall;
+        bbay(1,1).shape(gg).NDC = string(bbay(1,1).shape(gg).name(1:3));
         [maxQsf, index] = max(max(abs(Qsf_saveall(:,(length(Qsf_saveall(end,:))/3):(length(Qsf_saveall(end,:))*2/3)))));
-        A(1,1).shape(gg).MQsf = maxQsf * sign(Qsf_saveall(index));
+        bbay(1,1).shape(gg).MQsf = maxQsf * sign(Qsf_saveall(index));
         [maxQsf, index] = max(abs(Qsf_saveall(end,(length(Qsf_saveall(end,:))/3):(length(Qsf_saveall(end,:))*2/3))));
-        A(1,1).shape(gg).MQsfend = maxQsf * sign(Qsf_saveall(end,index));
-        A(1,1).shape(gg).Mwidth = max(max(W_saveall(:,(length(Qsf_saveall(end,:))/3):(length(Qsf_saveall(end,:))*2/3))));
-        A(1,1).shape(gg).Mwidthend = max(W_saveall(end,(length(Qsf_saveall(end,:))/3):(length(Qsf_saveall(end,:))*2/3)));
-        if A(1,1).shape(gg).NDC == 'NAT'
-            A(1,1).shape(gg).color = 'k';
-        elseif A(1,1).shape(gg).NDC == 'DR_'
-            A(1,1).shape(gg).color = 'b';
-        elseif A(1,1).shape(gg).NDC == 'DC_'
-            A(1,1).shape(gg).color = 'm';
-        elseif A(1,1).shape(gg).NDC == 'DCR'
-            A(1,1).shape(gg).color = 'r';
+        bbay(1,1).shape(gg).MQsfend = maxQsf * sign(Qsf_saveall(end,index));
+        bbay(1,1).shape(gg).Mwidth = max(max(W_saveall(:,(length(Qsf_saveall(end,:))/3):(length(Qsf_saveall(end,:))*2/3))));
+        bbay(1,1).shape(gg).Mwidthend = max(W_saveall(end,(length(Qsf_saveall(end,:))/3):(length(Qsf_saveall(end,:))*2/3)));
+        if bbay(1,1).shape(gg).NDC == 'NAT'
+            bbay(1,1).shape(gg).color = 'k';
+        elseif bbay(1,1).shape(gg).NDC == 'DR_'
+            bbay(1,1).shape(gg).color = 'b';
+        elseif bbay(1,1).shape(gg).NDC == 'DC_'
+            bbay(1,1).shape(gg).color = 'm';
+        elseif bbay(1,1).shape(gg).NDC == 'DCR'
+            bbay(1,1).shape(gg).color = 'r';
         end
         gg = gg+1;
-        
-    elseif shape == string('sWmid')
-        A(2,1).shape(sm).name = baseFileName;
-        scr = cat(1,zeros(1,length(Y)-2*buff),xsl_saveall(101:end,:)-xsl_saveall(1:end-100,:));
-        A(2,1).shape(sm).Mscr = max(max(scr));
-        A(2,1).shape(sm).Msc = max(max(xsl_saveall(end,:) - xsl_saveall(1,:)));
-        A(2,1).shape(sm).sl_a = sl_a;
-        A(2,1).shape(sm).astfac = astfac;
-        A(2,1).shape(sm).shape = shape;
-        A(2,1).shape(sm).Qow_max = Qow_max;
-        A(2,1).shape(sm).Qast_saveall = Qast_saveall;
-        A(2,1).shape(sm).Y = Y;
-        A(2,1).shape(sm).t = t;
-        A(2,1).shape(sm).QowB_saveall = QowB_saveall;
-        A(2,1).shape(sm).QowH_saveall = QowH_saveall;
-        A(2,1).shape(sm).Qow_saveall = Qow_saveall;
-        A(2,1).shape(sm).W_saveall = W_saveall;
-        A(2,1).shape(sm).xsl_saveall = xsl_saveall;
-        A(2,1).shape(sm).Wratio = Qow_saveall./(-llxldot_saveall);
-        A(2,1).shape(sm).llxldot_saveall = -llxldot_saveall;
-        A(2,1).shape(sm).slc_all = [zeros(1,size(xsl_saveall,2));(xsl_saveall(2:end,:) - xsl_saveall(1,:))];
-        A(2,1).shape(sm).mslc_all = max(max([zeros(1,size(xsl_saveall,2));(xsl_saveall(2:end,:) - xsl_saveall(1,:))]));
-        A(2,1).shape(sm).buff = buff;
-        A(2,1).shape(sm).Qsf_saveall = Qsf_saveall;
-        A(2,1).shape(sm).NDC = string(A(2,1).shape(sm).name(1:3));
-        [maxQsf, index] = max(max(abs(Qsf_saveall(:,(length(Qsf_saveall(end,:))/3):(length(Qsf_saveall(end,:))*2/3)))));
-        A(2,1).shape(sm).MQsf = maxQsf * sign(Qsf_saveall(index));
-        [maxQsf, index] = max(abs(Qsf_saveall(end,(length(Qsf_saveall(end,:))/3):(length(Qsf_saveall(end,:))*2/3))));
-        A(2,1).shape(sm).MQsfend = maxQsf * sign(Qsf_saveall(end,index));
-        A(2,1).shape(sm).Mwidth = max(max(W_saveall(:,(length(Qsf_saveall(end,:))/3):(length(Qsf_saveall(end,:))*2/3))));
-        A(2,1).shape(sm).Mwidthend = max(W_saveall(end,(length(Qsf_saveall(end,:))/3):(length(Qsf_saveall(end,:))*2/3)));
-        if A(2,1).shape(sm).NDC == 'NAT'
-            A(2,1).shape(sm).color = 'k';
-        elseif A(2,1).shape(sm).NDC == 'DR_'
-            A(2,1).shape(sm).color = 'b';
-        elseif A(2,1).shape(sm).NDC == 'DC_'
-            A(2,1).shape(sm).color = 'm';
-        elseif A(2,1).shape(sm).NDC == 'DCR'
-            A(2,1).shape(sm).color = 'r';
-            
-        end
-        sm = sm+1;
     end
     
 end

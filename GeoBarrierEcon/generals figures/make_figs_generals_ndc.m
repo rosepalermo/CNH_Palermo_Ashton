@@ -9,8 +9,8 @@ for i = 2 % 1:length(Usla)
     UNDCplot = [4;3;2;1];
     sp = 1;
     for iii = 1:length(UNDC)
-        j = ([A(aa).shape.sl_a] == Usla(i)) & ([A(aa).shape.NDC] == UNDC(UNDCplot(iii)));
-        j = j & ([A(aa).shape.astfac] == UFD(2)) & ([A(aa).shape.Qow_max] == UQOW(3));
+        j = ([A(aa).shape.sl_a] == Usla(1)) & ([A(aa).shape.NDC] == UNDC(UNDCplot(iii)));
+        j = j & ([A(aa).shape.astfac] == UFD(1)) & ([A(aa).shape.Qow_max] == UQOW(1));
         i_struct = A(aa).shape(j);
         
 %         figure(1)
@@ -137,7 +137,7 @@ for i = 2 % 1:length(Usla)
         ax(ppp) = subplot(1,3,ppp);
         imagesc(t,Y(1+buff:end-buff),[i_struct.Qsf_saveall]')
         set(gca,'ydir','normal','FontSize',12)
-        set(gca,'clim',[0 0.3])
+        set(gca,'clim',[0 0.15])
         xlabel('time (years)')
         ylabel('alongshore distance (m)')
         %         title('Qsf')
