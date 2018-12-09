@@ -9,7 +9,9 @@ imagesc(Qow_saveall./llxldot_saveall)
 colormap(parula(4))
 set(gca,'Clim',[-2 2])
 
-imagesc(Qsf_saveall)
+imagesc(Qow_saveall./llxldot_saveall)
+colormap(parula(4))
+set(gca,'Clim',[-2 2])
 
 %%
 h = figure()

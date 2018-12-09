@@ -25,53 +25,63 @@ for i = 2 % 1:length(Usla)
 %         colormap(ax(pp),bluewhitered)
 %         pp = pp+1;
 %         
-%          p =1;
-%          figure()
-%          ax(p) = subplot(1,5,p)
-%          imagesc(t,Y(1+buff:end-buff),[i_struct.Qow_saveall]')
-%          set(gca,'ydir','normal','FontSize',12)
-%          set(gca,'clim',[0 20])
-%          %         if p>12
-%          xlabel('time (years)')
-%          %         end
-%          ylabel('alongshore distance (m)')
-%          %         if p<6
-%          title('Q_o_w')
-%          %         end
-%          colormap(ax(p),bluewhitered)
-%          colorbar
-%          p = p+1;
-%          
-%          ax(p) = subplot(1,5,p);
-%          imagesc(t,Y(1+buff:end-buff),[i_struct.llxldot_saveall]')
-%          set(gca,'ydir','normal','FontSize',12)
-%          set(gca,'clim',[-10 10])
-%          %         if p>16
-%          xlabel('time (years)')
-%          %         end
-%          %         ylabel('alongshore distance (m)')
-%          colormap(ax(p),redblue)
-%          %         if p<6
-%          title('\Delta Q_a_s_t')
-%          %         end
-%          colorbar
-%          p = p+1;
-%          
-%          ax(p) = subplot(1,5,p);
-%          imagesc(t,Y(1+buff:end-buff),([i_struct.Wratio]'))
-%          set(gca,'ydir','normal','FontSize',12)
-%          set(gca,'clim',[-2 2])
-%          %         if p>16
-%          xlabel('time (years)')
-%          %         end
-%          %         ylabel('alongshore distance (m)')
-%          %         if p<6
-%          title('Washover ratio (W)')
-%          %         end
-%          colormap(ax(p),parulA_test(4))
-%          colorbar
-%          p = p+1;
-%          
+         p =1;
+         hh = figure();
+         hh.Position = [2 243 1437 562];         
+         ax(p) = subplot(1,3,p)
+         imagesc(t,Y(1+buff:end-buff),[i_struct.Qow_saveall]')
+         set(gca,'ydir','normal','FontSize',20)
+         set(gca,'clim',[0 20])
+         set(gca,'ytick',[0:2000:10000])
+         set(gca,'xtick',[0:100:200])
+         %         if p>12
+         xlabel('time (years)')
+         %         end
+         ylabel('alongshore distance (m)')
+         %         if p<6
+         title('Q_o_w')
+         %         end
+         colormap(ax(p),bluewhitered)
+         c = colorbar;
+         c.Label.String = 'Washover Ratio';
+         p = p+1;
+         
+         ax(p) = subplot(1,3,p);
+         imagesc(t,Y(1+buff:end-buff),[i_struct.llxldot_saveall]')
+         set(gca,'ydir','normal','FontSize',12)
+         set(gca,'clim',[-10 10])
+         set(gca,'ytick',[0:2000:10000])
+         set(gca,'xtick',[0:100:200])
+         %         if p>16
+         xlabel('time (years)')
+         %         end
+         %         ylabel('alongshore distance (m)')
+         colormap(ax(p),redblue)
+         %         if p<6
+         title('\Delta Q_a_s_t')
+         %         end
+         colorbar
+         p = p+1;
+         
+         ax(p) = subplot(1,3,p);
+         imagesc(t,Y(1+buff:end-buff),([i_struct.Wratio]'))
+         set(gca,'ydir','normal','FontSize',12)
+         set(gca,'clim',[-2 2])
+         %         if p>16
+         xlabel('time (years)')
+         set(gca,'ytick',[0:2000:10000])
+         set(gca,'xtick',[0:100:200])
+         %         end
+         %         ylabel('alongshore distance (m)')
+         %         if p<6
+         title('Washover ratio (W)')
+         %         end
+         colormap(ax(p),parula(4))
+         c =colorbar;
+         filler = [c.Label.Position(1)./3.*2 c.Label.Position(2) c.Label.Position(3)];
+         c.Label.Position = filler;
+         p = p+1;
+         
 %          ax(p) = subplot(1,5,p);
 %          imagesc(t,Y(1+buff:end-buff),[i_struct.W_saveall]')
 %          set(gca,'ydir','normal','FontSize',12)

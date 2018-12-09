@@ -11,7 +11,7 @@ Time_inputs
 
 
 xsonly = false;
-save_on = false;
+save_on = true;
 plot_on = true;
 community_on = false;
 if ndc == 1
