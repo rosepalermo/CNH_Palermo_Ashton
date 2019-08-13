@@ -89,8 +89,8 @@ end
 
 % astfac = .01; % fractional diffusivity (i.e. angular wave distribution reduces diffusivity by what)
 % some alongshore coefficients
-K2=0.34/2*astfac; %m^(3/5)s^(-6/5)
-Ka=K2*Ho^(12/5)*To^(1/5) * 365*86400; %convert to m^3/year
+K2=0.34/2; %m^(3/5)s^(-6/5)
+Ka=K2*Ho^(12/5)*To^(1/5)*astfac * 365*86400; %convert to m^3/year
 
 
 
