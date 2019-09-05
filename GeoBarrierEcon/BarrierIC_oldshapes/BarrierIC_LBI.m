@@ -19,9 +19,6 @@ Y=0:dy:Yn*dy;    % real y array
 ys=length(Y);    % alongshore spots
 Yi = 1:ys;       % Y i's
 
-%     %%%% Set the Domain Variables for the barrier (add the buff)
-ys = ys+2*buff;
-Yi = 1:ys;   
 
 
 B=ones(1,ys) * Bslope; % Basement Slope, can be different
@@ -53,8 +50,6 @@ xsl = vo(2,:);
 plot(Y,xsl)
 legend('raw','rot')
 
-Y = 0:dy:(Yn+2*buff)*dy;
-xsl = cat(2,xsl(1)*ones(1,buff),xsl,xsl(end)*ones(1,buff));
 plot(Y,xsl)
 %Then decide the location of the toe based on the slope and xsl
 xtoe=xsl-Dsf/Ae;            % X toe
@@ -71,7 +66,6 @@ W(20:115) = 800;
 W(115:150) = 1000;
 W(150:(Yn+1)-50) = 900;
 W((Yn+1)-50:Yn+1) = 350;
-W = cat(2,500*ones(1,buff),W,500*ones(1,buff));
 if exist('ncom')
     for c = 1:ncom
         W(com(c).jj) = com(c).W0;
@@ -84,13 +78,6 @@ xbb=xsl+W; % X backbarrier
 %whatever I do for width, do the same for height
 % H(Yi) =He;             % barrier height
 H = randi([1 3],1,(Yn+1));
-H = cat(2,He*ones(1,buff),H,He*ones(1,buff));
 
-% Yi = 1:1:2*buff+length(Yi);
 
-if exist('ncom')
-    for c = 1:ncom
-        com(c).jj = com(c).jj + buff;
-    end
-end
 

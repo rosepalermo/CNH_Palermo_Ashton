@@ -1,10 +1,10 @@
 
 
-foldername1 = 'D:\BI_AGU_2018\BarnegatBayModel\natural\';
-foldername2 = 'D:\BI_AGU_2018\BarnegatBayModel\developedr\';
-foldername3 = 'D:\BI_AGU_2018\BarnegatBayModel\developedc\';
+foldername1 = '/Users/rosepalermo/Dropbox (MIT)/AGU2018/NJ/natural/';
+foldername2 = '/Users/rosepalermo/Dropbox (MIT)/AGU2018/NJ/developedr/';
+foldername3 = '/Users/rosepalermo/Dropbox (MIT)/AGU2018/NJ/developedc/';
 
-addpath(foldername1,foldername2,foldername3,foldername4)
+addpath(foldername1,foldername2,foldername3)
 
 filepattern = fullfile(foldername1,'*.mat');
 theFiles1 = dir(filepattern);
@@ -12,12 +12,11 @@ filepattern = fullfile(foldername2,'*.mat');
 theFiles2 = dir(filepattern);
 filepattern = fullfile(foldername3,'*.mat');
 theFiles3 = dir(filepattern);
-filepattern = fullfile(foldername4,'*.mat');
-theFiles4 = dir(filepattern);
 
-theFiles = [theFiles1; theFiles2; theFiles3; theFiles4];
 
-astfac_all = [0.01;0.05;0.1;0.2;0.3;0.34;0.5];
+theFiles = [theFiles1; theFiles2; theFiles3];
+
+% astfac_all = [0.01;0.05;0.1;0.2;0.3;0.34;0.5];
 gen = struct;
 sWmid = struct;
 gg = 1;
@@ -42,24 +41,25 @@ for k = 1 : length(theFiles)
         bbay(1,1).shape(gg).Qast_saveall = Qast_saveall;
         bbay(1,1).shape(gg).Y = Y;
         bbay(1,1).shape(gg).t = t;
-        bbay(1,1).shape(gg).QowB_saveall = QowB_saveall;
-        bbay(1,1).shape(gg).QowH_saveall = QowH_saveall;
+%         bbay(1,1).shape(gg).QowB_saveall = QowB_saveall;
+%         bbay(1,1).shape(gg).QowH_saveall = QowH_saveall;
         bbay(1,1).shape(gg).Qow_saveall = Qow_saveall;
         bbay(1,1).shape(gg).W_saveall = W_saveall;
+        bbay(1,1).shape(gg).H_saveall = H_saveall;
         bbay(1,1).shape(gg).xsl_saveall = xsl_saveall;
         bbay(1,1).shape(gg).Wratio = Qow_saveall./-llxldot_saveall;
         bbay(1,1).shape(gg).llxldot_saveall = -llxldot_saveall;
-        bbay(1,1).shape(gg).slc_all = [zeros(1,size(xsl_saveall,2));(xsl_saveall(2:end,:) - xsl_saveall(1,:))];
-        bbay(1,1).shape(gg).mslc_all = max(max([zeros(1,size(xsl_saveall,2));(xsl_saveall(2:end,:) - xsl_saveall(1,:))]));
+%         bbay(1,1).shape(gg).slc_all = [zeros(1,size(xsl_saveall,2));(xsl_saveall(2:end,:) - xsl_saveall(1,:))];
+%         bbay(1,1).shape(gg).mslc_all = max(max([zeros(1,size(xsl_saveall,2));(xsl_saveall(2:end,:) - xsl_saveall(1,:))]));
         bbay(1,1).shape(gg).buff = buff;
         bbay(1,1).shape(gg).Qsf_saveall = Qsf_saveall;
         bbay(1,1).shape(gg).NDC = string(bbay(1,1).shape(gg).name(1:3));
         [maxQsf, index] = max(max(abs(Qsf_saveall(:,(length(Qsf_saveall(end,:))/3):(length(Qsf_saveall(end,:))*2/3)))));
-        bbay(1,1).shape(gg).MQsf = maxQsf * sign(Qsf_saveall(index));
+%         bbay(1,1).shape(gg).MQsf = maxQsf * sign(Qsf_saveall(index));
         [maxQsf, index] = max(abs(Qsf_saveall(end,(length(Qsf_saveall(end,:))/3):(length(Qsf_saveall(end,:))*2/3))));
-        bbay(1,1).shape(gg).MQsfend = maxQsf * sign(Qsf_saveall(end,index));
-        bbay(1,1).shape(gg).Mwidth = max(max(W_saveall(:,(length(Qsf_saveall(end,:))/3):(length(Qsf_saveall(end,:))*2/3))));
-        bbay(1,1).shape(gg).Mwidthend = max(W_saveall(end,(length(Qsf_saveall(end,:))/3):(length(Qsf_saveall(end,:))*2/3)));
+%         bbay(1,1).shape(gg).MQsfend = maxQsf * sign(Qsf_saveall(end,index));
+%         bbay(1,1).shape(gg).Mwidth = max(max(W_saveall(:,(length(Qsf_saveall(end,:))/3):(length(Qsf_saveall(end,:))*2/3))));
+%         bbay(1,1).shape(gg).Mwidthend = max(W_saveall(end,(length(Qsf_saveall(end,:))/3):(length(Qsf_saveall(end,:))*2/3)));
         if bbay(1,1).shape(gg).NDC == 'NAT'
             bbay(1,1).shape(gg).color = 'k';
         elseif bbay(1,1).shape(gg).NDC == 'DR_'

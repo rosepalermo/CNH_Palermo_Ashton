@@ -8,13 +8,6 @@ Y=0:dy:Yn*dy;    % real y array
 ys=length(Y);    % alongshore spots
 Yi = 1:ys;       % Y i's
 
-%     %%%% Set the Domain Variables for the barrier (add the buff)
-ys = ys+2*buff;
-Yi = 1:1:ys;   
-Y = 0:dy:(Yn+(2*buff))*dy;
-
-
-
 
 %%%% Set the Domain Variables for the barrier
 B=ones(1,ys) * Bslope; % Basement Slope, can be different

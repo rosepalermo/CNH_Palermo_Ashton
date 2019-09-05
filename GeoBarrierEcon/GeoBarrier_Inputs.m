@@ -7,11 +7,6 @@
 
 % Space
 dy = 100; % Spacing alongshore (m)
-if shape_ == 1
-    buff = 1;
-else
-    buff = 0;
-end
 
 % SL rise rate = a + bt
 sl_a = 0.004; %m/yr
@@ -38,11 +33,12 @@ end
 % Barrier Variables - here assume these are constant across barrier, these
 % could also be varied for some cases perhaps
 
-if i == 1
+% if i == 1
     Dsf = 10; % Shoreface Toe depth (meters). Typically in the range 10-20m
-else
-    Dsf = 16;
-end
+% else
+%     Dsf = 16; % USE 16 FOR BARNEGAT BAY
+% end
+
 We = 300; % Equilibrium width (meters)
 He = 2;   % Equilibrium heigth (meters)
 Ae = 0.015;    % Equilibrium shoreface slope3
@@ -89,12 +85,12 @@ end
 
 % astfac = .01; % fractional diffusivity (i.e. angular wave distribution reduces diffusivity by what)
 % some alongshore coefficients
-K2=0.34/2*astfac; %m^(3/5)s^(-6/5)
-Ka=K2*Ho^(12/5)*To^(1/5) * 365*86400; %convert to m^3/year
+K2=0.34/2; %m^(3/5)s^(-6/5)
+Ka=K2*Ho^(12/5)*To^(1/5)*astfac * 365*86400; %convert to m^3/year
 
 
 
-%% ICCP Scenarios -- save for later
+%% IPCC Scenarios -- save for later
 
 % if exist('sl')
 %     if sl == 1 % RCP2.6
