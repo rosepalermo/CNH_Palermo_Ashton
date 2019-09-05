@@ -18,8 +18,8 @@
 % 
 % theFiles = [theFiles1; theFiles2; theFiles3; theFiles4];
 
-
-foldername = "/Users/rosepalermo/Documents/Research/Alongshore coupled/GeoBarrierModelOutput/natural only/";
+foldername = 'D:\Model Output Generals\natural';
+% foldername = "/Users/rosepalermo/Documents/Research/Alongshore coupled/GeoBarrierModelOutput/natural only/";
 filepattern = fullfile(foldername,'*.mat');
 theFiles = dir(filepattern);
 addpath(foldername)
