@@ -13,7 +13,7 @@ sl_a = 0.004; %m/yr
 zzs = 0.001:0.001:0.003;
 sl_b = 0; % If b=0 constant sea-level rise
 
-if exist('sl')
+if exist('sl') == 1
     if sl == 1
         sl_a = 0.003;
     elseif sl == 2
@@ -83,7 +83,6 @@ elseif AA == 7
     astfac = 0.5;
 end
 
-% astfac = .01; % fractional diffusivity (i.e. angular wave distribution reduces diffusivity by what)
 % some alongshore coefficients
 K2=0.34/2; %m^(3/5)s^(-6/5)
 Ka=K2*Ho^(12/5)*To^(1/5)*astfac * 365*86400; %convert to m^3/year

@@ -2,10 +2,9 @@
 % Jorge Lorenzo Trueba adopted by Andrew Ashton starting 2-2015
 % adopted by Rose Palermo starting 2-2017
 % close all;clear all;
-for Dbb = 2:10
 
 mbw = 1;
-sl = 2;
+% sl = 2;
 ndc = 1;
 AA = 3;
 QW = 3;
@@ -77,16 +76,16 @@ if community_on
 end
 
 %%%% Zero the Save Variables
-Xtoe_save = nan(tsavetimes, ys);
-xsl_save = nan(tsavetimes, ys);
-xbb_save = nan(tsavetimes, ys);
-H_save= nan(tsavetimes, ys);
-QowH_save = nan(tsavetimes, ys);
-QowB_save = nan(tsavetimes, ys);
-Qow_save = nan(tsavetimes, ys);
-Qsf_save = nan(tsavetimes, ys);
-Qast_save = nan(tsavetimes, ys);
-W_save = nan(tsavetimes, ys);
+Xtoe_save = zeros(tsavetimes, ys);
+xsl_save = zeros(tsavetimes, ys);
+xbb_save = zeros(tsavetimes, ys);
+H_save= zeros(tsavetimes, ys);
+QowH_save = zeros(tsavetimes, ys);
+QowB_save = zeros(tsavetimes, ys);
+Qow_save = zeros(tsavetimes, ys);
+Qsf_save = zeros(tsavetimes, ys);
+Qast_save = zeros(tsavetimes, ys);
+W_save = zeros(tsavetimes, ys);
 
 % xsl_saveall = zeros(ts,length(Yi));
 % xbb_saveall = zeros(ts,length(Yi));
@@ -308,7 +307,7 @@ if plot_on
     end
     if ~community_on
         %ppp = Xsl_save(:,jplot)
-        plot(tsavei*Tsave,xsl_save(:,jplot)/1000,'--','Color','k', 'linewidth',2)
+        plot(t(tsavei)*Tsave,xsl_save(:,jplot)/1000,'--','Color','k', 'linewidth',2)
         plot(tsavei*Tsave,xbb_save(:,jplot)/1000,'Color','k', 'linewidth',2)
     end
     
@@ -339,7 +338,7 @@ if plot_on
     
     axes4 = subplot(4,1,4);
     plot(Y/1000,xsl_cr,'b', 'linewidth',2)
-%     axis([Y(1)/1000 Y(Yn)/1000 nanmin(xsl_cr) nanmax(xsl_cr)+1])
+    axis([Y(1)/1000 Y(Yn)/1000 min(xsl_cr) max(xsl_cr)+1])
     linkaxes([axes2,axes4],'x')
     xlabel('Alongshore position (km)')
     ylabel('shoreline change rate over whole simulation')
@@ -349,6 +348,4 @@ end
 
 if save_on
     save_files
-end
-
 end
