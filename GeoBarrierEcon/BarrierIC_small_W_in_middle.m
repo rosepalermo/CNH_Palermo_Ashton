@@ -11,9 +11,10 @@ ys=length(Y);    % alongshore spots
 Yi = 1:ys;       % Y i's
 
 %     %%%% Set the Domain Variables for the barrier
-W(Yi) = Wstart;
+W(Yi) = We;
 % W(ceil(ys/2)-EL:ceil(ys/2)+EL) = W(ceil(ys/2)-EL:ceil(ys/2)+EL)-150;
-W(ceil(ys/3):2*ceil(ys/3)) = W(ceil(ys/3):2*ceil(ys/3))-150;
+% W(ceil(ys/3):2*ceil(ys/3)) = Wstart.*ones(size(ceil(ys/3):2*ceil(ys/3)));
+W(ceil((ys-L)./2):ys-ceil((ys-L)./2)) = Wstart.*ones(size(ceil((ys-L)./2):ys-ceil((ys-L)./2)));
 
 
 xsl(Yi)=Dsf/Ae;        % X shoreline

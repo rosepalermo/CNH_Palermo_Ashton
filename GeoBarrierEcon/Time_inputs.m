@@ -1,7 +1,7 @@
 % Time
 Tmax = 200;    % Runing time (years)-- was 500 years
 Tsteps = 100;    % time steps per year
-Tsave = 0.5;     % Save T how often (years), can be float
+Tsave = 1;     % Save T how often (years), can be float
 
 %%%% Time
 dt = 1/Tsteps;   % time steps (years)

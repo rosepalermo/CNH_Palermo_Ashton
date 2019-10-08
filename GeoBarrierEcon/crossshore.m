@@ -3,7 +3,7 @@ for j = 1:ys
     % Compute local geometries from the saved arrays
     A=Dsf/(xsl(j)-xtoe(j)); % Shoreface Slope
     W=xbb(j)-xsl(j);    % Barrier Width
-    Db= min(Dsf + Z - xbb(j)*B(j),2); % Either calculated from the slope or 2m (~mean of Long Island data), whichever is smaller
+    Db= min(Dsf + Z - xbb(j)*B(j),Dbb); % Either calculated from the slope or Dbb - initial Db (2m) (~mean of Long Island data), whichever is smaller
     %                         Db= (Dsf + Z - xbb(j)*B(j));
     
     

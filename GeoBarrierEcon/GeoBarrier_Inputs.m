@@ -9,26 +9,11 @@
 dy = 100; % Spacing alongshore (m)
 
 % SL rise rate = a + bt
-sl_a = 0.004; %m/yr
+% sl_a = 0.003; %m/yr
 zzs = 0.001:0.001:0.003;
 sl_b = 0; % If b=0 constant sea-level rise
 
-if exist('sl') == 1
-    if sl == 1
-        sl_a = 0.003;
-    elseif sl == 2
-        sl_a = 0.004;
-    elseif sl == 3
-        sl_a = 0.005;
-    elseif sl == 4
-        sl_a = 0.1;
-    elseif sl == 5
-        sl_a = 0.01;
-    elseif sl==6
-        sl_a = 0.05;
-    end
 
-end
 
 % Barrier Variables - here assume these are constant across barrier, these
 % could also be varied for some cases perhaps
@@ -45,43 +30,19 @@ Ae = 0.015;    % Equilibrium shoreface slope3
 qows = 0:10:80;
 % Qow_max = 50;% Maximum overwash flux (m^2/year) Emily Carruthers estimates: 2.4 - 8.5; ?Masetti 2008: 24-48
 Vd_max = 100; % Maximum deficit volume (m^2)
-Ksf = 200;  % Shoreface Flux constant (m^2/year)
+Ksf = 2000;  % Shoreface Flux constant (m^2/year) %model runs for AGU and CS had Ksf 200
 kks = 0:1000:10000; 
 Bslope = 0.001; %basement slope
-Wstart = We;    
+% Wstart = We;   
+% Dbb = 2; % depth of the back barrier
 
-if QW == 1
-    Qow_max = 5;
-elseif QW == 2
-    Qow_max = 10;
-elseif QW == 3
-    Qow_max = 20;
-elseif QW == 4
-    Qow_max = 30;
-elseif QW == 5
-    Qow_max = 40;
-elseif QW == 6
-    Qow_max = 50;
-end
+
 
 % Alongshore input physical parameters
 To= 8; % Wave period (seconds)
 Ho= 1; % Wave heigth (m) (sic Jorge)
-if AA == 1
-    astfac = 0.01;
-elseif AA == 2
-    astfac = 0.05;
-elseif AA == 3
-    astfac = 0.1;
-elseif AA == 4
-    astfac = 0.2;
-elseif AA == 5
-    astfac = 0.3;
-elseif AA == 6
-    astfac = 0.4;
-elseif AA == 7
-    astfac = 0.5;
-end
+
+%astfac = 0.1; %0.01:0.5;
 
 % some alongshore coefficients
 K2=0.34/2; %m^(3/5)s^(-6/5)
