@@ -1,0 +1,17 @@
+% make pdf of approximate gulf lengths
+load('gulf_length_approx.mat')
+[p,x] = hist(lengths,15); %plot(x,p/sum(p)); %PDF
+
+figure()
+[f,x] = ecdf(lengths); plot(x,f,'k','LineWidth',2); %CDF
+xlabel('Length (km)')
+ylabel('Probability')
+title('Approximate length of Gulf coastal barriers')
+set(gca,'FontSize',16)
+
+% 
+psi = 0.4;%0:0.1:1;
+Qow = 20;
+dbb = 2;
+mu = 0.025*365*60*60*24*psi;
+Last = mu/dbb/Qow/1000; % Length in KM
