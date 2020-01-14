@@ -6,7 +6,7 @@ astfac = [0.1 0.2 0.3 0.4 0.5];
 Dbb = 2:10;
 Wstart = 150:50:400;
 L = [10 30 50 70 90];% 102= ys
-parfor SL = 5:6%1:length(sl_a)
+parfor SL = 1:length(sl_a)
 for OW = 1:length(Qow_max)
     for AF = 1:length(astfac)
         for d = 1:length(Dbb)
