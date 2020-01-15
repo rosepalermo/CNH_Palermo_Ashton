@@ -10,7 +10,7 @@
 %         filename = sprintf('/Users/rosepalermo/Documents/Research/Alongshore coupled/GeoBarrierModelOutput/populated_%s_OW%d_K%d_SLa%d_diff%d',shape,Qow_max,Ksf,sl_a*1000,astfac*10);
 %     else
 %         filename = sprintf('/Users/rosepalermo/Documents/Research/Alongshore coupled/GeoBarrierModelOutput/10_2019/natural_%s_OW%d_SLa%d_diff%d_Dbb%d_Wstart%d_L%d',shape,Qow_max,sl_a*1000,astfac*10,Dbb,Wstart,L);
-        filename = sprintf('Output_1_2020/natural_%s_OW%d_SLa%d_diff%d_Dbb%d_Wstart%d_L%d',shape,Qow_max,sl_a*1000,astfac*10,Dbb,Wstart,L);
+        filename = sprintf('/home/rpalermo/GeoBarrierModelOutput/10_2019/natural_%s_OW%d_SLa%d_diff%d_Dbb%d_Wstart%d_L%d',shape,Qow_max,sl_a*1000,astfac*10,Dbb,Wstart,L);
 
         %     end
 %     
