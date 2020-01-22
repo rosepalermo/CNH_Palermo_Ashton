@@ -7,4 +7,4 @@
 #SBATCH -p sched_engaging_default
 . /etc/profile.d/modules.sh
 module load mit/matlab/2018a 
-matlab -nodisplay -nodesktop -nosplash -r "run parameters_explored1.m"
+matlab -nodisplay -nodesktop -nosplash -r "run parameters_explored6.m"
