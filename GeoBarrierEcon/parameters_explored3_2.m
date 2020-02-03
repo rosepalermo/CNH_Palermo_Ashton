@@ -6,9 +6,9 @@ astfac = [0.1 0.2 0.3 0.4 0.5];
 Dbb = 2:10;
 Wstart = 150:50:500;
 L = [100 500 1000 5000 7000];% 102= ys
-SL = 5;%:length(sl_a)
+SL = 3%:length(sl_a)
 shape = 'sWmid';
-for OW = 1:2%;length(Qow_max)
+for OW = 3:4%;length(Qow_max)
     parfor AF = 1:length(astfac)
         for d = 1:length(Dbb)
             for Ws = 1:length(Wstart)

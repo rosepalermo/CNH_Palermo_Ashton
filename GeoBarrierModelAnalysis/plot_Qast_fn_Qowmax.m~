@@ -1,24 +1,25 @@
-%  plot mean slx as a function of changing Qow_max
-% seems like no matter what I change, the astfac plays no role in the mean
-% slx of the model run?
+%  plot slx, max,mean Qast as a function of changing Qow_max
 
 
-foldername = "/Users/rosepalermo/Documents/Research/Alongshore coupled/GeoBarrierModelOutput/Cluster/GeoBarrierModelOutput/10_2019/";
+% foldername = "/Users/rosepalermo/Documents/Research/Alongshorecoupled/GeoBarrierModelOutput/Cluster/GeoBarrierModelOutput/10_2019/";
+foldername = "/Users/rosepalermo/Documents/Research/Alongshorecoupled/GeoBarrierModelOutput/Cluster/1_2020/";
+
 filepattern = fullfile(foldername,'*.mat');
 files = dir(filepattern);
 
 % FILTER ONLY THE RUNS I WANT
 %     filter_L = @(params) params.L <= 30;
-filter_func = @(params) filter_L(params, 50, 50) && ... % range is 10-90
-    filter_astfac(params, 0.1, 0.5) && ... % range is 0.1-0.5
-    filter_sl_a(params, 0.004, 0.004) && ... % range is 0.003-0.1
-    filter_Qow_max(params, 20, 20) && ... % range is 5-50
-    filter_Dbb(params, 2, 2) && ... % range is 2-10
+filter_func = @(params) filter_L(params, 1000, 1000) && ... % range is 10-90
+    filter_astfac(params, 0.1, 0.1) && ... % range is 0.1-0.5
+    filter_sl_a(params, 0.1, 0.1) && ... % range is 0.003-0.1
+    filter_Qow_max(params, 5, 50) && ... % range is 5-50
+    filter_Dbb(params, 7, 7) && ... % range is 2-10
     filter_Wstart(params, 150, 150); % range is 150-400
 
 % LOOP FILES
 figure()
 ii = 1;
+subplot(1,3,1)
 for i=1:length(files)
     params = get_params_from_name(files(i).name);
     if filter_func(params)
@@ -30,19 +31,43 @@ for i=1:length(files)
         result = model_output_processing(fullFileName, files(i).name);
         
         % SAVE DATA I NEED
-        astfac_all(ii) =params.astfac;
+        qow_all(ii) =params.Qow_max;
+        meanQast(ii,:) = abs(nanmean(result.Qast_save,2))';
+        maxQast(ii,:) = abs(nanmax(result.Qast_save,[],2))';
         slx(ii,:) = result.mean_slx;
-        
-        % PLOT ER UP
-        plot(1:201,slx(ii,:))
-        hold on
-        
         ii = ii+1;
     end
 end
-%     legend('Qow max = 5','Qow max = 10','Qow max = 20','Qow max = 30','Qow max = 40','Qow max = 50','location','northwest')
 
+subplot(1,3,1)
+for i = 1:(ii-1)
+    plot(1:201,meanQast(i,:),'LineWidth',2)
+    hold on
+end
+legend('Qow max = 5','Qow max = 10','Qow max = 20','Qow max = 30','Qow max = 40','Qow max = 50','location','northwest')
+ylabel('mean Qast')
+xlabel('time')
+set(gca,'FontSize',14)
 
+subplot(1,3,2)
+for i = 1:(ii-1)
+    plot(1:201,maxQast(i,:),'LineWidth',2)
+    hold on
+end
+legend('Qow max = 5','Qow max = 10','Qow max = 20','Qow max = 30','Qow max = 40','Qow max = 50','location','northwest')
+ylabel('max Qast')
+xlabel('time')
+set(gca,'FontSize',14)
+
+subplot(1,3,3)
+for i = 1:(ii-1)
+    plot(1:201,slx(i,:),'LineWidth',2)
+    hold on
+end
+legend('Qow max = 5','Qow max = 10','Qow max = 20','Qow max = 30','Qow max = 40','Qow max = 50','location','northwest')
+ylabel('slx')
+xlabel('time')
+set(gca,'FontSize',14)
 
 
 % filter functions

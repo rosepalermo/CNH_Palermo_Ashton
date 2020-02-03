@@ -3,6 +3,7 @@
 function result = model_output_processing(fullFileName,name)
 
 load(fullFileName)
+result.tmax=t(end);
 result.name = name;
 result.scr = cat(1,zeros(1,length(Y)),xsl_save(101:end,:)-xsl_save(1:end-100,:));
 result.Mscr = nanmax(nanmax(result.scr));
