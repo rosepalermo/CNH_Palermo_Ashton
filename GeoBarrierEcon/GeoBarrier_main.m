@@ -1,15 +1,16 @@
 %% Barrier geometric model with coupled Alongshore. %%%%%%%%%%%%%%%
+% close all;clear all;
 % tic
 % sl_a = 0.004;%[0.003 0.004 0.005 0.01 0.05 0.1]; % sl_a right now is 0.003
 % Qow_max = 10;%[5 10 20 30 40 50];
 % astfac = 0.3;%[0.1 0.2 0.3 0.4 0.5];
 % Dbb = 2;%2:10;
 % Wstart = 400;%150:50:400;
-% L = 5000;%[10 30 50 70 90];% 102= ys
+% L = 500;%[10 30 50 70 90];% 102= ys
+
 function GeoBarrier_main(Qow_max,astfac,Dbb,Wstart,L,sl_a)
 % Jorge Lorenzo Trueba adopted by Andrew Ashton starting 2-2015
 % adopted by Rose Palermo starting 2-2017
-% close all;clear all;
     % inputs
     GeoBarrier_Inputs
     Time_inputs
