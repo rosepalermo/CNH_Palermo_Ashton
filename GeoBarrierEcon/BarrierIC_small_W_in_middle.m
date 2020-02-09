@@ -3,7 +3,7 @@
 shape = 'sWmid';
 
 % Space
-Yn = 10001; % number of Y cells
+Yn = 1001; % number of Y cells
 
 %%%% Alongshore array dimensions (initial)
 Y=0:dy:Yn*dy;    % real y array

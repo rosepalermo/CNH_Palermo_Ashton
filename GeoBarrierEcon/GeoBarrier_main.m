@@ -252,7 +252,7 @@ function GeoBarrier_main(Qow_max,astfac,Dbb,Wstart,L,sl_a)
                 if ~community_on
                     jplot = floor(length(Yi)./2); % Which profile youre plotting, the middle of the barrier
                     % compute the z's
-                    Db= Dsf - xbb(j)*B(j); zt=Z-Dsf; zs=Z; ztop=Z+H(j);
+                    Db= Dsf - xbb(jplot)*B(jplot); zt=Z-Dsf; zs=Z; ztop=Z+H(jplot);
                     % plot the barrier parts
                     Xplot=[xtoe(jplot) xsl(jplot) xsl(jplot) xbb(jplot) xbb(jplot)]/1000;
                     Zplot=[zt     zs     ztop   ztop   -Db ];
@@ -261,7 +261,7 @@ function GeoBarrier_main(Qow_max,astfac,Dbb,Wstart,L,sl_a)
                 
                 
                 % plot a shoreface
-                Xplot=[-Dsf/B(j) Dsf/B(j)]/1000;
+                Xplot=[-Dsf/B(jplot) Dsf/B(jplot)]/1000;
                 Zplot=[-2*Dsf 0];
                 plot(Xplot,Zplot,'k')
                 plot([-1000 2000], [Z Z], 'b')
