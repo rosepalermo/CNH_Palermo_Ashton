@@ -37,3 +37,4 @@ result.Qow_save = Qow_save;
 result.W_save = W_save;
 result.xsl_save = xsl_save;
 result.Qsf_save = Qsf_save;
+result.WRatio_save = Qow_save./Qast_save;

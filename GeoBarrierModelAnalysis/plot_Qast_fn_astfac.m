@@ -2,16 +2,16 @@
 
 
 
-foldername = "/Users/rosepalermo/Documents/Research/Alongshorecoupled/GeoBarrierModelOutput/Cluster/GeoBarrierModelOutput/10_2019/";
+foldername = "/Users/rosepalermo/Documents/Research/Alongshore coupled/GeoBarrierModelOutput/Cluster/GeoBarrierModelOutput/10_2019/";
 filepattern = fullfile(foldername,'*.mat');
 files = dir(filepattern);
 
 % FILTER ONLY THE RUNS I WANT
 %     filter_L = @(params) params.L <= 30;
-filter_func = @(params) filter_L(params, 10, 10) && ... % range is 10-90
+filter_func = @(params) filter_L(params, 50, 50) && ... % range is 10-90
     filter_astfac(params, 0.1, 0.5) && ... % range is 0.1-0.5
-    filter_sl_a(params, 0.1, 0.1) && ... % range is 0.003-0.1
-    filter_Qow_max(params, 50, 50) && ... % range is 5-50
+    filter_sl_a(params, 0.003, 0.003) && ... % range is 0.003-0.1
+    filter_Qow_max(params, 5, 5) && ... % range is 5-50
     filter_Dbb(params, 2, 2) && ... % range is 2-10
     filter_Wstart(params, 150, 150); % range is 150-400
 
