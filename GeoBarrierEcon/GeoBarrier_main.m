@@ -1,14 +1,14 @@
 %% Barrier geometric model with coupled Alongshore. %%%%%%%%%%%%%%%
 % close all;clear all;
 % tic
-% sl_a = 0.004;%[0.003 0.004 0.005 0.01 0.05 0.1]; % sl_a right now is 0.003
-% Qow_max = 10;%[5 10 20 30 40 50];
-% astfac = 0.3;%[0.1 0.2 0.3 0.4 0.5];
-% Dbb = 2;%2:10;
-% Wstart = 400;%150:50:400;
-% L = 500;%[10 30 50 70 90];% 102= ys
+sl_a = 0.003;%[0.003 0.004 0.005 0.01 0.05 0.1]; % sl_a right now is 0.003
+Qow_max = 100;%[5 10 20 30 40 50];
+astfac = 0.3;%[0.1 0.2 0.3 0.4 0.5];
+Dbb = 3;%2:10;
+Wstart = 325;%150:50:400;
+L = 0;%[10 30 50 70 90];% 102= ys
 
-function GeoBarrier_main(Qow_max,astfac,Dbb,Wstart,L,sl_a)
+% function GeoBarrier_main(Qow_max,astfac,Dbb,Wstart,L,sl_a)
 % Jorge Lorenzo Trueba adopted by Andrew Ashton starting 2-2015
 % adopted by Rose Palermo starting 2-2017
     % inputs
@@ -17,13 +17,13 @@ function GeoBarrier_main(Qow_max,astfac,Dbb,Wstart,L,sl_a)
     
     
     xsonly = false;
-    save_on = true;
+    save_on = false;
     developed_on = false; % this has to be true for either commercial or residential to matter
     commercial = false;
     residential = false;
     community_on = false;
     xs_only = false;
-    plot_on = false;
+    plot_on = true;
     if plot_on
         h = figure();
     end
@@ -80,16 +80,16 @@ function GeoBarrier_main(Qow_max,astfac,Dbb,Wstart,L,sl_a)
     end
     
     %%%% Zero the Save Variables
-    Xtoe_save = nan(tsavetimes+1, ys);
-    xsl_save = nan(tsavetimes+1, ys);
-    xbb_save = nan(tsavetimes+1, ys);
-    H_save= nan(tsavetimes+1, ys);
-    QowH_save = nan(tsavetimes+1, ys);
-    QowB_save = nan(tsavetimes+1, ys);
-    Qow_save = nan(tsavetimes+1, ys);
-    Qsf_save = nan(tsavetimes+1, ys);
-    Qast_save = nan(tsavetimes+1, ys);
-    W_save = nan(tsavetimes+1, ys);
+    Xtoe_save = nan(tsavetimes+1, yssave);
+    xsl_save = nan(tsavetimes+1, yssave);
+    xbb_save = nan(tsavetimes+1, yssave);
+    H_save= nan(tsavetimes+1, yssave);
+    QowH_save = nan(tsavetimes+1, yssave);
+    QowB_save = nan(tsavetimes+1, yssave);
+    Qow_save = nan(tsavetimes+1, yssave);
+    Qsf_save = nan(tsavetimes+1, yssave);
+    Qast_save = nan(tsavetimes+1, yssave);
+    W_save = nan(tsavetimes+1, yssave);
     
     % xsl_saveall = zeros(ts,length(Yi));
     % xbb_saveall = zeros(ts,length(Yi));
@@ -99,7 +99,7 @@ function GeoBarrier_main(Qow_max,astfac,Dbb,Wstart,L,sl_a)
     % Qsf_saveall = zeros(ts,length(Yi));
     % Qast_saveall = zeros(ts,length(Yi));
     % W_saveall = zeros(ts,length(Yi));
-    jplot = floor(length(Yi)./2); % Which profile youre plotting, the middle of the barrier
+    jplot = floor(length(Ysave)./2); % Which profile youre plotting, the middle of the barrier
     
     
     
@@ -197,15 +197,15 @@ function GeoBarrier_main(Qow_max,astfac,Dbb,Wstart,L,sl_a)
         %% Variable storage ?
         if (mod(i,savenum)- 1 == 0)
             tsi = (i-1)/savenum +1;
-            Xtoe_save(tsi,:) = xtoe;
-            xsl_save(tsi,:) = xsl;
-            H_save(tsi,:)= H;
+            Xtoe_save(tsi,:) = xtoe(Ysave);
+            xsl_save(tsi,:) = xsl(Ysave);
+            H_save(tsi,:)= H(Ysave);
             if xs_only
                 Qast_save(tsi,:) = 0;
             else
-                Qast_save(tsi,:) = F;
+                Qast_save(tsi,:) = F(Ysave);
             end
-            W_save(tsi,:) = xbb-xsl;
+            W_save(tsi,:) = xbb(Ysave)-xsl(Ysave);
         end
         %     xsl_saveall(i,:) = xsl;
         
@@ -251,7 +251,7 @@ function GeoBarrier_main(Qow_max,astfac,Dbb,Wstart,L,sl_a)
                 end
                 
                 if ~community_on
-                    jplot = floor(length(Yi)./2); % Which profile youre plotting, the middle of the barrier
+                    jplot = floor(length(Ysave)./2); % Which profile youre plotting, the middle of the barrier
                     % compute the z's
                     Db= Dsf - xbb(jplot)*B(jplot); zt=Z-Dsf; zs=Z; ztop=Z+H(jplot);
                     % plot the barrier parts
@@ -346,7 +346,7 @@ function GeoBarrier_main(Qow_max,astfac,Dbb,Wstart,L,sl_a)
         end
         
         axes4 = subplot(4,1,4);
-        plot(Y/1000,xsl_cr,'b', 'linewidth',2)
+        plot(Ysave/1000,xsl_cr,'b', 'linewidth',2)
         %     axis([Y(1)/1000 Y(Yn)/1000 nanmin(xsl_cr) nanmax(xsl_cr)+1])
 %         linkaxes([axes2,axes4],'x')
         xlabel('Alongshore position (km)')
@@ -358,5 +358,5 @@ function GeoBarrier_main(Qow_max,astfac,Dbb,Wstart,L,sl_a)
     if save_on
         save_files
     end
-end
+% end
 % toc

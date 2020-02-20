@@ -28,13 +28,16 @@ elseif result.NDC == 'DC_'
 elseif result.NDC == 'DCR'
     result.color = 'r';
 end
-result.Qast_save = Qast_save;
+% result.Qast_save = Qast_save;
 result.Y = Y;
 result.t = t;
-result.QowB_save = QowB_save;
-result.QowH_save = QowH_save;
+% result.QowB_save = QowB_save;
+% result.QowH_save = QowH_save;
 result.Qow_save = Qow_save;
 result.W_save = W_save;
 result.xsl_save = xsl_save;
 result.Qsf_save = Qsf_save;
-result.WRatio_save = Qow_save./Qast_save;
+Qast4grad = [Qast_save(:,:) Qast_save(:,1)];
+result.Qastgrad = (Qast4grad(:,2:end)-Qast4grad(:,1:end-1));
+result.WRatio_save = Qow_save./result.Qastgrad;
+

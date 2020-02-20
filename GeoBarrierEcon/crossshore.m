@@ -89,12 +89,14 @@ for j = 1:ys
     %         xbb_saveall(i,j) = xbb(j);
     %save ow and shoreface fluxes
     if (mod(i,savenum)- 1 == 0)
+        if ismember(j,Ysave)
         tsi = (i-1)/savenum +1;
         QowH_save(tsi,j) = Qow_H;
         QowB_save(tsi,j) = Qow_B;
         Qow_save(tsi,j) = Qow;
         Qsf_save(tsi,j) = Qsf;
         xbb_save(tsi,j) = xbb(j);
+        end
     end
     
 end

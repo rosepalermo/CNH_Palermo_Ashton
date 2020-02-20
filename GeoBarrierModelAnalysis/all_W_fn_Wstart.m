@@ -10,11 +10,11 @@ files = dir(filepattern);
 % FILTER ONLY THE RUNS I WANT
 %     filter_L = @(params) params.L <= 30;
 filter_func = @(params) filter_L(params, 700, 700) && ... % range is 10-90
-    filter_astfac(params, 0.1, 0.5) && ... % range is 0.1-0.5
+    filter_astfac(params, 0.3, 0.3) && ... % range is 0.1-0.5
     filter_sl_a(params, 0.005, 0.005) && ... % range is 0.003-0.1
     filter_Qow_max(params, 30, 30) && ... % range is 5-50
     filter_Dbb(params, 2, 2) && ... % range is 2-10
-    filter_Wstart(params, 250, 250); % range is 150-400
+    filter_Wstart(params, 150, 400); % range is 150-400
 
 % LOOP FILES
 % figure()
@@ -30,7 +30,7 @@ for i=1:length(files)
         result = model_output_processing(fullFileName, files(i).name);
         
         % SAVE DATA I NEED
-        ast_all(ii) =params.astfac;
+        Wstart_all(ii) =params.Wstart;
 %         Qow_max(ii) = params.Qow_max;
 %         Qast_all(:,:,ii) = result.Qastgrad;
         Qow_all(1:100,:,ii) = result.Qow_save(1:100,:);
@@ -45,7 +45,7 @@ end
 % for i = 1:(ii-1)
 %     subplot(ceil((ii-1)/2),ceil((ii-1)/3),i)
 %     imagesc(Qast_all(:,:,i)')
-%     title(sprintf('Diffusivity = %G',ast_all(i)))
+%     title(sprintf('Q_o_w_,_m_a_x = %G',ast_all(i)))
 %     caxis([min(Qast_all,[],'all') max(Qast_all,[],'all')])
 % end
 % % legend('Qow max = 5','Qow max = 10','Qow max = 20','Qow max = 30','Qow max = 40','Qow max = 50','location','northwest')
@@ -57,7 +57,7 @@ end
 % for i = 1:(ii-1)
 %     subplot(ceil((ii-1)/2),ceil((ii-1)/3),i)
 %     imagesc(Qow_all(:,:,i)')
-%     title(sprintf('Diffusivity = %G',ast_all(i)))
+%     title(sprintf('Q_o_w_,_m_a_x = %G',ast_all(i)))
 %     caxis([0 Qow_max(i)])
 % end
 % % legend('Qow max = 5','Qow max = 10','Qow max = 20','Qow max = 30','Qow max = 40','Qow max = 50','location','northwest')
@@ -69,7 +69,7 @@ figure()
 for i = 1:(ii-1)
     ax(i) = subplot(ceil((ii-1)/2),ceil((ii-1)/3),i)
     imagesc(WRatio_all(:,:,i)')
-    title(sprintf('Diffusivity = %G',ast_all(i)))
+    title(sprintf('Wstart = %G',Wstart_all(i)))
 %     caxis([0 5])
     set(gca,'clim',[-2 2])
     colormap(ax(i),parula(4))
@@ -87,7 +87,7 @@ xlabel('time (10s years)')
 % for i = 1:(ii-1)
 %     subplot(ceil((ii-1)/2),ceil((ii-1)/3),i)
 %     imagesc(xsl_all(:,:,i)')
-%     title(sprintf('Diffusivity = %G',ast_all(i)))
+%     title(sprintf('Q_o_w_,_m_a_x = %G',ast_all(i)))
 %     caxis([0 max(xsl_all,[],'all')])
 % end
 % % legend('Qow max = 5','Qow max = 10','Qow max = 20','Qow max = 30','Qow max = 40','Qow max = 50','location','northwest')
