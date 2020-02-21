@@ -2,11 +2,11 @@
 % close all;clear all;
 % tic
 sl_a = 0.003;%[0.003 0.004 0.005 0.01 0.05 0.1]; % sl_a right now is 0.003
-Qow_max = 100;%[5 10 20 30 40 50];
+Qow_max = 20;%[5 10 20 30 40 50];
 astfac = 0.3;%[0.1 0.2 0.3 0.4 0.5];
 Dbb = 100;%2:10;
 Wstart = 325;%150:50:400;
-L = 0;%[10 30 50 70 90];% 102= ys
+L = 334;%[10 30 50 70 90];% 102= ys
 
 % function GeoBarrier_main(Qow_max,astfac,Dbb,Wstart,L,sl_a)
 % Jorge Lorenzo Trueba adopted by Andrew Ashton starting 2-2015
@@ -14,7 +14,6 @@ L = 0;%[10 30 50 70 90];% 102= ys
     % inputs
     GeoBarrier_Inputs
     Time_inputs
-    
     
     xsonly = false;
     save_on = false;
@@ -37,6 +36,8 @@ L = 0;%[10 30 50 70 90];% 102= ys
     %     %%%% Set the Domain Variables for the barrier
     BarrierIC_small_W_in_middle %set barrier inital conditions (include those above)
     % BarnegatBay3
+       
+
     
     % set community variables
     if community_on
@@ -231,7 +232,7 @@ L = 0;%[10 30 50 70 90];% 102= ys
                 xlabel('alongshore location (km)')
                 ylabel('onshore location (km)')
                 
-                axis([Y(1)/1000 Y(Yn)/1000 0.5 (max(xbb)+100)/1000])
+                axis([Y(1)/1000 Y(Yn)/1000 0.5 (nanmax(xbb)+100)/1000])
                 set(gca,'fontweight','bold')
                 set(gca,'Fontsize', fs)
                 
@@ -242,7 +243,7 @@ L = 0;%[10 30 50 70 90];% 102= ys
                     for c = 1:ncom
                         jplot = floor((com(c).jj(c)+com(c).jj(end))./2); % Which profile youre plotting
                         % compute the z's
-                        Db= Dsf - xbb(j)*B(j); zt=Z-Dsf; zs=Z; ztop=Z+H(j);
+                        zt=Z-Dsf; zs=Z; ztop=Z+H(j);
                         % plot the barrier parts
                         Xplot=[xtoe(jplot) xsl(jplot) xsl(jplot) xbb(jplot) xbb(jplot)]/1000;
                         Zplot=[zt     zs     ztop   ztop   -Db ];
@@ -253,10 +254,10 @@ L = 0;%[10 30 50 70 90];% 102= ys
                 if ~community_on
                     jplot = floor(length(Ysave)./2); % Which profile youre plotting, the middle of the barrier
                     % compute the z's
-                    Db= Dsf - xbb(jplot)*B(jplot); zt=Z-Dsf; zs=Z; ztop=Z+H(jplot);
+                    zt=Z-Dsf; zs=Z; ztop=Z+H(jplot);
                     % plot the barrier parts
                     Xplot=[xtoe(jplot) xsl(jplot) xsl(jplot) xbb(jplot) xbb(jplot)]/1000;
-                    Zplot=[zt     zs     ztop   ztop   -Db ];
+                    Zplot=[zt     zs     ztop   ztop   -Db(jplot) ];
                     plot(Xplot,Zplot,'Color','k')
                 end
                 
