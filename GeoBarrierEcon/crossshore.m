@@ -6,8 +6,8 @@ Db= min(Dsf + Z - xbb.*B,Dbb); % Either calculated from the slope or Dbb - initi
 %                         Db= (Dsf + Z - xbb(j)*B(j));
 
 % Compute mud fraction - from BRIE
-% Df = (Dsf+Z-xbb.*Bslope) - Db; % thickness of mud in shelf-slope bay
-% Mf = Df./(Df + Db + H); % mud fraction
+Df = (Dsf+Z-xbb.*Bslope) - Db; % thickness of mud in shelf-slope bay
+Mf = Df./(Df + Db + H); % mud fraction
 %     MF = 0;
 
 % Compute Deficit volume Vd, overwash flux Qow, and shoreface flux Qsf
@@ -75,8 +75,7 @@ Qsf=Ksf*(Ae-A);
 Hdot=Qow_H./W-zdot;
 xbdot=Qow_B./(H+Db);
 %     xsdot=2*Qow/(Dsf+2*H(j))-4*Qsf*(H(j)+Dsf)/(2*H(j)+Dsf)^2;
-xsdot = 2*Qow./((2.*H + Dsf)) - 4.*Qsf.*(H + Dsf)./((2*H+Dsf).^2); %
-% xsdot = 2*Qow./((2.*H + Dsf).*(1-Mf)) - 4.*Qsf.*(H + Dsf)./((2*H+Dsf).^2); % mud fraction modified xsdot
+xsdot = 2*Qow./((2.*H + Dsf).*(1-Mf)) - 4.*Qsf.*(H + Dsf)./((2*H+Dsf).^2); % mud fraction modified xsdot
 xtdot=2*Qsf.*(1./(Dsf+2*H)+1./Dsf)+2*zdot./A;
 
 % Do changes- look for failure

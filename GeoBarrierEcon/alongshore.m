@@ -6,7 +6,7 @@ if ~xsonly
     F_fordel = [F(end) F];
     % change the shoreline
         heff = H + Dsf;
-        dsl = (F_fordel(2:end)-F_fordel(1:end-1))./dy./heff; % note positive sl change = erosion
+        dsl = (F_fordel(2:end)-F_fordel(1:end-1))./dy./heff.*(1-Mf); % note positive sl change = erosion
         xsl = xsl + dsl;
     
         
