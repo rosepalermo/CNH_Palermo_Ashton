@@ -2,7 +2,7 @@
 
 % foldername = "/Users/rosepalermo/Documents/Research/Alongshore coupled/GeoBarrierModelOutput/Cluster/GeoBarrierModelOutput/10_2019/";
 % foldername = "/Users/rosepalermo/Documents/Research/Alongshore coupled/GeoBarrierModelOutput/Cluster/1_2020/";
-foldername = 'C:\\Users\\Rose Palermo\\Documents\\Alongshore_coupled\\GeoBarrierModelOutput\\2_2020\\';
+foldername = 'C:\\Users\\Rose Palermo\\Documents\\Alongshore_coupled\\GeoBarrierModelOutput\\2_2020_3\\';
 
 filepattern = fullfile(foldername,'*.mat');
 files = dir(filepattern);

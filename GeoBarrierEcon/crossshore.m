@@ -98,10 +98,10 @@ end
 %save ow and shoreface fluxes
 if (mod(i,savenum)- 1 == 0)
     tsi = (i-1)/savenum +1;
-    QowH_save(tsi,Ysave) = Qow_H(:,Ysave);
-    QowB_save(tsi,Ysave) = Qow_B(:,Ysave);
-    Qow_save(tsi,Ysave) = Qow(:,Ysave);
-    Qsf_save(tsi,Ysave) = Qsf(:,Ysave);
+    QowH_save(tsi,:) = Qow_H(:,Ysave);
+    QowB_save(tsi,:) = Qow_B(:,Ysave);
+    Qow_save(tsi,:) = Qow(:,Ysave);
+    Qsf_save(tsi,:) = Qsf(:,Ysave);
     xbb_save(tsi,:) = xbb(:,Ysave);
 end
 

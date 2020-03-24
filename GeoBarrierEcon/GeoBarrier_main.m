@@ -1,14 +1,14 @@
 %% Barrier geometric model with coupled Alongshore. %%%%%%%%%%%%%%%
 % close all;clear all;
-tic
-sl_a = 0.003;%[0.003 0.004 0.005 0.01 0.05 0.1]; % sl_a right now is 0.003
-Qow_max = 20;%[5 10 20 30 40 50];
-astfac = 0.3;%[0.1 0.2 0.3 0.4 0.5];
-Dbb = 100;%2:10;
-Wstart = 325;%150:50:400;
-L = 334;%[10 30 50 70 90];% 102= ys
+% tic
+% sl_a = 0.003;%[0.003 0.004 0.005 0.01 0.05 0.1]; % sl_a right now is 0.003
+% Qow_max = 20;%[5 10 20 30 40 50];
+% astfac = 0.3;%[0.1 0.2 0.3 0.4 0.5];
+% Dbb = 100;%2:10;
+% Wstart = 325;%150:50:400;
+% L = 334;%[10 30 50 70 90];% 102= ys
 
-% function GeoBarrier_main(Qow_max,astfac,Dbb,Wstart,L,sl_a)
+function GeoBarrier_main(Qow_max,astfac,Dbb,Wstart,L,sl_a,shape)
 % Jorge Lorenzo Trueba adopted by Andrew Ashton starting 2-2015
 % adopted by Rose Palermo starting 2-2017
     % inputs
@@ -16,13 +16,13 @@ L = 334;%[10 30 50 70 90];% 102= ys
     Time_inputs
     
     xsonly = false;
-    save_on = false;
+    save_on = true;
     developed_on = false; % this has to be true for either commercial or residential to matter
     commercial = false;
     residential = false;
     community_on = false;
     xs_only = false;
-    plot_on = true;
+    plot_on = false;
     if plot_on
         h = figure();
     end
@@ -34,7 +34,11 @@ L = 334;%[10 30 50 70 90];% 102= ys
     Z=0;             % trying z= 0 which is the sea level
     
     %     %%%% Set the Domain Variables for the barrier
-    BarrierIC_small_W_in_middle %set barrier inital conditions (include those above)
+    if shape == "sWmid"
+        BarrierIC_small_W_in_middle %set barrier inital conditions (include those above)
+    elseif shape == "gen"
+        Gen_BarrierIC
+    end
     % BarnegatBay3
        
 
@@ -125,72 +129,6 @@ L = 334;%[10 30 50 70 90];% 102= ys
         
         alongshore
         
-        
-        
-        %% economics
-        if community_on
-            for c = 1:ncom
-                
-                %calculate distances to ocean and bay
-                com(c).npropxs = floor((com(c).housingbb - com(c).yfirsthouse)/com(c).propertysize);
-                com(c).dist2oc = zeros(length(com(c).jj),max((com(c).npropxs)));
-                com(c).dist2bb = zeros(length(com(c).jj),max((com(c).npropxs)));
-                for ll = 1:length(com(c).jj)
-                    % dist2oc0
-                    for l = 1:(com(c).npropxs(ll))
-                        com(c).dist2oc(ll,l) = 16-l;
-                    end
-                    if l > (com(c).npropxs(ll))
-                        com(c).dis2oc(end-l:l) = NaN;
-                    end
-                    
-                    %dist2bb0
-                    for l = 1:(com(c).npropxs(ll))
-                        com(c).dist2bb(ll,end+1-l) = 16-l;
-                    end
-                    if l > (com(c).npropxs(ll))
-                        com(c).dis2bb(1:end-l) = NaN;
-                    end
-                end
-                if size(com(c).dist2oc,2)<size(com(c).dist2oc0,2)
-                    com(c).dist2oc = cat(2,zeros(length(com(c).jj),(size(com(c).dist2oc0,2) - size(com(c).dist2oc,2))),com(c).dist2oc);
-                    com(c).dist2bb = cat(2,zeros(length(com(c).jj),(size(com(c).dist2bb0,2) - size(com(c).dist2bb,2))),com(c).dist2bb);
-                end
-                
-                
-                % run economic model to find net benefit
-                [nNB,mNB]=cba(nyears,com(c).npropertiesll,com(c).L,dy,com(c).alpha,b,com(c).slr,com(c).Wn,com(c).Wav(i),min(com(c).W(i,:)),com(c).W(1,1),com(c).propertysize,f,cost,mean(H(com(c).jj)),Dsf,dr,com(c).dist2oc0,com(c).dist2oc,com(c).dist2bb0,com(c).dist2bb,kappa,psi,com(c).npropxs,subsidies);
-                com(c).NB(i) = nNB;
-                com(c).NBmr(i) =mNB;
-            end
-        end
-        
-        
-        %% nourishing
-        if community_on
-            for c = 1:ncom
-                if i > nyears*100
-                    %if width and NB > 0 --> nourish
-                    if min(com(c).W(i,:))>0 && com(c).NB(i)>0 && sum(com(c).tnourished(i-nyears*100:i))<1
-                        xsl(com(c).jj) = xsl(com(c).jj) - 2*com(c).Vnn/(2*mean(H(com(c).jj))+Dsf);
-                        com(c).tnourished(i) = 1;
-                        % if width < 0 & MR<N --> nourish
-                    elseif min(com(c).W(i,:))<=0 && com(c).NBmr(i)<com(c).NB(i) && sum(com(c).tnourished(i-nyears*100:i))<1
-                        xsl(com(c).jj) = xsl(com(c).jj) - 2*com(c).Vnn/(2*mean(H(com(c).jj))+Dsf);
-                        com(c).tnourished(i) = 1;
-                        %if width < 0 & MR>N --> retreat
-                    elseif min(com(c).W(i,:))<=0 && (com(c).NBmr(i)>com(c).NB(i)||sum(com(c).tnourished(i-nyears*100:i))>1)
-                        com(c).yfirsthouse = com(c).yfirsthouse + com(c).propertysize;
-                        com(c).tmanret(i) = 1;
-                        %recalculate width
-                        com(c).W(i,:) = (com(c).yfirsthouse - xsl(com(c).jj)); %beach width
-                        % if width > 0 & NB< 0 --> continue
-                    elseif com(c).Wav(i)>0 && com(c).NB(i)<0
-                        xsl(com(c).jj) = xsl(com(c).jj);
-                    end
-                end
-            end
-        end
         
         %% save variables now that all changes have been made
         %     W_saveall(i,:) = xbb-xsl;
@@ -359,5 +297,5 @@ L = 334;%[10 30 50 70 90];% 102= ys
     if save_on
         save_files
     end
-% end
-toc
+end
+% toc

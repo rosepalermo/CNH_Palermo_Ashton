@@ -1,7 +1,6 @@
-% EL = mbw*5;
+Wstart = 316.667;
 
 shape = 'sWmid';
-
 % Space
 Yn = 1001; % number of Y cells
 

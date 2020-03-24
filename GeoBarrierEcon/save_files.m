@@ -11,7 +11,7 @@
 %     else
 %         filename = sprintf('/Users/rosepalermo/Documents/Research/Alongshore coupled/GeoBarrierModelOutput/10_2019/natural_%s_OW%d_SLa%d_diff%d_Dbb%d_Wstart%d_L%d',shape,Qow_max,sl_a*1000,astfac*10,Dbb,Wstart,L);
 %         filename = sprintf('/home/rpalermo/GeoBarrierModelOutput/1_2020/natural_%s_OW%d_SLa%d_diff%d_Dbb%d_Wstart%d_L%d',shape,Qow_max,sl_a*1000,astfac*10,Dbb,Wstart,L);
-        filename = sprintf('C:\\Users\\Rose Palermo\\Documents\\Alongshore_coupled\\GeoBarrierModelOutput\\2_2020_2\\natural_%s_OW%d_SLa%d_diff%d_Dbb%d_Wstart%d_L%d',shape,Qow_max,sl_a*1000,astfac*10,Dbb,Wstart,L);
+        filename = sprintf('C:\\Users\\Rose Palermo\\Documents\\Alongshore_coupled\\GeoBarrierModelOutput\\2_2020_3\\WdrownK2000\\natural_%s_OW%d_SLa%d_diff%d_Dbb%d_Wstart%d_L%d',shape,Qow_max,sl_a*1000,astfac*10,Dbb,round(Wstart),L);
 
         %     end
 %     

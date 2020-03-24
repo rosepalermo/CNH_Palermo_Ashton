@@ -1,18 +1,18 @@
-%% Barrier geometric model with coupled Alongshore. %%%%%%%%%%%%%%%
-% close all;clear all;
-% tic
-sl_a = 0.003;%[0.003 0.004 0.005 0.01 0.05 0.1]; % sl_a right now is 0.003
-Qow_max = 20;%[5 10 20 30 40 50];
+%% TEST Barrier geometric model with coupled Alongshore. %%%%%%%%%%%%%%%
+close all;clear all;
+sl_a = 0.004;%[0.003 0.004 0.005 0.01 0.05 0.1]; % sl_a right now is 0.003
+Qow_max = 1;%[5 10 20 30 40 50];
 astfac = 0.3;%[0.1 0.2 0.3 0.4 0.5];
 Dbb = 100;%2:10;
-Wstart = 325;%150:50:400;
+Wstart = 300;%150:50:400;
 L = 334;%[10 30 50 70 90];% 102= ys
+shape = 'gen';
 
-% function GeoBarrier_main(Qow_max,astfac,Dbb,Wstart,L,sl_a)
 % Jorge Lorenzo Trueba adopted by Andrew Ashton starting 2-2015
 % adopted by Rose Palermo starting 2-2017
     % inputs
     GeoBarrier_Inputs
+%     ae = 0.02;
     Time_inputs
     
     xsonly = false;
@@ -34,7 +34,11 @@ L = 334;%[10 30 50 70 90];% 102= ys
     Z=0;             % trying z= 0 which is the sea level
     
     %     %%%% Set the Domain Variables for the barrier
-    BarrierIC_small_W_in_middle %set barrier inital conditions (include those above)
+    if shape == "sWmid"
+        BarrierIC_small_W_in_middle %set barrier inital conditions (include those above)
+    elseif shape == "gen"
+        Gen_BarrierIC
+    end
     % BarnegatBay3
        
 
@@ -81,16 +85,16 @@ L = 334;%[10 30 50 70 90];% 102= ys
     end
     
     %%%% Zero the Save Variables
-    Xtoe_save = nan(tsavetimes+1, yssave);
-    xsl_save = nan(tsavetimes+1, yssave);
-    xbb_save = nan(tsavetimes+1, yssave);
-    H_save= nan(tsavetimes+1, yssave);
-    QowH_save = nan(tsavetimes+1, yssave);
-    QowB_save = nan(tsavetimes+1, yssave);
-    Qow_save = nan(tsavetimes+1, yssave);
-    Qsf_save = nan(tsavetimes+1, yssave);
-    Qast_save = nan(tsavetimes+1, yssave);
-    W_save = nan(tsavetimes+1, yssave);
+    Xtoe_save = zeros(tsavetimes+1, yssave);
+    xsl_save = zeros(tsavetimes+1, yssave);
+    xbb_save = zeros(tsavetimes+1, yssave);
+    H_save= zeros(tsavetimes+1, yssave);
+    QowH_save = zeros(tsavetimes+1, yssave);
+    QowB_save = zeros(tsavetimes+1, yssave);
+    Qow_save = zeros(tsavetimes+1, yssave);
+    Qsf_save = zeros(tsavetimes+1, yssave);
+    Qast_save = zeros(tsavetimes+1, yssave);
+    W_save = zeros(tsavetimes+1, yssave);
     
     % xsl_saveall = zeros(ts,length(Yi));
     % xbb_saveall = zeros(ts,length(Yi));
@@ -359,5 +363,3 @@ L = 334;%[10 30 50 70 90];% 102= ys
     if save_on
         save_files
     end
-% end
-% toc
