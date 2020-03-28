@@ -2,7 +2,7 @@
 clc; 
 close all;
 %% Input physical parameters%%%%%%%%%%%%%%%
-B=0.0001; %Basement slope
+B=0.001; %Basement slope
 Dt=10;% Toe depth (meters). Typically in the range 10-20m
 We=300; %Equilibrium width (meters)
 He=2;  %Equilibrium heigth (meters)
@@ -21,16 +21,18 @@ Interval=20;
 dt=0.01;
 t=0:dt:Tmax;n=length(t);
 tt=0:Interval:Tmax;nt=length(tt);
+plotnum = 10000;
 %% Nourishment parameters %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 Vn=100; % Nourishment Volume
 k=1;
 %% Initial conditions %%%%%%%%%%%%
 A=Ae;W=We;H=He; %Barrier initially in equlibrium
-xt=0;xs=Dt/A;xb=xs+W;xso=xs;Z=0;
+xt=0;xs=Dt/A;xb=xs+W;xso=xs;Z=10;
 Db=min(Z-B*xb,2); %Initial back barrier depth (meters) 
 % X=Xo;
 %% Variable initialization %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 XS=zeros(1,n);
+figure()
 for i=1:n
 %% SL curve
 zdot=a+2*b*t(i); %Base-level rise rate (m/year)
@@ -56,14 +58,36 @@ xt=xt+xtdot*dt;
 %% Additional parameters
 A=Dt/(xs-xt);
 W=xb-xs;if W<0;tdrown_W=t(i);break; end
-Db = min(Z-B*xb,2);
-Db_el_save(i)= Z- min(Z-B*xb,2);
+% Db = min(Z-B*xb,2);
+Db = Z-B*xb;
+Db_el_save(i)= Z- Db;
 Z_save(i) = Z;
-basement(i) = Z-B*xb;
+basement(i) = Z-(Z-B*xb);
 % Variable storage %%%%%%%%%%%%%%%%%%%%
 XS(i)=xs;
+
+if (mod(i,plotnum)- 1 == 0)
+hold on
+% compute the z's
+zt=Z-Dt; zs=Z; ztop=Z+H;
+% plot the barrier parts
+Xplot=[xt xs xs xb xb];
+Zplot=[zt zs ztop ztop Z-Db ];
+plot(Xplot,Zplot,'Color','k')
+Xplot=[-Dt/B Dt/B];
+Zplot=[-Dt Dt];
+plot(Xplot,Zplot,'k')
+plot([-1000 3000], [Z Z], 'b')
+xlabel('onshore location (km)')
+ylabel('elevation (m)')
+set(gca,'fontweight','bold')
+set(gca,'Fontsize', 12)
+xlim([0 xb])
+ylim([0 Z+5])
+end
 end
 %% Plots %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+figure()
 hold on
 plot(t,XS,'k','linewidth',1)
 ylabel('Shoreline Position')
@@ -78,3 +102,5 @@ plot(t,Z_save,'b','linewidth',1)
 ylabel('Z')
 xlabel('time')
 legend('Db','basement','SLR')
+
+%%

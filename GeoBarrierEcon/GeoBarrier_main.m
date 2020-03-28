@@ -176,19 +176,7 @@ function GeoBarrier_main(Qow_max,astfac,Dbb,Wstart,L,sl_a,shape)
                 
                 axes3 = subplot(4,1,3);
                 hold on
-                
-                if community_on
-                    for c = 1:ncom
-                        jplot = floor((com(c).jj(c)+com(c).jj(end))./2); % Which profile youre plotting
-                        % compute the z's
-                        zt=Z-Dsf; zs=Z; ztop=Z+H(j);
-                        % plot the barrier parts
-                        Xplot=[xtoe(jplot) xsl(jplot) xsl(jplot) xbb(jplot) xbb(jplot)]/1000;
-                        Zplot=[zt     zs     ztop   ztop   -Db ];
-                        plot(Xplot,Zplot,'Color',com(c).color)
-                    end
-                end
-                
+
                 if ~community_on
                     jplot = floor(length(Ysave)./2); % Which profile youre plotting, the middle of the barrier
                     % compute the z's
