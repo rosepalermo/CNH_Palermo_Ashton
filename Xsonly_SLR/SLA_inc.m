@@ -1,30 +1,38 @@
-% Linear increase in the nourishment flux
+% Increasing vs constant sea level rise scenarios
+% Rose Palermo GCC 2019
+
 % close all; 
 clear all;
 % constant = 0;
 % increasing = ~constant;
 start004 = 0;
+plotslx_on = 0;
 Mqow = [1:2:100];
 slr = [0.5 1.0 1.5 2.0];
 output = nan(length(Mqow),length(slr),2);
 tdrown_total = nan(length(Mqow),length(slr),2);
 xsend = nan(length(Mqow),length(slr),2);
+for k = 1:4
+    title_txt = ["0.5 m";"1.0 m";"1.5 m";"2.0 m"];
+    if plotslx_on
+    figure()
+    end
 for inc = 1:2
     ccc = [1 0];
+    plot_color = ["k";"r"];
     constant = ccc(inc);
     increasing = ~constant;
 for mm = 1:length(Mqow)
     Qow_max = Mqow(mm);
-for k = 1:4
 %% Input physical parameters%%%%%%%%%%%%%%%
 B=0.001; %Basement slope
-Dsf=10;% Depth of closure (meters). Typically in the range 10-20m
+Dsf=10;% Toe depth (meters). Typically in the range 10-20m
 We=300; %Equilibrium width (meters)
-He=1.5;  %Equilibrium height (meters)
+He=2;  %Equilibrium heigth (meters)
 Ae=0.015; %Equilibrium shoreface slope
-% Qow_max=10; %Maximum overwash flux (m^2/year)
+% Qow_max=100; %Maximum overwash flux (m^2/year)
 Vd_max=300; %Maximum deficit volume (m^2/year)
-K=5000;  %Shoreface Flux constant (m^2/year)
+K=10000;  %Shoreface Flux constant (m^2/year)
 
 %% SL rise rate = a + 2bt %%%%%%%%%%%%%%%%
 
@@ -49,7 +57,7 @@ end
 
 
 %% Computational parameters%%%%%%%%%%%%%%%
-Tmax=200; 
+Tmax=1000; 
 Interval=20;
 dt=0.01;
 t=0:dt:Tmax;n=length(t);
@@ -65,12 +73,14 @@ tt=0:Interval:Tmax;nt=length(tt);
 %% Nourishment parameters %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 Vn=100; % Nourishment Volume
 %% Initial conditions %%%%%%%%%%%%
-A=Ae;W=We+200;H=He; %Barrier initially in equlibrium
+A=Ae;W=We;H=He; %Barrier initially in equlibrium
 xt=0;xs=Dsf/A;xb=xs+W;xso=xs;Z=Dsf;
 Db=Z-B*xb; %Initial back barrier depth (meters) 
 % X=Xo;
 %% Variable initialization %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-XS=zeros(1,n);
+XS=nan(1,n);
+XSchange=nan(1,n);
+
 for i=1:n
 %% SL curve
 zdot=a+2*b*t(i); %Base-level rise rate (m/year)
@@ -112,21 +122,45 @@ end
 Db=Z-xb*B;
 % Variable storage %%%%%%%%%%%%%%%%%%%%
 XS(i)=xs;
+XSchange(i)=xs-XS(1);
+if isnan(xs)
+    isnan(xs)
+end
+
 end
 % save final shoreline change
 if isnan(xsend(mm,k,inc))
     xsend(mm,k,inc) = XS(end)-XS(1);
 end
 
+if plotslx_on
+% %plot
+hold on
+plot(t,XSchange,'k','linewidth',2,'Color',plot_color(inc))
+ylabel('Shoreline change')
+xlabel('time (yrs)');
+title(title_txt(k));
+set(gca,'FontSize',18)
+ylim([0 5000])
+xlim([0 Tmax])
+xline(108,'--','linewidth',0.5,'HandleVisibility','off');
+legend('constant','increasing','location','northwest')
+
+% % box on
+if exist('tdrown_W')
+    scatter(tdrown_W,XSchange(find(t == tdrown_W)-1),'b','*','HandleVisibility','off');
+%     legend('constant','increasing','drown','location','northwest')
+elseif exist('tdrown_H')
+    scatter(tdrown_H,XSchange(find(t == tdrown_H)-1),'g','*','HandleVisibility','off');
+%     legend('constant','increasing','drown','location','northwest')
+end
+end
+clearvars tdrown_W tdrown_H
+
 end
 end
 end
 %% Plots %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% hold on
-% plot(t,XS,'k','linewidth',1)
-% ylabel('Shoreline Position')
-% xlabel('time');
-% box on
 
 figure();
 subplot(2,1,1); 
@@ -139,6 +173,7 @@ xlabel('SLR Scenario')
 set(gca,'FontSize',12)
 caxis([1 2])
 xticks(slr)
+length(find(output(:,:,1)==1))./sum(~isnan(output(:,:,1)),'all')
 
 subplot(2,1,2);
 f2 = imagesc(slr,Mqow,output(:,:,2)); 
@@ -150,31 +185,33 @@ xlabel('SLR Scenario')
 set(gca,'FontSize',12)
 caxis([1 2])
 xticks(slr)
+length(find(output(:,:,2)==1))./sum(~isnan(output(:,:,2)),'all')
 
-figure();
-subplot(2,1,1); 
-f1 = imagesc(slr,Mqow,tdrown_total(:,:,1)); 
-set(f1,'AlphaData',~isnan(tdrown_total(:,:,1)))
-set(gca,'Ydir','normal')
-title('Constant')
-ylabel('Qow max (m^3/m/yr')
-xlabel('SLR Scenario')
-set(gca,'FontSize',12)
-caxis([50 200])
-xticks(slr)
-colorbar
-
-subplot(2,1,2);
-f2 = imagesc(slr,Mqow,tdrown_total(:,:,2)); 
-set(f2,'AlphaData',~isnan(tdrown_total(:,:,2)))
-set(gca,'Ydir','normal')
-title('Increasing')
-ylabel('Qow max (m^3/m/yr')
-xlabel('SLR Scenario')
-set(gca,'FontSize',12)
-caxis([50 200])
-xticks(slr)
-colorbar
+% 
+% figure();
+% subplot(2,1,1); 
+% f1 = imagesc(slr,Mqow,tdrown_total(:,:,1)); 
+% set(f1,'AlphaData',~isnan(tdrown_total(:,:,1)))
+% set(gca,'Ydir','normal')
+% title('Constant')
+% ylabel('Qow max (m^3/m/yr')
+% xlabel('SLR Scenario')
+% set(gca,'FontSize',12)
+% caxis([50 200])
+% xticks(slr)
+% colorbar
+% 
+% subplot(2,1,2);
+% f2 = imagesc(slr,Mqow,tdrown_total(:,:,2)); 
+% set(f2,'AlphaData',~isnan(tdrown_total(:,:,2)))
+% set(gca,'Ydir','normal')
+% title('Increasing')
+% ylabel('Qow max (m^3/m/yr')
+% xlabel('SLR Scenario')
+% set(gca,'FontSize',12)
+% caxis([50 200])
+% xticks(slr)
+% colorbar
 
 % figure();
 % subplot(2,1,1); 

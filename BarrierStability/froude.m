@@ -19,14 +19,14 @@ for p = 1:length(ang)
     QsAST_LTA(p) = K2_LTA.*E.*((cos(ang(p))).^(6/5)).*(sin(ang(p)))*365*60*60*24;
 end
 
-figure()
-plot(rad2deg(ang),QsAST_LTA)
-% h = colorbar;
-% ylabel(h, 'QsAST_LTA')
-xlabel('ang')
-ylabel('Qast using K2 = 0.17')
-set(gca,'FontSize',14)
-set(gca,'YDir','normal')
+% figure()
+% plot(rad2deg(ang),QsAST_LTA)
+% % h = colorbar;
+% % ylabel(h, 'QsAST_LTA')
+% xlabel('ang')
+% ylabel('Qast using K2 = 0.17')
+% set(gca,'FontSize',14)
+% set(gca,'YDir','normal')
 
 maxQast = max(QsAST_LTA); %m^3/m/yr max
 
@@ -44,7 +44,13 @@ xlabel('D_b_b')
 ylabel('Q_o_w')
 set(gca,'FontSize',14)
 set(gca,'YDir','normal')
-title(sprintf('L_a_s_t when Pe = 1; Q_a_s_t_,_m_a_x = %d',maxQast))
+title(sprintf('L_a_s_t when Fr = 1; Q_a_s_t_,_m_a_x = %d',maxQast))
+set(gca,'colorscale','log')
+hold on
+[C,h] = contour(Dbb,Qow,Last'./1000,[10,25,50,100,150],'LineColor','k');
+clabel(C,h,'FontSize',14)
+set(gca,'FontSize',16)
+
 
 figure()
 imagesc(Dbb,Qow,log(Last'./1000))
@@ -54,5 +60,5 @@ xlabel('D_b_b')
 ylabel('Q_o_w')
 set(gca,'FontSize',14)
 set(gca,'YDir','normal')
-title(sprintf('L_a_s_t when Pe = 1; Q_a_s_t_,_m_a_x = %d',maxQast))
+title(sprintf('L_a_s_t when Fr = 1; Q_a_s_t_,_m_a_x = %d',maxQast))
 

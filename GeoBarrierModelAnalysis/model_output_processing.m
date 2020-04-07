@@ -31,8 +31,8 @@ end
 result.Qast_save = Qast_save;
 result.Y = Y;
 result.t = t;
-result.QowB_save = QowB_save;
-result.QowH_save = QowH_save;
+% result.QowB_save = QowB_save;
+% result.QowH_save = QowH_save;
 result.Qow_save = Qow_save;
 result.W_save = W_save;
 result.xsl_save = xsl_save;

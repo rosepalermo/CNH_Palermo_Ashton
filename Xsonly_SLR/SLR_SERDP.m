@@ -1,6 +1,6 @@
 % plot sea level rise for longer timeline than 2100 using SERDP curves
-t = 1:200; % 500 years
-colors = {'r','c','k','b'}
+t = 1:226; % 500 years
+colors = {'r','c','k','b'};
 
 % increasing;  % increasing sea level rise scenarios (SERDP table 3.4)
 a = 1.7e-3;
@@ -71,11 +71,11 @@ meanRSLR_i(k) = mean(RSLR_i(k,:));
 meanRSLR_c(k) = mean(RSLR_c(k,:));
 end
 
-figure()
-for k = 1:4
-scatter(t,RSLR_c(k,:),colors{k})
-end
-xlabel('time (yrs)')
-ylabel('Rate of SLR (m/yr)')
+% figure()
+% for k = 1:4
+% scatter(t,RSLR_c(k,:),colors{k})
+% end
+% xlabel('time (yrs)')
+% ylabel('Rate of SLR (m/yr)')
 
 
