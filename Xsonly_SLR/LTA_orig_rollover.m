@@ -1,6 +1,6 @@
 % Linear increase in the nourishment flux
 clc; 
-close all;
+% close all;
 %% Input physical parameters%%%%%%%%%%%%%%%
 B=0.001; %Basement slope
 Dt=10;% Toe depth (meters). Typically in the range 10-20m
@@ -16,7 +16,7 @@ a=0.004;
 b=0.000; % If b=0 constant sea-level rise
 
 %% Computational parameters%%%%%%%%%%%%%%%
-Tmax=500; 
+Tmax=100; 
 Interval=20;
 dt=0.01;
 t=0:dt:Tmax;n=length(t);
@@ -25,7 +25,7 @@ tt=0:Interval:Tmax;nt=length(tt);
 Vn=100; % Nourishment Volume
 k=1;
 %% Initial conditions %%%%%%%%%%%%
-A=Ae;W=We;H=He; %Barrier initially in equlibrium
+A=Ae;W=We/3;H=He*3; %Barrier initially in equlibrium
 xt=0;xs=Dt/A;xb=xs+W;xso=xs;Z=Dt;
 Db=Z-B*xb; %Initial back barrier depth (meters) 
 % X=Xo;
@@ -62,8 +62,9 @@ XS(i)=xs;
 end
 %% Plots %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 hold on
-plot(t,XS,'k','linewidth',1)
+plot(t,XS,'b','linewidth',1)
 ylabel('Shoreline Position')
 xlabel('time');
+yline(XS(1)+100,'b')
 box on
 
