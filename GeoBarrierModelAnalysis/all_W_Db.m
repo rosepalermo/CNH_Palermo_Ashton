@@ -8,7 +8,6 @@ filepattern = fullfile(foldername,'*.mat');
 files = dir(filepattern);
 
 % FILTER ONLY THE RUNS I WANT
-%     filter_L = @(params) params.L <= 30;
 filter_func = @(params) filter_L(params, 334, 334) && ... % range is 10-90
     filter_astfac(params, 0.5, 0.5) && ... % range is 0.1-0.5
     filter_sl_a(params, 0.004, 0.004) && ... % range is 0.003-0.1
@@ -16,7 +15,7 @@ filter_func = @(params) filter_L(params, 334, 334) && ... % range is 10-90
     filter_Dbb(params, 100, 100) && ... % range is 2-10
     filter_Wstart(params, 300, 317);% && ... % range is 150-400
     filter_shape(params,'gen');
-
+    
 % LOOP FILES
 % figure()
 ii = 1;
@@ -65,6 +64,19 @@ end
 % ylabel('alongshore position')
 % xlabel('time')
 % set(gca,'FontSize',14)
+
+% figure()
+% for i = 1:(ii-1)
+%     ax(i) = subplot(3,1,i);
+%     imagesc(WRatio_all(:,:,i)')
+%     title(sprintf('D_b_b = %G',Dbb_all(i)))
+% %     caxis([0 5])
+%     set(gca,'clim',[-2 2])
+%     colormap(ax(i),parula(4))
+% end
+% % legend('Qow max = 5','Qow max = 10','Qow max = 20','Qow max = 30','Qow max = 40','Qow max = 50','location','northwest')
+% ylabel('alongshore position')
+% xlabel('time (10s years)')
 
 figure()
 for i = 2:(ii-1)
