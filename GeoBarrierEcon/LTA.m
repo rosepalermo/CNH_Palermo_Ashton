@@ -84,6 +84,9 @@ for j = 1:ys
         % compute changes
         Hdot=Qow_H/W-zdot;
         xbdot=Qow_B/(H(j)+Db);
+        if xbdot<0
+            disp('Houston, we have a problem')
+        end
         xsdot=2*Qow/(Dsf+2*H(j))-4*Qsf*(H(j)+Dsf)/(2*H(j)+Dsf)^2;
         xsxldot_saveall(i,j) = xsdot;
         xtdot=2*Qsf*(1/(Dsf+2*H(j))+1/Dsf)+2*zdot/A;

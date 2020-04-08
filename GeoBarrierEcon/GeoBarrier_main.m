@@ -1,20 +1,19 @@
 %% Barrier geometric model with coupled Alongshore. %%%%%%%%%%%%%%%
 % close all;clear all;
 % tic
-% sl_a = 0.004;%[0.003 0.004 0.005 0.01 0.05 0.1]; % sl_a right now is 0.003
-% Qow_max = 10;%[5 10 20 30 40 50];
+% sl_a = 0.003;%[0.003 0.004 0.005 0.01 0.05 0.1]; % sl_a right now is 0.003
+% Qow_max = 20;%[5 10 20 30 40 50];
 % astfac = 0.3;%[0.1 0.2 0.3 0.4 0.5];
-% Dbb = 2;%2:10;
-% Wstart = 400;%150:50:400;
-% L = 500;%[10 30 50 70 90];% 102= ys
+% Dbb = 100;%2:10;
+% Wstart = 325;%150:50:400;
+% L = 334;%[10 30 50 70 90];% 102= ys
 
-function GeoBarrier_main(Qow_max,astfac,Dbb,Wstart,L,sl_a)
+function GeoBarrier_main(Qow_max,astfac,Dbb,Wstart,L,sl_a,shape)
 % Jorge Lorenzo Trueba adopted by Andrew Ashton starting 2-2015
 % adopted by Rose Palermo starting 2-2017
     % inputs
     GeoBarrier_Inputs
     Time_inputs
-    
     
     xsonly = false;
     save_on = true;
@@ -35,8 +34,14 @@ function GeoBarrier_main(Qow_max,astfac,Dbb,Wstart,L,sl_a)
     Z=0;             % trying z= 0 which is the sea level
     
     %     %%%% Set the Domain Variables for the barrier
-    BarrierIC_small_W_in_middle %set barrier inital conditions (include those above)
+    if shape == "sWmid"
+        BarrierIC_small_W_in_middle %set barrier inital conditions (include those above)
+    elseif shape == "gen"
+        Gen_BarrierIC
+    end
     % BarnegatBay3
+       
+
     
     % set community variables
     if community_on
@@ -80,16 +85,16 @@ function GeoBarrier_main(Qow_max,astfac,Dbb,Wstart,L,sl_a)
     end
     
     %%%% Zero the Save Variables
-    Xtoe_save = nan(tsavetimes+1, ys);
-    xsl_save = nan(tsavetimes+1, ys);
-    xbb_save = nan(tsavetimes+1, ys);
-    H_save= nan(tsavetimes+1, ys);
-    QowH_save = nan(tsavetimes+1, ys);
-    QowB_save = nan(tsavetimes+1, ys);
-    Qow_save = nan(tsavetimes+1, ys);
-    Qsf_save = nan(tsavetimes+1, ys);
-    Qast_save = nan(tsavetimes+1, ys);
-    W_save = nan(tsavetimes+1, ys);
+    Xtoe_save = zeros(tsavetimes+1, yssave);
+    xsl_save = zeros(tsavetimes+1, yssave);
+    xbb_save = zeros(tsavetimes+1, yssave);
+    H_save= zeros(tsavetimes+1, yssave);
+    QowH_save = zeros(tsavetimes+1, yssave);
+    QowB_save = zeros(tsavetimes+1, yssave);
+    Qow_save = zeros(tsavetimes+1, yssave);
+    Qsf_save = zeros(tsavetimes+1, yssave);
+    Qast_save = zeros(tsavetimes+1, yssave);
+    W_save = zeros(tsavetimes+1, yssave);
     
     % xsl_saveall = zeros(ts,length(Yi));
     % xbb_saveall = zeros(ts,length(Yi));
@@ -99,7 +104,7 @@ function GeoBarrier_main(Qow_max,astfac,Dbb,Wstart,L,sl_a)
     % Qsf_saveall = zeros(ts,length(Yi));
     % Qast_saveall = zeros(ts,length(Yi));
     % W_saveall = zeros(ts,length(Yi));
-    jplot = floor(length(Yi)./2); % Which profile youre plotting, the middle of the barrier
+    jplot = floor(length(Ysave)./2); % Which profile youre plotting, the middle of the barrier
     
     
     
@@ -125,87 +130,21 @@ function GeoBarrier_main(Qow_max,astfac,Dbb,Wstart,L,sl_a)
         alongshore
         
         
-        
-        %% economics
-        if community_on
-            for c = 1:ncom
-                
-                %calculate distances to ocean and bay
-                com(c).npropxs = floor((com(c).housingbb - com(c).yfirsthouse)/com(c).propertysize);
-                com(c).dist2oc = zeros(length(com(c).jj),max((com(c).npropxs)));
-                com(c).dist2bb = zeros(length(com(c).jj),max((com(c).npropxs)));
-                for ll = 1:length(com(c).jj)
-                    % dist2oc0
-                    for l = 1:(com(c).npropxs(ll))
-                        com(c).dist2oc(ll,l) = 16-l;
-                    end
-                    if l > (com(c).npropxs(ll))
-                        com(c).dis2oc(end-l:l) = NaN;
-                    end
-                    
-                    %dist2bb0
-                    for l = 1:(com(c).npropxs(ll))
-                        com(c).dist2bb(ll,end+1-l) = 16-l;
-                    end
-                    if l > (com(c).npropxs(ll))
-                        com(c).dis2bb(1:end-l) = NaN;
-                    end
-                end
-                if size(com(c).dist2oc,2)<size(com(c).dist2oc0,2)
-                    com(c).dist2oc = cat(2,zeros(length(com(c).jj),(size(com(c).dist2oc0,2) - size(com(c).dist2oc,2))),com(c).dist2oc);
-                    com(c).dist2bb = cat(2,zeros(length(com(c).jj),(size(com(c).dist2bb0,2) - size(com(c).dist2bb,2))),com(c).dist2bb);
-                end
-                
-                
-                % run economic model to find net benefit
-                [nNB,mNB]=cba(nyears,com(c).npropertiesll,com(c).L,dy,com(c).alpha,b,com(c).slr,com(c).Wn,com(c).Wav(i),min(com(c).W(i,:)),com(c).W(1,1),com(c).propertysize,f,cost,mean(H(com(c).jj)),Dsf,dr,com(c).dist2oc0,com(c).dist2oc,com(c).dist2bb0,com(c).dist2bb,kappa,psi,com(c).npropxs,subsidies);
-                com(c).NB(i) = nNB;
-                com(c).NBmr(i) =mNB;
-            end
-        end
-        
-        
-        %% nourishing
-        if community_on
-            for c = 1:ncom
-                if i > nyears*100
-                    %if width and NB > 0 --> nourish
-                    if min(com(c).W(i,:))>0 && com(c).NB(i)>0 && sum(com(c).tnourished(i-nyears*100:i))<1
-                        xsl(com(c).jj) = xsl(com(c).jj) - 2*com(c).Vnn/(2*mean(H(com(c).jj))+Dsf);
-                        com(c).tnourished(i) = 1;
-                        % if width < 0 & MR<N --> nourish
-                    elseif min(com(c).W(i,:))<=0 && com(c).NBmr(i)<com(c).NB(i) && sum(com(c).tnourished(i-nyears*100:i))<1
-                        xsl(com(c).jj) = xsl(com(c).jj) - 2*com(c).Vnn/(2*mean(H(com(c).jj))+Dsf);
-                        com(c).tnourished(i) = 1;
-                        %if width < 0 & MR>N --> retreat
-                    elseif min(com(c).W(i,:))<=0 && (com(c).NBmr(i)>com(c).NB(i)||sum(com(c).tnourished(i-nyears*100:i))>1)
-                        com(c).yfirsthouse = com(c).yfirsthouse + com(c).propertysize;
-                        com(c).tmanret(i) = 1;
-                        %recalculate width
-                        com(c).W(i,:) = (com(c).yfirsthouse - xsl(com(c).jj)); %beach width
-                        % if width > 0 & NB< 0 --> continue
-                    elseif com(c).Wav(i)>0 && com(c).NB(i)<0
-                        xsl(com(c).jj) = xsl(com(c).jj);
-                    end
-                end
-            end
-        end
-        
         %% save variables now that all changes have been made
         %     W_saveall(i,:) = xbb-xsl;
         
         %% Variable storage ?
         if (mod(i,savenum)- 1 == 0)
             tsi = (i-1)/savenum +1;
-            Xtoe_save(tsi,:) = xtoe;
-            xsl_save(tsi,:) = xsl;
-            H_save(tsi,:)= H;
+            Xtoe_save(tsi,:) = xtoe(Ysave);
+            xsl_save(tsi,:) = xsl(Ysave);
+            H_save(tsi,:)= H(Ysave);
             if xs_only
                 Qast_save(tsi,:) = 0;
             else
-                Qast_save(tsi,:) = F;
+                Qast_save(tsi,:) = F(Ysave);
             end
-            W_save(tsi,:) = xbb-xsl;
+            W_save(tsi,:) = xbb(Ysave)-xsl(Ysave);
         end
         %     xsl_saveall(i,:) = xsl;
         
@@ -231,32 +170,20 @@ function GeoBarrier_main(Qow_max,astfac,Dbb,Wstart,L,sl_a)
                 xlabel('alongshore location (km)')
                 ylabel('onshore location (km)')
                 
-                axis([Y(1)/1000 Y(Yn)/1000 0.5 (max(xbb)+100)/1000])
+                axis([Y(1)/1000 Y(Yn)/1000 0.5 (nanmax(xbb)+100)/1000])
                 set(gca,'fontweight','bold')
                 set(gca,'Fontsize', fs)
                 
                 axes3 = subplot(4,1,3);
                 hold on
-                
-                if community_on
-                    for c = 1:ncom
-                        jplot = floor((com(c).jj(c)+com(c).jj(end))./2); % Which profile youre plotting
-                        % compute the z's
-                        Db= Dsf - xbb(j)*B(j); zt=Z-Dsf; zs=Z; ztop=Z+H(j);
-                        % plot the barrier parts
-                        Xplot=[xtoe(jplot) xsl(jplot) xsl(jplot) xbb(jplot) xbb(jplot)]/1000;
-                        Zplot=[zt     zs     ztop   ztop   -Db ];
-                        plot(Xplot,Zplot,'Color',com(c).color)
-                    end
-                end
-                
+
                 if ~community_on
-                    jplot = floor(length(Yi)./2); % Which profile youre plotting, the middle of the barrier
+                    jplot = floor(length(Ysave)./2); % Which profile youre plotting, the middle of the barrier
                     % compute the z's
-                    Db= Dsf - xbb(jplot)*B(jplot); zt=Z-Dsf; zs=Z; ztop=Z+H(jplot);
+                    zt=Z-Dsf; zs=Z; ztop=Z+H(jplot);
                     % plot the barrier parts
                     Xplot=[xtoe(jplot) xsl(jplot) xsl(jplot) xbb(jplot) xbb(jplot)]/1000;
-                    Zplot=[zt     zs     ztop   ztop   -Db ];
+                    Zplot=[zt     zs     ztop   ztop   -Db(jplot) ];
                     plot(Xplot,Zplot,'Color','k')
                 end
                 
@@ -346,7 +273,7 @@ function GeoBarrier_main(Qow_max,astfac,Dbb,Wstart,L,sl_a)
         end
         
         axes4 = subplot(4,1,4);
-        plot(Y/1000,xsl_cr,'b', 'linewidth',2)
+        plot(Ysave/1000,xsl_cr,'b', 'linewidth',2)
         %     axis([Y(1)/1000 Y(Yn)/1000 nanmin(xsl_cr) nanmax(xsl_cr)+1])
 %         linkaxes([axes2,axes4],'x')
         xlabel('Alongshore position (km)')

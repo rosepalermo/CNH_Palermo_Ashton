@@ -1,23 +1,15 @@
 if ~xsonly
+    xsl_forflux = [xsl xsl(1)];
     % compute de fluxes - fluxes across rt cell border
-    for j=1:(ys-1)
-        F(j) = (Ka * dt) * (xsl(j+1) - xsl(j))/dy;
+        F = (Ka * dt) * (xsl_forflux(2:end) - xsl_forflux(1:end-1))/dy;
         %             F(j)=Ka/(2*(H(j)+H(j-1))/2+Dsf)*(xsl(j)-xsl(j-1))*dt*3650;
-    end
-    F(ys) = (Ka * dt) * (xsl(1) - xsl(ys))/dy;
-    %         Qast_saveall(i,:) = F;
-    
+    F_fordel = [F(end) F];
     % change the shoreline
-    for j=2:(ys)
-        heff = H(j) + Dsf;
-        dsl = (F(j)-F(j-1))/dy/heff; % note positive sl change = erosion
-        xsl(j) = xsl(j) + dsl;
-    end
+        heff = H + Dsf;
+        dsl = (F_fordel(2:end)-F_fordel(1:end-1))./dy./heff.*(1-Mf); % note positive sl change = erosion
+        xsl = xsl + dsl;
     
-    heff = H(1) + Dsf;
-    dsl = (F(1)-F(ys))/dy/heff;
-    xsl(1) = xsl(1) + dsl;
-    
+        
     if community_on
         for c = 1:ncom
             com(c).W(i,:) = (com(c).yfirsthouse - xsl(com(c).jj)); % beach width
