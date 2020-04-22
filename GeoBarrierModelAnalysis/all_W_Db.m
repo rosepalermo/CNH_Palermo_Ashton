@@ -14,7 +14,7 @@ filter_func = @(params) filter_L(params, 334, 334) && ... % range is 10-90
     filter_Qow_max(params, 100, 100) && ... % range is 5-50
     filter_Dbb(params, 100, 100) && ... % range is 2-10
     filter_Wstart(params, 300, 317);% && ... % range is 150-400
-    filter_shape(params,'gen');
+%     filter_shape(params,'gen');
     
 % LOOP FILES
 % figure()

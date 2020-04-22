@@ -1,4 +1,7 @@
-% Linear increase in the nourishment flux
+% test the Height and Width initial conditions for rollover height
+% 1) Hstart = He & Wstart = We
+% 2) Hstart = He*3 & Wstart = We/3
+
 clc; 
 % close all;
 %% Input physical parameters%%%%%%%%%%%%%%%
@@ -25,7 +28,7 @@ tt=0:Interval:Tmax;nt=length(tt);
 Vn=100; % Nourishment Volume
 k=1;
 %% Initial conditions %%%%%%%%%%%%
-A=Ae;W=We/3;H=He*3; %Barrier initially in equlibrium
+A=Ae;W=We/3;H=24.4627; %Barrier initially in equlibrium
 xt=0;xs=Dt/A;xb=xs+W;xso=xs;Z=Dt;
 Db=Z-B*xb; %Initial back barrier depth (meters) 
 % X=Xo;
@@ -40,6 +43,7 @@ Vd_H=max(0,(He-H)*W);
 Vd_B=max(0,(We-W)*(H+Db));
 Vd=Vd_H+Vd_B;
 Qow_H=Qow_max*Vd_H/max(Vd,Vd_max);Qow_B=Qow_max*Vd_B/max(Vd,Vd_max);
+% Qow_H = Vd_H; Qow_B = Vd_B;
 Qow=Qow_H+Qow_B;
 Qsf=K*(Ae-A);
 %% Barrier evolution %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

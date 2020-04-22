@@ -6,7 +6,7 @@ Db= min(Dsf + Z - xbb.*B,Dbb); % Either calculated from the slope or Dbb - initi
 %                         Db= (Dsf + Z - xbb(j)*B(j));
 
 % Compute mud fraction - from BRIE
-Df = (Dsf+Z-xbb.*Bslope) - Db; % thickness of mud in shelf-slope bay
+Df = (Dsf+Z-xbb.*B) - Db; % thickness of mud in shelf-slope bay
 Mf = Df./(Df + Db + H); % mud fraction
 %     MF = 0;
 
