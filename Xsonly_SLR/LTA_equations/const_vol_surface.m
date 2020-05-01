@@ -17,5 +17,10 @@ h_b = linspace(1,2,20);
 
 total_vol = sf_vol + b_vol;
 
-
-isosurface(W_sf,W_b,H_b,total_vol,1000)
+for vol = 500:500:2500
+isosurface(W_sf,W_b,H_b,total_vol,vol)
+hold on
+end
+zlabel('Height')
+xlabel('shoreface width')
+ylabel('barrier width')

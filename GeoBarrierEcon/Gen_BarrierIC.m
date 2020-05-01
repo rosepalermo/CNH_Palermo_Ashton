@@ -4,6 +4,8 @@ shape = 'gen';
 
 % Space
 Yn = 1001; % number of Y cells
+% delta t <= delta x^2 / 2*diffusivity; diffusivity in this case is
+% astfac*8.125e6. x = 100
 
 %%%% Alongshore array dimensions (initial)
 Y=0:dy:Yn*dy;    % real y array
