@@ -8,12 +8,10 @@ nourish_only = 0;
 plotslx_on = 1;
 kplot = 1;
 start004 = 0;
-
 Mqow = [1:2:100];
 slr = [0.5 1.0 1.5 2.0];
 nint = [0 5 10 20];
 plot_color = ["k";"r";"c";"g"];
-
 output = nan(length(Mqow),length(slr),2);
 tdrown_total = nan(length(Mqow),length(slr),2);
 xsend = nan(length(Mqow),length(slr),2);
@@ -183,9 +181,10 @@ for inc = 1:2
 % %plot
 figure(1*k*kplot)
 hold on
-plot(t,XS-XS(1),'k','linewidth',2,'Color',plot_color(inc))
+plot(t,XSchange,'k','linewidth',2,'Color',plot_color(inc))
 ylabel('Shoreline location (m)')
 xlabel('time (yrs)');
+title(title_txt(k));
 set(gca,'FontSize',18)
 % ylim([0 1000])
 xlim([0 Tmax])
@@ -194,10 +193,11 @@ legend('constant','increasing','location','southeast')
 
 figure(2*k*kplot)
 hold on
-plot(t(1:end-1),XS(2:end)-XS(1:end-1),'k','linewidth',2,'Color',plot_color(inc))
+plot(t(1:end-1),XSchange(2:end)-XSchange(1:end-1),'k','linewidth',2,'Color',plot_color(inc))
 % ylabel('Shoreline location (m)')
 ylabel('Transgression rate (m/yr)')
 xlabel('time (yrs)');
+title(title_txt(k));
 set(gca,'FontSize',18)
 % ylim([0 1000])
 xlim([0 Tmax])
@@ -206,9 +206,10 @@ legend('constant','increasing','location','southeast')
 
 figure(3*k*kplot)
 hold on
-plot(t,WB,'k','linewidth',2,'Color',plot_color(inc))
-ylabel('Beach width (meters)')
+plot(t,W_save,'k','linewidth',2,'Color',plot_color(inc))
+ylabel('Barrier width (meters)')
 xlabel('time (yrs)');
+title(title_txt(k));
 set(gca,'FontSize',18)
 % ylim([0 1000])
 xlim([0 Tmax])
@@ -230,16 +231,15 @@ end
 % end
 %% Plots %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 runs = find(~cellfun(@isempty,XS_all));
-% figure()
-% for i = 1:length((find(~cellfun(@isempty,XS_all))))
-% plot(t,XS_all{runs(i)}-XS(1,1),plot_color{i},'linewidth',2)
-% hold on
-% ylabel('Shoreline location (m)')
-% xlabel('time (years)');
-% set(gca,'FontSize',18)
-% box on
-% end
-% legend('constant, natural','increasing, natural','location','northwest')
+for i = 1:length((find(~cellfun(@isempty,XS_all))))
+plot(t,XS_all{runs(i)}-XS(1,1),plot_color{i},'linewidth',2)
+hold on
+ylabel('Shoreline location (m)')
+xlabel('time (years)');
+set(gca,'FontSize',18)
+box on
+end
+legend('constant, natural','increasing, natural','location','northwest')
 %% GCC 2019 plots
 % figure();
 % subplot(2,1,1);
